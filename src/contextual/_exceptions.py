@@ -18,11 +18,11 @@ __all__ = [
 ]
 
 
-class SunriseError(Exception):
+class ContextualAIError(Exception):
     pass
 
 
-class APIError(SunriseError):
+class APIError(ContextualAIError):
     message: str
     request: httpx.Request
 

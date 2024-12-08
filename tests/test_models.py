@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from sunrise._utils import PropertyInfo
-from sunrise._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
-from sunrise._models import BaseModel, construct_type
+from contextual._utils import PropertyInfo
+from contextual._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
+from contextual._models import BaseModel, construct_type
 
 
 class BasicModel(BaseModel):

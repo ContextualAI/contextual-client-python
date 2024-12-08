@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from sunrise._types import Base64FileInput
-from sunrise._utils import (
+from contextual._types import Base64FileInput
+from contextual._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from sunrise._compat import PYDANTIC_V2
-from sunrise._models import BaseModel
+from contextual._compat import PYDANTIC_V2
+from contextual._models import BaseModel
 
 _T = TypeVar("_T")
 
