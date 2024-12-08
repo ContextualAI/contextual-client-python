@@ -20,12 +20,12 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from sunrise import Sunrise, AsyncSunrise, APIResponseValidationError
-from sunrise._types import Omit
-from sunrise._models import BaseModel, FinalRequestOptions
-from sunrise._constants import RAW_RESPONSE_HEADER
-from sunrise._exceptions import SunriseError, APIStatusError, APITimeoutError, APIResponseValidationError
-from sunrise._base_client import (
+from contextual import ContextualAI, AsyncContextualAI, APIResponseValidationError
+from contextual._types import Omit
+from contextual._models import BaseModel, FinalRequestOptions
+from contextual._constants import RAW_RESPONSE_HEADER
+from contextual._exceptions import APIStatusError, APITimeoutError, ContextualAIError, APIResponseValidationError
+from contextual._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
@@ -35,7 +35,7 @@ from sunrise._base_client import (
 from .utils import update_env
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
-bearer_token = "My Bearer Token"
+api_key = "My API Key"
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -48,7 +48,7 @@ def _low_retry_timeout(*_args: Any, **_kwargs: Any) -> float:
     return 0.1
 
 
-def _get_open_connections(client: Sunrise | AsyncSunrise) -> int:
+def _get_open_connections(client: ContextualAI | AsyncContextualAI) -> int:
     transport = client._client._transport
     assert isinstance(transport, httpx.HTTPTransport) or isinstance(transport, httpx.AsyncHTTPTransport)
 
@@ -56,8 +56,8 @@ def _get_open_connections(client: Sunrise | AsyncSunrise) -> int:
     return len(pool._requests)
 
 
-class TestSunrise:
-    client = Sunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+class TestContextualAI:
+    client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response(self, respx_mock: MockRouter) -> None:
@@ -83,9 +83,9 @@ class TestSunrise:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(bearer_token="another My Bearer Token")
-        assert copied.bearer_token == "another My Bearer Token"
-        assert self.client.bearer_token == "My Bearer Token"
+        copied = self.client.copy(api_key="another My API Key")
+        assert copied.api_key == "another My API Key"
+        assert self.client.api_key == "My API Key"
 
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
@@ -104,11 +104,8 @@ class TestSunrise:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = Sunrise(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+        client = ContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -141,8 +138,8 @@ class TestSunrise:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = Sunrise(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, default_query={"foo": "bar"}
+        client = ContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -232,10 +229,10 @@ class TestSunrise:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "sunrise/_legacy_response.py",
-                        "sunrise/_response.py",
+                        "contextual/_legacy_response.py",
+                        "contextual/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "sunrise/_compat.py",
+                        "contextual/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -266,8 +263,8 @@ class TestSunrise:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = Sunrise(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, timeout=httpx.Timeout(0)
+        client = ContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -277,8 +274,8 @@ class TestSunrise:
     def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
-            client = Sunrise(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+            client = ContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -287,8 +284,8 @@ class TestSunrise:
 
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
-            client = Sunrise(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+            client = ContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -297,8 +294,8 @@ class TestSunrise:
 
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = Sunrise(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+            client = ContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -308,27 +305,24 @@ class TestSunrise:
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             async with httpx.AsyncClient() as http_client:
-                Sunrise(
+                ContextualAI(
                     base_url=base_url,
-                    bearer_token=bearer_token,
+                    api_key=api_key,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
-        client = Sunrise(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+        client = ContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = Sunrise(
+        client2 = ContextualAI(
             base_url=base_url,
-            bearer_token=bearer_token,
+            api_key=api_key,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -340,21 +334,18 @@ class TestSunrise:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = Sunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {bearer_token}"
+        assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
-        with pytest.raises(SunriseError):
-            with update_env(**{"BEARER_TOKEN": Omit()}):
-                client2 = Sunrise(base_url=base_url, bearer_token=None, _strict_response_validation=True)
+        with pytest.raises(ContextualAIError):
+            with update_env(**{"CONTEXTUAL_API_KEY": Omit()}):
+                client2 = ContextualAI(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = Sunrise(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_query={"query_param": "bar"},
+        client = ContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -467,7 +458,7 @@ class TestSunrise:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, client: Sunrise) -> None:
+    def test_multipart_repeating_array(self, client: ContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions.construct(
                 method="get",
@@ -554,8 +545,8 @@ class TestSunrise:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = Sunrise(
-            base_url="https://example.com/from_init", bearer_token=bearer_token, _strict_response_validation=True
+        client = ContextualAI(
+            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -564,28 +555,26 @@ class TestSunrise:
         assert client.base_url == "https://example.com/from_setter/"
 
     def test_base_url_env(self) -> None:
-        with update_env(SUNRISE_BASE_URL="http://localhost:5000/from/env"):
-            client = Sunrise(bearer_token=bearer_token, _strict_response_validation=True)
+        with update_env(CONTEXTUAL_AI_BASE_URL="http://localhost:5000/from/env"):
+            client = ContextualAI(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            Sunrise(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+            ContextualAI(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            Sunrise(
+            ContextualAI(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: Sunrise) -> None:
+    def test_base_url_trailing_slash(self, client: ContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -598,21 +587,19 @@ class TestSunrise:
     @pytest.mark.parametrize(
         "client",
         [
-            Sunrise(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+            ContextualAI(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            Sunrise(
+            ContextualAI(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: Sunrise) -> None:
+    def test_base_url_no_trailing_slash(self, client: ContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -625,21 +612,19 @@ class TestSunrise:
     @pytest.mark.parametrize(
         "client",
         [
-            Sunrise(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+            ContextualAI(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            Sunrise(
+            ContextualAI(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: Sunrise) -> None:
+    def test_absolute_request_url(self, client: ContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -650,7 +635,7 @@ class TestSunrise:
         assert request.url == "https://myapi.com/foo"
 
     def test_copied_client_does_not_close_http(self) -> None:
-        client = Sunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -661,7 +646,7 @@ class TestSunrise:
         assert not client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        client = Sunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -682,11 +667,8 @@ class TestSunrise:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            Sunrise(
-                base_url=base_url,
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
+            ContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -696,12 +678,12 @@ class TestSunrise:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = Sunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        strict_client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        client = Sunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=False)
+        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -729,14 +711,14 @@ class TestSunrise:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = Sunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -751,7 +733,7 @@ class TestSunrise:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(return_value=httpx.Response(500))
@@ -767,12 +749,12 @@ class TestSunrise:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
         self,
-        client: Sunrise,
+        client: ContextualAI,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -798,10 +780,10 @@ class TestSunrise:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_omit_retry_count_header(
-        self, client: Sunrise, failures_before_success: int, respx_mock: MockRouter
+        self, client: ContextualAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -823,10 +805,10 @@ class TestSunrise:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
-        self, client: Sunrise, failures_before_success: int, respx_mock: MockRouter
+        self, client: ContextualAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -848,8 +830,8 @@ class TestSunrise:
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
 
-class TestAsyncSunrise:
-    client = AsyncSunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+class TestAsyncContextualAI:
+    client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
@@ -877,9 +859,9 @@ class TestAsyncSunrise:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(bearer_token="another My Bearer Token")
-        assert copied.bearer_token == "another My Bearer Token"
-        assert self.client.bearer_token == "My Bearer Token"
+        copied = self.client.copy(api_key="another My API Key")
+        assert copied.api_key == "another My API Key"
+        assert self.client.api_key == "My API Key"
 
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
@@ -898,11 +880,8 @@ class TestAsyncSunrise:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = AsyncSunrise(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+        client = AsyncContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -935,8 +914,8 @@ class TestAsyncSunrise:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = AsyncSunrise(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, default_query={"foo": "bar"}
+        client = AsyncContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -1026,10 +1005,10 @@ class TestAsyncSunrise:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "sunrise/_legacy_response.py",
-                        "sunrise/_response.py",
+                        "contextual/_legacy_response.py",
+                        "contextual/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "sunrise/_compat.py",
+                        "contextual/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -1060,8 +1039,8 @@ class TestAsyncSunrise:
         assert timeout == httpx.Timeout(100.0)
 
     async def test_client_timeout_option(self) -> None:
-        client = AsyncSunrise(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, timeout=httpx.Timeout(0)
+        client = AsyncContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1071,8 +1050,8 @@ class TestAsyncSunrise:
     async def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
-            client = AsyncSunrise(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+            client = AsyncContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1081,8 +1060,8 @@ class TestAsyncSunrise:
 
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
-            client = AsyncSunrise(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+            client = AsyncContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1091,8 +1070,8 @@ class TestAsyncSunrise:
 
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = AsyncSunrise(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+            client = AsyncContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1102,27 +1081,24 @@ class TestAsyncSunrise:
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             with httpx.Client() as http_client:
-                AsyncSunrise(
+                AsyncContextualAI(
                     base_url=base_url,
-                    bearer_token=bearer_token,
+                    api_key=api_key,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
-        client = AsyncSunrise(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+        client = AsyncContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = AsyncSunrise(
+        client2 = AsyncContextualAI(
             base_url=base_url,
-            bearer_token=bearer_token,
+            api_key=api_key,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -1134,21 +1110,18 @@ class TestAsyncSunrise:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = AsyncSunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {bearer_token}"
+        assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
-        with pytest.raises(SunriseError):
-            with update_env(**{"BEARER_TOKEN": Omit()}):
-                client2 = AsyncSunrise(base_url=base_url, bearer_token=None, _strict_response_validation=True)
+        with pytest.raises(ContextualAIError):
+            with update_env(**{"CONTEXTUAL_API_KEY": Omit()}):
+                client2 = AsyncContextualAI(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = AsyncSunrise(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_query={"query_param": "bar"},
+        client = AsyncContextualAI(
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -1261,7 +1234,7 @@ class TestAsyncSunrise:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, async_client: AsyncSunrise) -> None:
+    def test_multipart_repeating_array(self, async_client: AsyncContextualAI) -> None:
         request = async_client._build_request(
             FinalRequestOptions.construct(
                 method="get",
@@ -1348,8 +1321,8 @@ class TestAsyncSunrise:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = AsyncSunrise(
-            base_url="https://example.com/from_init", bearer_token=bearer_token, _strict_response_validation=True
+        client = AsyncContextualAI(
+            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -1358,28 +1331,26 @@ class TestAsyncSunrise:
         assert client.base_url == "https://example.com/from_setter/"
 
     def test_base_url_env(self) -> None:
-        with update_env(SUNRISE_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncSunrise(bearer_token=bearer_token, _strict_response_validation=True)
+        with update_env(CONTEXTUAL_AI_BASE_URL="http://localhost:5000/from/env"):
+            client = AsyncContextualAI(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncSunrise(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+            AsyncContextualAI(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncSunrise(
+            AsyncContextualAI(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: AsyncSunrise) -> None:
+    def test_base_url_trailing_slash(self, client: AsyncContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1392,21 +1363,19 @@ class TestAsyncSunrise:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncSunrise(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+            AsyncContextualAI(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncSunrise(
+            AsyncContextualAI(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: AsyncSunrise) -> None:
+    def test_base_url_no_trailing_slash(self, client: AsyncContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1419,21 +1388,19 @@ class TestAsyncSunrise:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncSunrise(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+            AsyncContextualAI(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncSunrise(
+            AsyncContextualAI(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: AsyncSunrise) -> None:
+    def test_absolute_request_url(self, client: AsyncContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1444,7 +1411,7 @@ class TestAsyncSunrise:
         assert request.url == "https://myapi.com/foo"
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        client = AsyncSunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -1456,7 +1423,7 @@ class TestAsyncSunrise:
         assert not client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        client = AsyncSunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         async with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -1478,11 +1445,8 @@ class TestAsyncSunrise:
 
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            AsyncSunrise(
-                base_url=base_url,
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
+            AsyncContextualAI(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -1493,12 +1457,12 @@ class TestAsyncSunrise:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncSunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        strict_client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        client = AsyncSunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=False)
+        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = await client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1527,14 +1491,14 @@ class TestAsyncSunrise:
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
     async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AsyncSunrise(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -1549,7 +1513,7 @@ class TestAsyncSunrise:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(return_value=httpx.Response(500))
@@ -1565,13 +1529,13 @@ class TestAsyncSunrise:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
-        async_client: AsyncSunrise,
+        async_client: AsyncContextualAI,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -1597,11 +1561,11 @@ class TestAsyncSunrise:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_omit_retry_count_header(
-        self, async_client: AsyncSunrise, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncContextualAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1623,11 +1587,11 @@ class TestAsyncSunrise:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("sunrise._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_overwrite_retry_count_header(
-        self, async_client: AsyncSunrise, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncContextualAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1659,8 +1623,8 @@ class TestAsyncSunrise:
         import nest_asyncio
         import threading
 
-        from sunrise._utils import asyncify
-        from sunrise._base_client import get_platform 
+        from contextual._utils import asyncify
+        from contextual._base_client import get_platform 
 
         async def test_main() -> None:
             result = await asyncify(get_platform)()

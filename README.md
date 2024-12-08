@@ -1,8 +1,8 @@
-# Sunrise Python API library
+# Contextual AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/sunrise.svg)](https://pypi.org/project/sunrise/)
+[![PyPI version](https://img.shields.io/pypi/v/contextual.svg)](https://pypi.org/project/contextual/)
 
-The Sunrise Python library provides convenient access to the Sunrise REST API from any Python 3.8+
+The Contextual AI Python library provides convenient access to the Contextual AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -10,7 +10,7 @@ It is generated with [Stainless](https://www.stainlessapi.com/).
 
 ## Documentation
 
-The REST API documentation can be found on [docs.sunrise.com](https://docs.sunrise.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.contextual.ai](https://docs.contextual.ai). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/stainless-sdks/sunrise-python.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre sunrise`
+> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre contextual`
 
 ## Usage
 
@@ -28,10 +28,10 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from sunrise import Sunrise
+from contextual import ContextualAI
 
-client = Sunrise(
-    bearer_token=os.environ.get("BEARER_TOKEN"),  # This is the default and can be omitted
+client = ContextualAI(
+    api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
 )
 
 create_datastore_output = client.datastores.create(
@@ -40,22 +40,22 @@ create_datastore_output = client.datastores.create(
 print(create_datastore_output.id)
 ```
 
-While you can provide a `bearer_token` keyword argument,
+While you can provide an `api_key` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `BEARER_TOKEN="My Bearer Token"` to your `.env` file
-so that your Bearer Token is not stored in source control.
+to add `CONTEXTUAL_API_KEY="My API Key"` to your `.env` file
+so that your API Key is not stored in source control.
 
 ## Async usage
 
-Simply import `AsyncSunrise` instead of `Sunrise` and use `await` with each API call:
+Simply import `AsyncContextualAI` instead of `ContextualAI` and use `await` with each API call:
 
 ```python
 import os
 import asyncio
-from sunrise import AsyncSunrise
+from contextual import AsyncContextualAI
 
-client = AsyncSunrise(
-    bearer_token=os.environ.get("BEARER_TOKEN"),  # This is the default and can be omitted
+client = AsyncContextualAI(
+    api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
 )
 
 
@@ -82,29 +82,29 @@ Typed requests and responses provide autocomplete and documentation within your 
 
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `sunrise.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `contextual.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `sunrise.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `contextual.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `sunrise.APIError`.
+All errors inherit from `contextual.APIError`.
 
 ```python
-import sunrise
-from sunrise import Sunrise
+import contextual
+from contextual import ContextualAI
 
-client = Sunrise()
+client = ContextualAI()
 
 try:
     client.datastores.create(
         name="name",
     )
-except sunrise.APIConnectionError as e:
+except contextual.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except sunrise.RateLimitError as e:
+except contextual.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except sunrise.APIStatusError as e:
+except contextual.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -132,10 +132,10 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from sunrise import Sunrise
+from contextual import ContextualAI
 
 # Configure the default for all requests:
-client = Sunrise(
+client = ContextualAI(
     # default is 2
     max_retries=0,
 )
@@ -152,16 +152,16 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
 
 ```python
-from sunrise import Sunrise
+from contextual import ContextualAI
 
 # Configure the default for all requests:
-client = Sunrise(
+client = ContextualAI(
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
-client = Sunrise(
+client = ContextualAI(
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -181,10 +181,10 @@ Note that requests that time out are [retried twice by default](#retries).
 
 We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
 
-You can enable logging by setting the environment variable `SUNRISE_LOG` to `info`.
+You can enable logging by setting the environment variable `CONTEXTUAL_AI_LOG` to `info`.
 
 ```shell
-$ export SUNRISE_LOG=info
+$ export CONTEXTUAL_AI_LOG=info
 ```
 
 Or to `debug` for more verbose logging.
@@ -206,9 +206,9 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from sunrise import Sunrise
+from contextual import ContextualAI
 
-client = Sunrise()
+client = ContextualAI()
 response = client.datastores.with_raw_response.create(
     name="name",
 )
@@ -218,9 +218,9 @@ datastore = response.parse()  # get the object that `datastores.create()` would 
 print(datastore.id)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/sunrise/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/sunrise/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -284,10 +284,10 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 - Additional [advanced](https://www.python-httpx.org/advanced/clients/) functionality
 
 ```python
-from sunrise import Sunrise, DefaultHttpxClient
+from contextual import ContextualAI, DefaultHttpxClient
 
-client = Sunrise(
-    # Or use the `SUNRISE_BASE_URL` env var
+client = ContextualAI(
+    # Or use the `CONTEXTUAL_AI_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
         proxies="http://my.test.proxy.example.com",
@@ -325,8 +325,8 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import sunrise
-print(sunrise.__version__)
+import contextual
+print(contextual.__version__)
 ```
 
 ## Requirements

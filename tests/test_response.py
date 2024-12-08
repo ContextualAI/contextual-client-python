@@ -6,8 +6,8 @@ import httpx
 import pytest
 import pydantic
 
-from sunrise import Sunrise, BaseModel, AsyncSunrise
-from sunrise._response import (
+from contextual import BaseModel, ContextualAI, AsyncContextualAI
+from contextual._response import (
     APIResponse,
     BaseAPIResponse,
     AsyncAPIResponse,
@@ -15,8 +15,8 @@ from sunrise._response import (
     AsyncBinaryAPIResponse,
     extract_response_type,
 )
-from sunrise._streaming import Stream
-from sunrise._base_client import FinalRequestOptions
+from contextual._streaming import Stream
+from contextual._base_client import FinalRequestOptions
 
 
 class ConcreteBaseAPIResponse(APIResponse[bytes]): ...
@@ -37,7 +37,7 @@ def test_extract_response_type_direct_classes() -> None:
 def test_extract_response_type_direct_class_missing_type_arg() -> None:
     with pytest.raises(
         RuntimeError,
-        match="Expected type <class 'sunrise._response.AsyncAPIResponse'> to have a type argument at index 0 but it did not",
+        match="Expected type <class 'contextual._response.AsyncAPIResponse'> to have a type argument at index 0 but it did not",
     ):
         extract_response_type(AsyncAPIResponse)
 
@@ -56,7 +56,7 @@ def test_extract_response_type_binary_response() -> None:
 class PydanticModel(pydantic.BaseModel): ...
 
 
-def test_response_parse_mismatched_basemodel(client: Sunrise) -> None:
+def test_response_parse_mismatched_basemodel(client: ContextualAI) -> None:
     response = APIResponse(
         raw=httpx.Response(200, content=b"foo"),
         client=client,
@@ -68,13 +68,13 @@ def test_response_parse_mismatched_basemodel(client: Sunrise) -> None:
 
     with pytest.raises(
         TypeError,
-        match="Pydantic models must subclass our base model type, e.g. `from sunrise import BaseModel`",
+        match="Pydantic models must subclass our base model type, e.g. `from contextual import BaseModel`",
     ):
         response.parse(to=PydanticModel)
 
 
 @pytest.mark.asyncio
-async def test_async_response_parse_mismatched_basemodel(async_client: AsyncSunrise) -> None:
+async def test_async_response_parse_mismatched_basemodel(async_client: AsyncContextualAI) -> None:
     response = AsyncAPIResponse(
         raw=httpx.Response(200, content=b"foo"),
         client=async_client,
@@ -86,12 +86,12 @@ async def test_async_response_parse_mismatched_basemodel(async_client: AsyncSunr
 
     with pytest.raises(
         TypeError,
-        match="Pydantic models must subclass our base model type, e.g. `from sunrise import BaseModel`",
+        match="Pydantic models must subclass our base model type, e.g. `from contextual import BaseModel`",
     ):
         await response.parse(to=PydanticModel)
 
 
-def test_response_parse_custom_stream(client: Sunrise) -> None:
+def test_response_parse_custom_stream(client: ContextualAI) -> None:
     response = APIResponse(
         raw=httpx.Response(200, content=b"foo"),
         client=client,
@@ -106,7 +106,7 @@ def test_response_parse_custom_stream(client: Sunrise) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_response_parse_custom_stream(async_client: AsyncSunrise) -> None:
+async def test_async_response_parse_custom_stream(async_client: AsyncContextualAI) -> None:
     response = AsyncAPIResponse(
         raw=httpx.Response(200, content=b"foo"),
         client=async_client,
@@ -125,7 +125,7 @@ class CustomModel(BaseModel):
     bar: int
 
 
-def test_response_parse_custom_model(client: Sunrise) -> None:
+def test_response_parse_custom_model(client: ContextualAI) -> None:
     response = APIResponse(
         raw=httpx.Response(200, content=json.dumps({"foo": "hello!", "bar": 2})),
         client=client,
@@ -141,7 +141,7 @@ def test_response_parse_custom_model(client: Sunrise) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_response_parse_custom_model(async_client: AsyncSunrise) -> None:
+async def test_async_response_parse_custom_model(async_client: AsyncContextualAI) -> None:
     response = AsyncAPIResponse(
         raw=httpx.Response(200, content=json.dumps({"foo": "hello!", "bar": 2})),
         client=async_client,
@@ -156,7 +156,7 @@ async def test_async_response_parse_custom_model(async_client: AsyncSunrise) -> 
     assert obj.bar == 2
 
 
-def test_response_parse_annotated_type(client: Sunrise) -> None:
+def test_response_parse_annotated_type(client: ContextualAI) -> None:
     response = APIResponse(
         raw=httpx.Response(200, content=json.dumps({"foo": "hello!", "bar": 2})),
         client=client,
@@ -173,7 +173,7 @@ def test_response_parse_annotated_type(client: Sunrise) -> None:
     assert obj.bar == 2
 
 
-async def test_async_response_parse_annotated_type(async_client: AsyncSunrise) -> None:
+async def test_async_response_parse_annotated_type(async_client: AsyncContextualAI) -> None:
     response = AsyncAPIResponse(
         raw=httpx.Response(200, content=json.dumps({"foo": "hello!", "bar": 2})),
         client=async_client,
@@ -201,7 +201,7 @@ async def test_async_response_parse_annotated_type(async_client: AsyncSunrise) -
         ("FalSe", False),
     ],
 )
-def test_response_parse_bool(client: Sunrise, content: str, expected: bool) -> None:
+def test_response_parse_bool(client: ContextualAI, content: str, expected: bool) -> None:
     response = APIResponse(
         raw=httpx.Response(200, content=content),
         client=client,
@@ -226,7 +226,7 @@ def test_response_parse_bool(client: Sunrise, content: str, expected: bool) -> N
         ("FalSe", False),
     ],
 )
-async def test_async_response_parse_bool(client: AsyncSunrise, content: str, expected: bool) -> None:
+async def test_async_response_parse_bool(client: AsyncContextualAI, content: str, expected: bool) -> None:
     response = AsyncAPIResponse(
         raw=httpx.Response(200, content=content),
         client=client,
@@ -245,7 +245,7 @@ class OtherModel(BaseModel):
 
 
 @pytest.mark.parametrize("client", [False], indirect=True)  # loose validation
-def test_response_parse_expect_model_union_non_json_content(client: Sunrise) -> None:
+def test_response_parse_expect_model_union_non_json_content(client: ContextualAI) -> None:
     response = APIResponse(
         raw=httpx.Response(200, content=b"foo", headers={"Content-Type": "application/text"}),
         client=client,
@@ -262,7 +262,7 @@ def test_response_parse_expect_model_union_non_json_content(client: Sunrise) -> 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("async_client", [False], indirect=True)  # loose validation
-async def test_async_response_parse_expect_model_union_non_json_content(async_client: AsyncSunrise) -> None:
+async def test_async_response_parse_expect_model_union_non_json_content(async_client: AsyncContextualAI) -> None:
     response = AsyncAPIResponse(
         raw=httpx.Response(200, content=b"foo", headers={"Content-Type": "application/text"}),
         client=async_client,

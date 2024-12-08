@@ -25,7 +25,7 @@ from ._utils import (
 )
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import SunriseError, APIStatusError
+from ._exceptions import APIStatusError, ContextualAIError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -38,26 +38,26 @@ __all__ = [
     "ProxiesTypes",
     "RequestOptions",
     "resources",
-    "Sunrise",
-    "AsyncSunrise",
+    "ContextualAI",
+    "AsyncContextualAI",
     "Client",
     "AsyncClient",
 ]
 
 
-class Sunrise(SyncAPIClient):
+class ContextualAI(SyncAPIClient):
     datastores: resources.DatastoresResource
     applications: resources.ApplicationsResource
-    with_raw_response: SunriseWithRawResponse
-    with_streaming_response: SunriseWithStreamedResponse
+    with_raw_response: ContextualAIWithRawResponse
+    with_streaming_response: ContextualAIWithStreamedResponse
 
     # client options
-    bearer_token: str
+    api_key: str
 
     def __init__(
         self,
         *,
-        bearer_token: str | None = None,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -77,20 +77,20 @@ class Sunrise(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous sunrise client instance.
+        """Construct a new synchronous Contextual AI client instance.
 
-        This automatically infers the `bearer_token` argument from the `BEARER_TOKEN` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `CONTEXTUAL_API_KEY` environment variable if it is not provided.
         """
-        if bearer_token is None:
-            bearer_token = os.environ.get("BEARER_TOKEN")
-        if bearer_token is None:
-            raise SunriseError(
-                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the BEARER_TOKEN environment variable"
+        if api_key is None:
+            api_key = os.environ.get("CONTEXTUAL_API_KEY")
+        if api_key is None:
+            raise ContextualAIError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the CONTEXTUAL_API_KEY environment variable"
             )
-        self.bearer_token = bearer_token
+        self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("SUNRISE_BASE_URL")
+            base_url = os.environ.get("CONTEXTUAL_AI_BASE_URL")
         if base_url is None:
             base_url = f"https://api.contextual.ai/v1"
 
@@ -107,8 +107,8 @@ class Sunrise(SyncAPIClient):
 
         self.datastores = resources.DatastoresResource(self)
         self.applications = resources.ApplicationsResource(self)
-        self.with_raw_response = SunriseWithRawResponse(self)
-        self.with_streaming_response = SunriseWithStreamedResponse(self)
+        self.with_raw_response = ContextualAIWithRawResponse(self)
+        self.with_streaming_response = ContextualAIWithStreamedResponse(self)
 
     @property
     @override
@@ -118,8 +118,8 @@ class Sunrise(SyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        bearer_token = self.bearer_token
-        return {"Authorization": f"Bearer {bearer_token}"}
+        api_key = self.api_key
+        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -133,7 +133,7 @@ class Sunrise(SyncAPIClient):
     def copy(
         self,
         *,
-        bearer_token: str | None = None,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.Client | None = None,
@@ -167,7 +167,7 @@ class Sunrise(SyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
-            bearer_token=bearer_token or self.bearer_token,
+            api_key=api_key or self.api_key,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -215,19 +215,19 @@ class Sunrise(SyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AsyncSunrise(AsyncAPIClient):
+class AsyncContextualAI(AsyncAPIClient):
     datastores: resources.AsyncDatastoresResource
     applications: resources.AsyncApplicationsResource
-    with_raw_response: AsyncSunriseWithRawResponse
-    with_streaming_response: AsyncSunriseWithStreamedResponse
+    with_raw_response: AsyncContextualAIWithRawResponse
+    with_streaming_response: AsyncContextualAIWithStreamedResponse
 
     # client options
-    bearer_token: str
+    api_key: str
 
     def __init__(
         self,
         *,
-        bearer_token: str | None = None,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -247,20 +247,20 @@ class AsyncSunrise(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async sunrise client instance.
+        """Construct a new async Contextual AI client instance.
 
-        This automatically infers the `bearer_token` argument from the `BEARER_TOKEN` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `CONTEXTUAL_API_KEY` environment variable if it is not provided.
         """
-        if bearer_token is None:
-            bearer_token = os.environ.get("BEARER_TOKEN")
-        if bearer_token is None:
-            raise SunriseError(
-                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the BEARER_TOKEN environment variable"
+        if api_key is None:
+            api_key = os.environ.get("CONTEXTUAL_API_KEY")
+        if api_key is None:
+            raise ContextualAIError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the CONTEXTUAL_API_KEY environment variable"
             )
-        self.bearer_token = bearer_token
+        self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("SUNRISE_BASE_URL")
+            base_url = os.environ.get("CONTEXTUAL_AI_BASE_URL")
         if base_url is None:
             base_url = f"https://api.contextual.ai/v1"
 
@@ -277,8 +277,8 @@ class AsyncSunrise(AsyncAPIClient):
 
         self.datastores = resources.AsyncDatastoresResource(self)
         self.applications = resources.AsyncApplicationsResource(self)
-        self.with_raw_response = AsyncSunriseWithRawResponse(self)
-        self.with_streaming_response = AsyncSunriseWithStreamedResponse(self)
+        self.with_raw_response = AsyncContextualAIWithRawResponse(self)
+        self.with_streaming_response = AsyncContextualAIWithStreamedResponse(self)
 
     @property
     @override
@@ -288,8 +288,8 @@ class AsyncSunrise(AsyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        bearer_token = self.bearer_token
-        return {"Authorization": f"Bearer {bearer_token}"}
+        api_key = self.api_key
+        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -303,7 +303,7 @@ class AsyncSunrise(AsyncAPIClient):
     def copy(
         self,
         *,
-        bearer_token: str | None = None,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.AsyncClient | None = None,
@@ -337,7 +337,7 @@ class AsyncSunrise(AsyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
-            bearer_token=bearer_token or self.bearer_token,
+            api_key=api_key or self.api_key,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -385,30 +385,30 @@ class AsyncSunrise(AsyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class SunriseWithRawResponse:
-    def __init__(self, client: Sunrise) -> None:
+class ContextualAIWithRawResponse:
+    def __init__(self, client: ContextualAI) -> None:
         self.datastores = resources.DatastoresResourceWithRawResponse(client.datastores)
         self.applications = resources.ApplicationsResourceWithRawResponse(client.applications)
 
 
-class AsyncSunriseWithRawResponse:
-    def __init__(self, client: AsyncSunrise) -> None:
+class AsyncContextualAIWithRawResponse:
+    def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = resources.AsyncDatastoresResourceWithRawResponse(client.datastores)
         self.applications = resources.AsyncApplicationsResourceWithRawResponse(client.applications)
 
 
-class SunriseWithStreamedResponse:
-    def __init__(self, client: Sunrise) -> None:
+class ContextualAIWithStreamedResponse:
+    def __init__(self, client: ContextualAI) -> None:
         self.datastores = resources.DatastoresResourceWithStreamingResponse(client.datastores)
         self.applications = resources.ApplicationsResourceWithStreamingResponse(client.applications)
 
 
-class AsyncSunriseWithStreamedResponse:
-    def __init__(self, client: AsyncSunrise) -> None:
+class AsyncContextualAIWithStreamedResponse:
+    def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = resources.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
         self.applications = resources.AsyncApplicationsResourceWithStreamingResponse(client.applications)
 
 
-Client = Sunrise
+Client = ContextualAI
 
-AsyncClient = AsyncSunrise
+AsyncClient = AsyncContextualAI

@@ -7,10 +7,10 @@ from typing import Any, cast
 
 import pytest
 
-from sunrise import Sunrise, AsyncSunrise
+from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from sunrise._utils import parse_datetime
-from sunrise.types.datastores import (
+from contextual._utils import parse_datetime
+from contextual.types.datastores import (
     IngestionResponse,
     GetDocumentsResponse,
 )
@@ -22,7 +22,7 @@ class TestDocuments:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
-    def test_method_create(self, client: Sunrise) -> None:
+    def test_method_create(self, client: ContextualAI) -> None:
         document = client.datastores.documents.create(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
@@ -30,7 +30,7 @@ class TestDocuments:
         assert_matches_type(IngestionResponse, document, path=["response"])
 
     @parametrize
-    def test_raw_response_create(self, client: Sunrise) -> None:
+    def test_raw_response_create(self, client: ContextualAI) -> None:
         response = client.datastores.documents.with_raw_response.create(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
@@ -42,7 +42,7 @@ class TestDocuments:
         assert_matches_type(IngestionResponse, document, path=["response"])
 
     @parametrize
-    def test_streaming_response_create(self, client: Sunrise) -> None:
+    def test_streaming_response_create(self, client: ContextualAI) -> None:
         with client.datastores.documents.with_streaming_response.create(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
@@ -56,7 +56,7 @@ class TestDocuments:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    def test_path_params_create(self, client: Sunrise) -> None:
+    def test_path_params_create(self, client: ContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             client.datastores.documents.with_raw_response.create(
                 datastore_id="",
@@ -64,14 +64,14 @@ class TestDocuments:
             )
 
     @parametrize
-    def test_method_list(self, client: Sunrise) -> None:
+    def test_method_list(self, client: ContextualAI) -> None:
         document = client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(GetDocumentsResponse, document, path=["response"])
 
     @parametrize
-    def test_method_list_with_all_params(self, client: Sunrise) -> None:
+    def test_method_list_with_all_params(self, client: ContextualAI) -> None:
         document = client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
@@ -83,7 +83,7 @@ class TestDocuments:
         assert_matches_type(GetDocumentsResponse, document, path=["response"])
 
     @parametrize
-    def test_raw_response_list(self, client: Sunrise) -> None:
+    def test_raw_response_list(self, client: ContextualAI) -> None:
         response = client.datastores.documents.with_raw_response.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -94,7 +94,7 @@ class TestDocuments:
         assert_matches_type(GetDocumentsResponse, document, path=["response"])
 
     @parametrize
-    def test_streaming_response_list(self, client: Sunrise) -> None:
+    def test_streaming_response_list(self, client: ContextualAI) -> None:
         with client.datastores.documents.with_streaming_response.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         ) as response:
@@ -107,14 +107,14 @@ class TestDocuments:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    def test_path_params_list(self, client: Sunrise) -> None:
+    def test_path_params_list(self, client: ContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             client.datastores.documents.with_raw_response.list(
                 datastore_id="",
             )
 
     @parametrize
-    def test_method_delete(self, client: Sunrise) -> None:
+    def test_method_delete(self, client: ContextualAI) -> None:
         document = client.datastores.documents.delete(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -122,7 +122,7 @@ class TestDocuments:
         assert_matches_type(object, document, path=["response"])
 
     @parametrize
-    def test_raw_response_delete(self, client: Sunrise) -> None:
+    def test_raw_response_delete(self, client: ContextualAI) -> None:
         response = client.datastores.documents.with_raw_response.delete(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -134,7 +134,7 @@ class TestDocuments:
         assert_matches_type(object, document, path=["response"])
 
     @parametrize
-    def test_streaming_response_delete(self, client: Sunrise) -> None:
+    def test_streaming_response_delete(self, client: ContextualAI) -> None:
         with client.datastores.documents.with_streaming_response.delete(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -148,7 +148,7 @@ class TestDocuments:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    def test_path_params_delete(self, client: Sunrise) -> None:
+    def test_path_params_delete(self, client: ContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             client.datastores.documents.with_raw_response.delete(
                 document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -166,7 +166,7 @@ class TestAsyncDocuments:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
-    async def test_method_create(self, async_client: AsyncSunrise) -> None:
+    async def test_method_create(self, async_client: AsyncContextualAI) -> None:
         document = await async_client.datastores.documents.create(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
@@ -174,7 +174,7 @@ class TestAsyncDocuments:
         assert_matches_type(IngestionResponse, document, path=["response"])
 
     @parametrize
-    async def test_raw_response_create(self, async_client: AsyncSunrise) -> None:
+    async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
         response = await async_client.datastores.documents.with_raw_response.create(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
@@ -186,7 +186,7 @@ class TestAsyncDocuments:
         assert_matches_type(IngestionResponse, document, path=["response"])
 
     @parametrize
-    async def test_streaming_response_create(self, async_client: AsyncSunrise) -> None:
+    async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
         async with async_client.datastores.documents.with_streaming_response.create(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
@@ -200,7 +200,7 @@ class TestAsyncDocuments:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_path_params_create(self, async_client: AsyncSunrise) -> None:
+    async def test_path_params_create(self, async_client: AsyncContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             await async_client.datastores.documents.with_raw_response.create(
                 datastore_id="",
@@ -208,14 +208,14 @@ class TestAsyncDocuments:
             )
 
     @parametrize
-    async def test_method_list(self, async_client: AsyncSunrise) -> None:
+    async def test_method_list(self, async_client: AsyncContextualAI) -> None:
         document = await async_client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(GetDocumentsResponse, document, path=["response"])
 
     @parametrize
-    async def test_method_list_with_all_params(self, async_client: AsyncSunrise) -> None:
+    async def test_method_list_with_all_params(self, async_client: AsyncContextualAI) -> None:
         document = await async_client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
@@ -227,7 +227,7 @@ class TestAsyncDocuments:
         assert_matches_type(GetDocumentsResponse, document, path=["response"])
 
     @parametrize
-    async def test_raw_response_list(self, async_client: AsyncSunrise) -> None:
+    async def test_raw_response_list(self, async_client: AsyncContextualAI) -> None:
         response = await async_client.datastores.documents.with_raw_response.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -238,7 +238,7 @@ class TestAsyncDocuments:
         assert_matches_type(GetDocumentsResponse, document, path=["response"])
 
     @parametrize
-    async def test_streaming_response_list(self, async_client: AsyncSunrise) -> None:
+    async def test_streaming_response_list(self, async_client: AsyncContextualAI) -> None:
         async with async_client.datastores.documents.with_streaming_response.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         ) as response:
@@ -251,14 +251,14 @@ class TestAsyncDocuments:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_path_params_list(self, async_client: AsyncSunrise) -> None:
+    async def test_path_params_list(self, async_client: AsyncContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             await async_client.datastores.documents.with_raw_response.list(
                 datastore_id="",
             )
 
     @parametrize
-    async def test_method_delete(self, async_client: AsyncSunrise) -> None:
+    async def test_method_delete(self, async_client: AsyncContextualAI) -> None:
         document = await async_client.datastores.documents.delete(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -266,7 +266,7 @@ class TestAsyncDocuments:
         assert_matches_type(object, document, path=["response"])
 
     @parametrize
-    async def test_raw_response_delete(self, async_client: AsyncSunrise) -> None:
+    async def test_raw_response_delete(self, async_client: AsyncContextualAI) -> None:
         response = await async_client.datastores.documents.with_raw_response.delete(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -278,7 +278,7 @@ class TestAsyncDocuments:
         assert_matches_type(object, document, path=["response"])
 
     @parametrize
-    async def test_streaming_response_delete(self, async_client: AsyncSunrise) -> None:
+    async def test_streaming_response_delete(self, async_client: AsyncContextualAI) -> None:
         async with async_client.datastores.documents.with_streaming_response.delete(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -292,7 +292,7 @@ class TestAsyncDocuments:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_path_params_delete(self, async_client: AsyncSunrise) -> None:
+    async def test_path_params_delete(self, async_client: AsyncContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             await async_client.datastores.documents.with_raw_response.delete(
                 document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",

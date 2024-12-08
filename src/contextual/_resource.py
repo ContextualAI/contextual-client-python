@@ -8,13 +8,13 @@ from typing import TYPE_CHECKING
 import anyio
 
 if TYPE_CHECKING:
-    from ._client import Sunrise, AsyncSunrise
+    from ._client import ContextualAI, AsyncContextualAI
 
 
 class SyncAPIResource:
-    _client: Sunrise
+    _client: ContextualAI
 
-    def __init__(self, client: Sunrise) -> None:
+    def __init__(self, client: ContextualAI) -> None:
         self._client = client
         self._get = client.get
         self._post = client.post
@@ -28,9 +28,9 @@ class SyncAPIResource:
 
 
 class AsyncAPIResource:
-    _client: AsyncSunrise
+    _client: AsyncContextualAI
 
-    def __init__(self, client: AsyncSunrise) -> None:
+    def __init__(self, client: AsyncContextualAI) -> None:
         self._client = client
         self._get = client.get
         self._post = client.post
