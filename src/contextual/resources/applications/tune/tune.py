@@ -6,14 +6,6 @@ from typing import Mapping, cast
 
 import httpx
 
-from .jobs import (
-    JobsResource,
-    AsyncJobsResource,
-    JobsResourceWithRawResponse,
-    AsyncJobsResourceWithRawResponse,
-    JobsResourceWithStreamingResponse,
-    AsyncJobsResourceWithStreamingResponse,
-)
 from .models import (
     ModelsResource,
     AsyncModelsResource,
@@ -29,7 +21,14 @@ from ...._utils import (
     deepcopy_minimal,
     async_maybe_transform,
 )
-from .jobs.jobs import JobsResource, AsyncJobsResource
+from .jobs.jobs import (
+    JobsResource,
+    AsyncJobsResource,
+    JobsResourceWithRawResponse,
+    AsyncJobsResourceWithRawResponse,
+    JobsResourceWithStreamingResponse,
+    AsyncJobsResourceWithStreamingResponse,
+)
 from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
 from ...._response import (

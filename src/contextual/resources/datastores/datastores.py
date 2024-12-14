@@ -19,14 +19,6 @@ from .metadata import (
     AsyncMetadataResourceWithStreamingResponse,
 )
 from ..._compat import cached_property
-from .documents import (
-    DocumentsResource,
-    AsyncDocumentsResource,
-    DocumentsResourceWithRawResponse,
-    AsyncDocumentsResourceWithRawResponse,
-    DocumentsResourceWithStreamingResponse,
-    AsyncDocumentsResourceWithStreamingResponse,
-)
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
     to_raw_response_wrapper,
@@ -36,7 +28,14 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.datastore import Datastore
-from .documents.documents import DocumentsResource, AsyncDocumentsResource
+from .documents.documents import (
+    DocumentsResource,
+    AsyncDocumentsResource,
+    DocumentsResourceWithRawResponse,
+    AsyncDocumentsResourceWithRawResponse,
+    DocumentsResourceWithStreamingResponse,
+    AsyncDocumentsResourceWithStreamingResponse,
+)
 from ...types.create_datastore_output import CreateDatastoreOutput
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
