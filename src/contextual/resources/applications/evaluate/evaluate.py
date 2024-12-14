@@ -7,14 +7,7 @@ from typing_extensions import Literal
 
 import httpx
 
-from ...._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
-from ...._utils import (
-    extract_files,
-    maybe_transform,
-    deepcopy_minimal,
-    async_maybe_transform,
-)
-from .jobs.jobs import (
+from .jobs import (
     JobsResource,
     AsyncJobsResource,
     JobsResourceWithRawResponse,
@@ -22,6 +15,14 @@ from .jobs.jobs import (
     JobsResourceWithStreamingResponse,
     AsyncJobsResourceWithStreamingResponse,
 )
+from ...._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
+from ...._utils import (
+    extract_files,
+    maybe_transform,
+    deepcopy_minimal,
+    async_maybe_transform,
+)
+from .jobs.jobs import JobsResource, AsyncJobsResource
 from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
 from ...._response import (
