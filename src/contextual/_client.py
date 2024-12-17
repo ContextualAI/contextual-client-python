@@ -8,7 +8,7 @@ from typing_extensions import Self, override
 
 import httpx
 
-from . import resources, _exceptions
+from . import _exceptions
 from ._qs import Querystring
 from ._types import (
     NOT_GIVEN,
@@ -31,13 +31,14 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
+from .resources.datastores import datastores
+from .resources.applications import applications
 
 __all__ = [
     "Timeout",
     "Transport",
     "ProxiesTypes",
     "RequestOptions",
-    "resources",
     "ContextualAI",
     "AsyncContextualAI",
     "Client",
@@ -46,8 +47,8 @@ __all__ = [
 
 
 class ContextualAI(SyncAPIClient):
-    datastores: resources.DatastoresResource
-    applications: resources.ApplicationsResource
+    datastores: datastores.DatastoresResource
+    applications: applications.ApplicationsResource
     with_raw_response: ContextualAIWithRawResponse
     with_streaming_response: ContextualAIWithStreamedResponse
 
@@ -105,8 +106,8 @@ class ContextualAI(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.datastores = resources.DatastoresResource(self)
-        self.applications = resources.ApplicationsResource(self)
+        self.datastores = datastores.DatastoresResource(self)
+        self.applications = applications.ApplicationsResource(self)
         self.with_raw_response = ContextualAIWithRawResponse(self)
         self.with_streaming_response = ContextualAIWithStreamedResponse(self)
 
@@ -216,8 +217,8 @@ class ContextualAI(SyncAPIClient):
 
 
 class AsyncContextualAI(AsyncAPIClient):
-    datastores: resources.AsyncDatastoresResource
-    applications: resources.AsyncApplicationsResource
+    datastores: datastores.AsyncDatastoresResource
+    applications: applications.AsyncApplicationsResource
     with_raw_response: AsyncContextualAIWithRawResponse
     with_streaming_response: AsyncContextualAIWithStreamedResponse
 
@@ -275,8 +276,8 @@ class AsyncContextualAI(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.datastores = resources.AsyncDatastoresResource(self)
-        self.applications = resources.AsyncApplicationsResource(self)
+        self.datastores = datastores.AsyncDatastoresResource(self)
+        self.applications = applications.AsyncApplicationsResource(self)
         self.with_raw_response = AsyncContextualAIWithRawResponse(self)
         self.with_streaming_response = AsyncContextualAIWithStreamedResponse(self)
 
@@ -387,26 +388,26 @@ class AsyncContextualAI(AsyncAPIClient):
 
 class ContextualAIWithRawResponse:
     def __init__(self, client: ContextualAI) -> None:
-        self.datastores = resources.DatastoresResourceWithRawResponse(client.datastores)
-        self.applications = resources.ApplicationsResourceWithRawResponse(client.applications)
+        self.datastores = datastores.DatastoresResourceWithRawResponse(client.datastores)
+        self.applications = applications.ApplicationsResourceWithRawResponse(client.applications)
 
 
 class AsyncContextualAIWithRawResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
-        self.datastores = resources.AsyncDatastoresResourceWithRawResponse(client.datastores)
-        self.applications = resources.AsyncApplicationsResourceWithRawResponse(client.applications)
+        self.datastores = datastores.AsyncDatastoresResourceWithRawResponse(client.datastores)
+        self.applications = applications.AsyncApplicationsResourceWithRawResponse(client.applications)
 
 
 class ContextualAIWithStreamedResponse:
     def __init__(self, client: ContextualAI) -> None:
-        self.datastores = resources.DatastoresResourceWithStreamingResponse(client.datastores)
-        self.applications = resources.ApplicationsResourceWithStreamingResponse(client.applications)
+        self.datastores = datastores.DatastoresResourceWithStreamingResponse(client.datastores)
+        self.applications = applications.ApplicationsResourceWithStreamingResponse(client.applications)
 
 
 class AsyncContextualAIWithStreamedResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
-        self.datastores = resources.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
-        self.applications = resources.AsyncApplicationsResourceWithStreamingResponse(client.applications)
+        self.datastores = datastores.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
+        self.applications = applications.AsyncApplicationsResourceWithStreamingResponse(client.applications)
 
 
 Client = ContextualAI
