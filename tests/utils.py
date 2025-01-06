@@ -8,8 +8,8 @@ from typing import Any, TypeVar, Iterator, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, get_origin, assert_type
 
-from contextual_sdk._types import Omit, NoneType
-from contextual_sdk._utils import (
+from contextual._types import Omit, NoneType
+from contextual._utils import (
     is_dict,
     is_list,
     is_list_type,
@@ -18,8 +18,8 @@ from contextual_sdk._utils import (
     is_annotated_type,
     is_type_alias_type,
 )
-from contextual_sdk._compat import PYDANTIC_V2, field_outer_type, get_model_fields
-from contextual_sdk._models import BaseModel
+from contextual._compat import PYDANTIC_V2, field_outer_type, get_model_fields
+from contextual._models import BaseModel
 
 BaseModelT = TypeVar("BaseModelT", bound=BaseModel)
 

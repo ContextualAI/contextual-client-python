@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import lmunit
+from .resources import standalone
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, ContextualAIError
 from ._base_client import (
@@ -50,7 +50,7 @@ __all__ = [
 class ContextualAI(SyncAPIClient):
     datastores: datastores.DatastoresResource
     applications: applications.ApplicationsResource
-    lmunit: lmunit.LmunitResource
+    standalone: standalone.StandaloneResource
     with_raw_response: ContextualAIWithRawResponse
     with_streaming_response: ContextualAIWithStreamedResponse
 
@@ -110,7 +110,7 @@ class ContextualAI(SyncAPIClient):
 
         self.datastores = datastores.DatastoresResource(self)
         self.applications = applications.ApplicationsResource(self)
-        self.lmunit = lmunit.LmunitResource(self)
+        self.standalone = standalone.StandaloneResource(self)
         self.with_raw_response = ContextualAIWithRawResponse(self)
         self.with_streaming_response = ContextualAIWithStreamedResponse(self)
 
@@ -222,7 +222,7 @@ class ContextualAI(SyncAPIClient):
 class AsyncContextualAI(AsyncAPIClient):
     datastores: datastores.AsyncDatastoresResource
     applications: applications.AsyncApplicationsResource
-    lmunit: lmunit.AsyncLmunitResource
+    standalone: standalone.AsyncStandaloneResource
     with_raw_response: AsyncContextualAIWithRawResponse
     with_streaming_response: AsyncContextualAIWithStreamedResponse
 
@@ -282,7 +282,7 @@ class AsyncContextualAI(AsyncAPIClient):
 
         self.datastores = datastores.AsyncDatastoresResource(self)
         self.applications = applications.AsyncApplicationsResource(self)
-        self.lmunit = lmunit.AsyncLmunitResource(self)
+        self.standalone = standalone.AsyncStandaloneResource(self)
         self.with_raw_response = AsyncContextualAIWithRawResponse(self)
         self.with_streaming_response = AsyncContextualAIWithStreamedResponse(self)
 
@@ -395,28 +395,28 @@ class ContextualAIWithRawResponse:
     def __init__(self, client: ContextualAI) -> None:
         self.datastores = datastores.DatastoresResourceWithRawResponse(client.datastores)
         self.applications = applications.ApplicationsResourceWithRawResponse(client.applications)
-        self.lmunit = lmunit.LmunitResourceWithRawResponse(client.lmunit)
+        self.standalone = standalone.StandaloneResourceWithRawResponse(client.standalone)
 
 
 class AsyncContextualAIWithRawResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = datastores.AsyncDatastoresResourceWithRawResponse(client.datastores)
         self.applications = applications.AsyncApplicationsResourceWithRawResponse(client.applications)
-        self.lmunit = lmunit.AsyncLmunitResourceWithRawResponse(client.lmunit)
+        self.standalone = standalone.AsyncStandaloneResourceWithRawResponse(client.standalone)
 
 
 class ContextualAIWithStreamedResponse:
     def __init__(self, client: ContextualAI) -> None:
         self.datastores = datastores.DatastoresResourceWithStreamingResponse(client.datastores)
         self.applications = applications.ApplicationsResourceWithStreamingResponse(client.applications)
-        self.lmunit = lmunit.LmunitResourceWithStreamingResponse(client.lmunit)
+        self.standalone = standalone.StandaloneResourceWithStreamingResponse(client.standalone)
 
 
 class AsyncContextualAIWithStreamedResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = datastores.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
         self.applications = applications.AsyncApplicationsResourceWithStreamingResponse(client.applications)
-        self.lmunit = lmunit.AsyncLmunitResourceWithStreamingResponse(client.lmunit)
+        self.standalone = standalone.AsyncStandaloneResourceWithStreamingResponse(client.standalone)
 
 
 Client = ContextualAI

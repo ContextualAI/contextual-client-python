@@ -28,7 +28,7 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from contextual_sdk import ContextualAI
+from contextual import ContextualAI
 
 client = ContextualAI(
     api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
@@ -52,7 +52,7 @@ Simply import `AsyncContextualAI` instead of `ContextualAI` and use `await` with
 ```python
 import os
 import asyncio
-from contextual_sdk import AsyncContextualAI
+from contextual import AsyncContextualAI
 
 client = AsyncContextualAI(
     api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
@@ -87,7 +87,7 @@ List methods in the Contextual AI API are paginated.
 This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
 
 ```python
-from contextual_sdk import ContextualAI
+from contextual import ContextualAI
 
 client = ContextualAI()
 
@@ -103,7 +103,7 @@ Or, asynchronously:
 
 ```python
 import asyncio
-from contextual_sdk import AsyncContextualAI
+from contextual import AsyncContextualAI
 
 client = AsyncContextualAI()
 
@@ -145,16 +145,16 @@ for datastore in first_page.datastores:
 
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `contextual_sdk.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `contextual.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `contextual_sdk.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `contextual.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `contextual_sdk.APIError`.
+All errors inherit from `contextual.APIError`.
 
 ```python
-import contextual_sdk
-from contextual_sdk import ContextualAI
+import contextual
+from contextual import ContextualAI
 
 client = ContextualAI()
 
@@ -162,12 +162,12 @@ try:
     client.datastores.create(
         name="name",
     )
-except contextual_sdk.APIConnectionError as e:
+except contextual.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except contextual_sdk.RateLimitError as e:
+except contextual.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except contextual_sdk.APIStatusError as e:
+except contextual.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -195,7 +195,7 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from contextual_sdk import ContextualAI
+from contextual import ContextualAI
 
 # Configure the default for all requests:
 client = ContextualAI(
@@ -215,7 +215,7 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
 
 ```python
-from contextual_sdk import ContextualAI
+from contextual import ContextualAI
 
 # Configure the default for all requests:
 client = ContextualAI(
@@ -269,7 +269,7 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from contextual_sdk import ContextualAI
+from contextual import ContextualAI
 
 client = ContextualAI()
 response = client.datastores.with_raw_response.create(
@@ -281,9 +281,9 @@ datastore = response.parse()  # get the object that `datastores.create()` would 
 print(datastore.id)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual_sdk/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual_sdk/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -348,7 +348,7 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from contextual_sdk import ContextualAI, DefaultHttpxClient
+from contextual import ContextualAI, DefaultHttpxClient
 
 client = ContextualAI(
     # Or use the `CONTEXTUAL_AI_BASE_URL` env var
@@ -371,7 +371,7 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from contextual_sdk import ContextualAI
+from contextual import ContextualAI
 
 with ContextualAI() as client:
   # make requests here
@@ -399,8 +399,8 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import contextual_sdk
-print(contextual_sdk.__version__)
+import contextual
+print(contextual.__version__)
 ```
 
 ## Requirements

@@ -7,10 +7,10 @@ from typing import Any, cast
 
 import pytest
 
+from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from contextual_sdk import ContextualAI, AsyncContextualAI
-from contextual_sdk._utils import parse_datetime
-from contextual_sdk.types.applications.query import MetricRetrieveResponse
+from contextual._utils import parse_datetime
+from contextual.types.applications.query import MetricRetrieveResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 

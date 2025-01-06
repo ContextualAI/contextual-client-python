@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["LmunitScoreParams"]
+__all__ = ["StandaloneLmunitParams"]
 
 
-class LmunitScoreParams(TypedDict, total=False):
+class StandaloneLmunitParams(TypedDict, total=False):
     query: Required[str]
     """The prompt to which the model responds"""
 
