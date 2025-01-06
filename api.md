@@ -44,7 +44,7 @@ from contextual.types.datastores import (
 Methods:
 
 - <code title="post /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents/documents.py">create</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_create_params.py">params</a>) -> <a href="./src/contextual/types/datastores/ingestion_response.py">IngestionResponse</a></code>
-- <code title="get /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents/documents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/get_documents_response.py">GetDocumentsResponse</a></code>
+- <code title="get /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents/documents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/documents/document_description.py">SyncDatastoresDocumentsListPagination[DocumentDescription]</a></code>
 - <code title="delete /datastores/{datastore_id}/documents/{document_id}">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents/documents.py">delete</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_delete_response.py">object</a></code>
 
 ### Metadata
@@ -68,6 +68,7 @@ from contextual.types import (
     ApplicationList,
     CreateApplicationOutput,
     ApplicationUpdateResponse,
+    ApplicationListResponse,
     ApplicationDeleteResponse,
 )
 ```
@@ -76,7 +77,7 @@ Methods:
 
 - <code title="post /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">create</a>(\*\*<a href="src/contextual/types/application_create_params.py">params</a>) -> <a href="./src/contextual/types/create_application_output.py">CreateApplicationOutput</a></code>
 - <code title="put /applications/{application_id}">client.applications.<a href="./src/contextual/resources/applications/applications.py">update</a>(application_id, \*\*<a href="src/contextual/types/application_update_params.py">params</a>) -> <a href="./src/contextual/types/application_update_response.py">object</a></code>
-- <code title="get /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">list</a>(\*\*<a href="src/contextual/types/application_list_params.py">params</a>) -> <a href="./src/contextual/types/application_list.py">ApplicationList</a></code>
+- <code title="get /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">list</a>(\*\*<a href="src/contextual/types/application_list_params.py">params</a>) -> <a href="./src/contextual/types/application_list_response.py">SyncApplicationsListPagination[ApplicationListResponse]</a></code>
 - <code title="delete /applications/{application_id}">client.applications.<a href="./src/contextual/resources/applications/applications.py">delete</a>(application_id) -> <a href="./src/contextual/types/application_delete_response.py">object</a></code>
 
 ## Metadata
