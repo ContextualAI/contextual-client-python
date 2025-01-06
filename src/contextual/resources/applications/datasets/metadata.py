@@ -57,10 +57,12 @@ class MetadataResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetDatasetResponse:
-        """Retrieve details of a specific dataset version or the latest version.
+        """
+        Retrieve details of a specific `Dataset` version, or the latest version if no
+        `version` is specified.
 
-        Provides
-        comprehensive information about the dataset, including its metadata and schema.
+        Provides comprehensive information about the `Dataset`, including its metadata
+        and schema.
 
         Args:
           application_id: Application ID associated with dataset
@@ -127,10 +129,12 @@ class AsyncMetadataResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetDatasetResponse:
-        """Retrieve details of a specific dataset version or the latest version.
+        """
+        Retrieve details of a specific `Dataset` version, or the latest version if no
+        `version` is specified.
 
-        Provides
-        comprehensive information about the dataset, including its metadata and schema.
+        Provides comprehensive information about the `Dataset`, including its metadata
+        and schema.
 
         Args:
           application_id: Application ID associated with dataset

@@ -86,10 +86,23 @@ class TuneResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> TuneResponse:
-        """Create a tuning job for the specified application.
+        """Create a tuning job for the specified `Application`.
 
-        Initiates a tuning
-        specialization task using the provided training file and an optional test file.
+        Tuning jobs are
+        asynchronous tasks to specialize your `Application` to your specific domain or
+        use case.
+
+        This API initiates a tuning specialization task using the provided
+        `training_file` and an optional `test_file`. If no `test_file` is provided, the
+        tuning job will hold out a portion of the `training_file` as the test set.
+
+        Returns a tune job `id` which can be used to check on the status of your tuning
+        task through the `GET /tune/jobs/{job_id}/metadata` endpoint.
+
+        A tuned model can be activated through the `PUT /applications/{application_id}`
+        API. After the tuning job is complete, the metadata associated with the tune job
+        will include evaluation results and a model ID. You can deploy the tuned model
+        to the application by editing its config with the "Edit Application" API.
 
         Args:
           application_id: Application ID of the application to tune
@@ -209,10 +222,23 @@ class AsyncTuneResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> TuneResponse:
-        """Create a tuning job for the specified application.
+        """Create a tuning job for the specified `Application`.
 
-        Initiates a tuning
-        specialization task using the provided training file and an optional test file.
+        Tuning jobs are
+        asynchronous tasks to specialize your `Application` to your specific domain or
+        use case.
+
+        This API initiates a tuning specialization task using the provided
+        `training_file` and an optional `test_file`. If no `test_file` is provided, the
+        tuning job will hold out a portion of the `training_file` as the test set.
+
+        Returns a tune job `id` which can be used to check on the status of your tuning
+        task through the `GET /tune/jobs/{job_id}/metadata` endpoint.
+
+        A tuned model can be activated through the `PUT /applications/{application_id}`
+        API. After the tuning job is complete, the metadata associated with the tune job
+        will include evaluation results and a model ID. You can deploy the tuned model
+        to the application by editing its config with the "Edit Application" API.
 
         Args:
           application_id: Application ID of the application to tune

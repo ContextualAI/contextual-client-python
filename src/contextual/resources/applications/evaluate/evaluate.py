@@ -77,7 +77,17 @@ class EvaluateResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> LaunchEvaluationResponse:
         """
-        Launch an evaluation round.
+        Launch an `Evaluation` round.
+
+        An `Evaluation` is an asynchronous operation which evaluates an `Application` on
+        a set of test questions and reference answers. An `Evaluation` can select one or
+        more metrics to assess the quality of generated answers. These metrics include
+        `equivalence` and `factuality`.
+
+        `Evaluation` test set data can be provided in one of two forms: - A CSV
+        `evalset_file` containing the columns `prompt`, `reference` (i.e. gold-answers),
+        and `knowledge` (optional `list[str]` of retrieved knowledge) - A `dataset_name`
+        which refers to an `evaluation_set` `Dataset` created through the `Dataset` API.
 
         Args:
           application_id: Application ID of the application to evaluate
@@ -169,7 +179,17 @@ class AsyncEvaluateResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> LaunchEvaluationResponse:
         """
-        Launch an evaluation round.
+        Launch an `Evaluation` round.
+
+        An `Evaluation` is an asynchronous operation which evaluates an `Application` on
+        a set of test questions and reference answers. An `Evaluation` can select one or
+        more metrics to assess the quality of generated answers. These metrics include
+        `equivalence` and `factuality`.
+
+        `Evaluation` test set data can be provided in one of two forms: - A CSV
+        `evalset_file` containing the columns `prompt`, `reference` (i.e. gold-answers),
+        and `knowledge` (optional `list[str]` of retrieved knowledge) - A `dataset_name`
+        which refers to an `evaluation_set` `Dataset` created through the `Dataset` API.
 
         Args:
           application_id: Application ID of the application to evaluate

@@ -22,7 +22,7 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.applications import query_start_params, query_feedback_params
-from ...types.applications.query_response import QueryResponse
+from ...types.applications.query_start_response import QueryStartResponse
 
 __all__ = ["QueryResource", "AsyncQueryResource"]
 
@@ -62,11 +62,14 @@ class QueryResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """
-        Provide feedback for a generation or a retrieval.
+        """Provide feedback for a generation or a retrieval.
 
-        If providing feedback on a retrieval, include the `message_id` of the /query
-        call, and a `content_id` returned in the query's retrieval_contents list.
+        Feedback can be used to track
+        overall `Application` performance through the `Feedback` page in the Contextual
+        UI, and as a basis for model fine-tuning.
+
+        If providing feedback on a retrieval, include the `message_id` from the `/query`
+        response, and a `content_id` returned in the query's `retrieval_contents` list.
 
         For feedback on generations, include `message_id` and do not include a
         `content_id`.
@@ -116,6 +119,7 @@ class QueryResource(SyncAPIResource):
         application_id: str,
         *,
         messages: Iterable[query_start_params.Message],
+        retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
         model_id: str | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
@@ -125,15 +129,17 @@ class QueryResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryResponse:
+    ) -> QueryStartResponse:
         """
-        Start a conversation with an application and receive its generated response and
-        attributions.
+        Start a conversation with an `Application` and receive its generated response,
+        along with relevant retrieved data and attributions.
 
         Args:
           application_id: Application ID of the application to query
 
           messages: Message objects in the conversation
+
+          retrievals_only: Set to `true` to skip generation of the response.
 
           conversation_id: Conversation ID. An optional alternative to providing message history in the
               `messages` field. If provided, history in the `messages` field will be ignored.
@@ -165,9 +171,13 @@ class QueryResource(SyncAPIResource):
                 query_start_params.QueryStartParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"retrievals_only": retrievals_only}, query_start_params.QueryStartParams),
             ),
-            cast_to=QueryResponse,
+            cast_to=QueryStartResponse,
         )
 
 
@@ -206,11 +216,14 @@ class AsyncQueryResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """
-        Provide feedback for a generation or a retrieval.
+        """Provide feedback for a generation or a retrieval.
 
-        If providing feedback on a retrieval, include the `message_id` of the /query
-        call, and a `content_id` returned in the query's retrieval_contents list.
+        Feedback can be used to track
+        overall `Application` performance through the `Feedback` page in the Contextual
+        UI, and as a basis for model fine-tuning.
+
+        If providing feedback on a retrieval, include the `message_id` from the `/query`
+        response, and a `content_id` returned in the query's `retrieval_contents` list.
 
         For feedback on generations, include `message_id` and do not include a
         `content_id`.
@@ -260,6 +273,7 @@ class AsyncQueryResource(AsyncAPIResource):
         application_id: str,
         *,
         messages: Iterable[query_start_params.Message],
+        retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
         model_id: str | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
@@ -269,15 +283,17 @@ class AsyncQueryResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryResponse:
+    ) -> QueryStartResponse:
         """
-        Start a conversation with an application and receive its generated response and
-        attributions.
+        Start a conversation with an `Application` and receive its generated response,
+        along with relevant retrieved data and attributions.
 
         Args:
           application_id: Application ID of the application to query
 
           messages: Message objects in the conversation
+
+          retrievals_only: Set to `true` to skip generation of the response.
 
           conversation_id: Conversation ID. An optional alternative to providing message history in the
               `messages` field. If provided, history in the `messages` field will be ignored.
@@ -309,9 +325,15 @@ class AsyncQueryResource(AsyncAPIResource):
                 query_start_params.QueryStartParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"retrievals_only": retrievals_only}, query_start_params.QueryStartParams
+                ),
             ),
-            cast_to=QueryResponse,
+            cast_to=QueryStartResponse,
         )
 
 

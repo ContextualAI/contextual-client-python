@@ -12,6 +12,9 @@ class QueryStartParams(TypedDict, total=False):
     messages: Required[Iterable[Message]]
     """Message objects in the conversation"""
 
+    retrievals_only: bool
+    """Set to `true` to skip generation of the response."""
+
     conversation_id: str
     """Conversation ID.
 

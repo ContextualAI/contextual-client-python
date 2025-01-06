@@ -20,6 +20,13 @@ class ApplicationUpdateParams(TypedDict, total=False):
     to deactivate the tuned model and use the default model.
     """
 
+    suggested_queries: List[str]
+    """These queries will show up as suggestions when users load the app.
+
+    We recommend including common queries that users will ask, as well as complex
+    queries so users understand the types of complex queries the system can handle.
+    """
+
     system_prompt: str
     """Instructions that your RAG system references when generating responses.
 

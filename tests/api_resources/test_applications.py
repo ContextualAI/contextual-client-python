@@ -33,6 +33,7 @@ class TestApplications:
             name="xxx",
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="xxx",
+            suggested_queries=["string"],
             system_prompt="system_prompt",
         )
         assert_matches_type(CreateApplicationOutput, application, path=["response"])
@@ -74,6 +75,7 @@ class TestApplications:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             llm_model_id="llm_model_id",
+            suggested_queries=["string"],
             system_prompt="system_prompt",
         )
         assert_matches_type(object, application, path=["response"])
@@ -119,6 +121,7 @@ class TestApplications:
         application = client.applications.list(
             cursor="cursor",
             limit=1,
+            search="search",
         )
         assert_matches_type(ApplicationList, application, path=["response"])
 
@@ -197,6 +200,7 @@ class TestAsyncApplications:
             name="xxx",
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="xxx",
+            suggested_queries=["string"],
             system_prompt="system_prompt",
         )
         assert_matches_type(CreateApplicationOutput, application, path=["response"])
@@ -238,6 +242,7 @@ class TestAsyncApplications:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             llm_model_id="llm_model_id",
+            suggested_queries=["string"],
             system_prompt="system_prompt",
         )
         assert_matches_type(object, application, path=["response"])
@@ -283,6 +288,7 @@ class TestAsyncApplications:
         application = await async_client.applications.list(
             cursor="cursor",
             limit=1,
+            search="search",
         )
         assert_matches_type(ApplicationList, application, path=["response"])
 

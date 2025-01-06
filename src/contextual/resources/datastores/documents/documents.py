@@ -75,8 +75,18 @@ class DocumentsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> IngestionResponse:
-        """
-        Upload a document to a given datastore.
+        """Ingest a document into a given `Datastore`.
+
+        Ingestion is an asynchronous task.
+
+        Returns a document `id` which can be used to
+        track the status of the ingestion job through calls to the
+        `GET /datastores/{datastore_id}/documents/{document_id}/metadata` API.
+
+        This `id` can also be used to delete the document through the
+        `DELETE /datastores/{datastore_id}/documents/{document_id}` API.
+
+        `file` must be a PDF or HTML file.
 
         Args:
           datastore_id: Datastore ID of the datastore in which to ingest the document
@@ -127,7 +137,13 @@ class DocumentsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetDocumentsResponse:
         """
-        Get list of documents in a given datastore.
+        Get list of documents in a given `Datastore`, including document `id`, `name`,
+        and ingestion job `status`.
+
+        Performs `cursor`-based pagination if the number of documents exceeds the
+        requested `limit`. The returned `cursor` can be passed to the next
+        `GET /datastores/{datastore_id}/documents` call to retrieve the next set of
+        documents.
 
         Args:
           datastore_id: Datastore ID of the datastore to retrieve documents for
@@ -187,8 +203,9 @@ class DocumentsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """
-        Delete a given document.
+        """Delete a given document from its `Datastore`.
+
+        This operation is irreversible.
 
         Args:
           datastore_id: Datastore ID of the datastore from which to delete the document
@@ -252,8 +269,18 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> IngestionResponse:
-        """
-        Upload a document to a given datastore.
+        """Ingest a document into a given `Datastore`.
+
+        Ingestion is an asynchronous task.
+
+        Returns a document `id` which can be used to
+        track the status of the ingestion job through calls to the
+        `GET /datastores/{datastore_id}/documents/{document_id}/metadata` API.
+
+        This `id` can also be used to delete the document through the
+        `DELETE /datastores/{datastore_id}/documents/{document_id}` API.
+
+        `file` must be a PDF or HTML file.
 
         Args:
           datastore_id: Datastore ID of the datastore in which to ingest the document
@@ -304,7 +331,13 @@ class AsyncDocumentsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetDocumentsResponse:
         """
-        Get list of documents in a given datastore.
+        Get list of documents in a given `Datastore`, including document `id`, `name`,
+        and ingestion job `status`.
+
+        Performs `cursor`-based pagination if the number of documents exceeds the
+        requested `limit`. The returned `cursor` can be passed to the next
+        `GET /datastores/{datastore_id}/documents` call to retrieve the next set of
+        documents.
 
         Args:
           datastore_id: Datastore ID of the datastore to retrieve documents for
@@ -364,8 +397,9 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """
-        Delete a given document.
+        """Delete a given document from its `Datastore`.
+
+        This operation is irreversible.
 
         Args:
           datastore_id: Datastore ID of the datastore from which to delete the document

@@ -51,7 +51,8 @@ class MetadataResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetDatastoreResponse:
         """
-        Get the details of a given datastore.
+        Get the details of a given `Datastore`, including its name, create time, and the
+        list of `Applications` which are currently configured to use the `Datastore`.
 
         Args:
           datastore_id: Datastore ID of the datastore to get details of
@@ -107,7 +108,8 @@ class AsyncMetadataResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetDatastoreResponse:
         """
-        Get the details of a given datastore.
+        Get the details of a given `Datastore`, including its name, create time, and the
+        list of `Applications` which are currently configured to use the `Datastore`.
 
         Args:
           datastore_id: Datastore ID of the datastore to get details of

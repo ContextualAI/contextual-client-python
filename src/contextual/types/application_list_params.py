@@ -16,3 +16,6 @@ class ApplicationListParams(TypedDict, total=False):
 
     limit: int
     """Maximum number of applications to return"""
+
+    search: str
+    """Search text to filter applications by name"""

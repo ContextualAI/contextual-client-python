@@ -80,8 +80,17 @@ class DatastoresResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> CreateDatastoreOutput:
-        """
-        Create a new datastore.
+        """Create a new `Datastore`.
+
+        A `Datastore` is a collection of documents.
+
+        Documents can be ingested into and
+        deleted from a `Datastore`.
+
+        A `Datastore` can be linked to one or more `Applications` to provide data on
+        which the `Application` can ground its answers. This linkage of `Datastore` to
+        `Application` is done through the `Create Application` or `Edit Application`
+        APIs.
 
         Args:
           name: Name of the datastore
@@ -106,6 +115,7 @@ class DatastoresResource(SyncAPIResource):
     def list(
         self,
         *,
+        application_id: str | NotGiven = NOT_GIVEN,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -116,9 +126,16 @@ class DatastoresResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Datastore:
         """
-        List all the datastores.
+        List all the `Datastores`.
+
+        Performs `cursor`-based pagination if the number of `Datastores` exceeds the
+        requested `limit`. The returned `cursor` can be passed to the next
+        `GET /datastores` call to retrieve the next set of `Datastores`.
 
         Args:
+          application_id: ID of the application used to filter datastores. If provided, only datastores
+              linked to this application will be returned.
+
           cursor: Cursor from the previous call to list datastores, used to retrieve the next set
               of results
 
@@ -141,6 +158,7 @@ class DatastoresResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "application_id": application_id,
                         "cursor": cursor,
                         "limit": limit,
                     },
@@ -161,9 +179,10 @@ class DatastoresResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """Delete a given datastore.
+        """Delete a given `Datastore`, including all the documents ingested into it.
 
-        This operation is irreversible.
+        This
+        operation is irreversible.
 
         Args:
           datastore_id: Datastore ID of the datastore to delete
@@ -226,8 +245,17 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> CreateDatastoreOutput:
-        """
-        Create a new datastore.
+        """Create a new `Datastore`.
+
+        A `Datastore` is a collection of documents.
+
+        Documents can be ingested into and
+        deleted from a `Datastore`.
+
+        A `Datastore` can be linked to one or more `Applications` to provide data on
+        which the `Application` can ground its answers. This linkage of `Datastore` to
+        `Application` is done through the `Create Application` or `Edit Application`
+        APIs.
 
         Args:
           name: Name of the datastore
@@ -252,6 +280,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
     async def list(
         self,
         *,
+        application_id: str | NotGiven = NOT_GIVEN,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -262,9 +291,16 @@ class AsyncDatastoresResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Datastore:
         """
-        List all the datastores.
+        List all the `Datastores`.
+
+        Performs `cursor`-based pagination if the number of `Datastores` exceeds the
+        requested `limit`. The returned `cursor` can be passed to the next
+        `GET /datastores` call to retrieve the next set of `Datastores`.
 
         Args:
+          application_id: ID of the application used to filter datastores. If provided, only datastores
+              linked to this application will be returned.
+
           cursor: Cursor from the previous call to list datastores, used to retrieve the next set
               of results
 
@@ -287,6 +323,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "application_id": application_id,
                         "cursor": cursor,
                         "limit": limit,
                     },
@@ -307,9 +344,10 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """Delete a given datastore.
+        """Delete a given `Datastore`, including all the documents ingested into it.
 
-        This operation is irreversible.
+        This
+        operation is irreversible.
 
         Args:
           datastore_id: Datastore ID of the datastore to delete

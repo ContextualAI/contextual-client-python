@@ -52,7 +52,8 @@ class MetadataResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> DocumentDescription:
         """
-        Get details of a given document.
+        Get details of a given document, including its `name` and ingestion job
+        `status`.
 
         Args:
           datastore_id: Datastore ID of the datastore from which to retrieve the document
@@ -113,7 +114,8 @@ class AsyncMetadataResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> DocumentDescription:
         """
-        Get details of a given document.
+        Get details of a given document, including its `name` and ingestion job
+        `status`.
 
         Args:
           datastore_id: Datastore ID of the datastore from which to retrieve the document
