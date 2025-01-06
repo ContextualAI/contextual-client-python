@@ -22,7 +22,7 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.applications import query_start_params, query_feedback_params
-from ...types.applications.query_start_response import QueryStartResponse
+from ...types.applications.query_response import QueryResponse
 
 __all__ = ["QueryResource", "AsyncQueryResource"]
 
@@ -129,7 +129,7 @@ class QueryResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryStartResponse:
+    ) -> QueryResponse:
         """
         Start a conversation with an `Application` and receive its generated response,
         along with relevant retrieved data and attributions.
@@ -177,7 +177,7 @@ class QueryResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform({"retrievals_only": retrievals_only}, query_start_params.QueryStartParams),
             ),
-            cast_to=QueryStartResponse,
+            cast_to=QueryResponse,
         )
 
 
@@ -283,7 +283,7 @@ class AsyncQueryResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryStartResponse:
+    ) -> QueryResponse:
         """
         Start a conversation with an `Application` and receive its generated response,
         along with relevant retrieved data and attributions.
@@ -333,7 +333,7 @@ class AsyncQueryResource(AsyncAPIResource):
                     {"retrievals_only": retrievals_only}, query_start_params.QueryStartParams
                 ),
             ),
-            cast_to=QueryStartResponse,
+            cast_to=QueryResponse,
         )
 
 

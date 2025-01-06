@@ -91,13 +91,13 @@ Methods:
 Types:
 
 ```python
-from contextual.types.applications import QueryFeedbackResponse, QueryStartResponse
+from contextual.types.applications import QueryResponse, QueryFeedbackResponse
 ```
 
 Methods:
 
 - <code title="post /applications/{application_id}/feedback">client.applications.query.<a href="./src/contextual/resources/applications/query.py">feedback</a>(application_id, \*\*<a href="src/contextual/types/applications/query_feedback_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_feedback_response.py">object</a></code>
-- <code title="post /applications/{application_id}/query">client.applications.query.<a href="./src/contextual/resources/applications/query.py">start</a>(application_id, \*\*<a href="src/contextual/types/applications/query_start_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_start_response.py">QueryStartResponse</a></code>
+- <code title="post /applications/{application_id}/query">client.applications.query.<a href="./src/contextual/resources/applications/query.py">start</a>(application_id, \*\*<a href="src/contextual/types/applications/query_start_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_response.py">QueryResponse</a></code>
 
 ## Evaluate
 

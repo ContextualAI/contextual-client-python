@@ -9,7 +9,7 @@ import pytest
 
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from contextual.types.applications import QueryStartResponse
+from contextual.types.applications import QueryResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -85,7 +85,7 @@ class TestQuery:
                 }
             ],
         )
-        assert_matches_type(QueryStartResponse, query, path=["response"])
+        assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
     def test_method_start_with_all_params(self, client: ContextualAI) -> None:
@@ -102,7 +102,7 @@ class TestQuery:
             model_id="model_id",
             stream=True,
         )
-        assert_matches_type(QueryStartResponse, query, path=["response"])
+        assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
     def test_raw_response_start(self, client: ContextualAI) -> None:
@@ -119,7 +119,7 @@ class TestQuery:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         query = response.parse()
-        assert_matches_type(QueryStartResponse, query, path=["response"])
+        assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
     def test_streaming_response_start(self, client: ContextualAI) -> None:
@@ -136,7 +136,7 @@ class TestQuery:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             query = response.parse()
-            assert_matches_type(QueryStartResponse, query, path=["response"])
+            assert_matches_type(QueryResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -225,7 +225,7 @@ class TestAsyncQuery:
                 }
             ],
         )
-        assert_matches_type(QueryStartResponse, query, path=["response"])
+        assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
     async def test_method_start_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -242,7 +242,7 @@ class TestAsyncQuery:
             model_id="model_id",
             stream=True,
         )
-        assert_matches_type(QueryStartResponse, query, path=["response"])
+        assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
     async def test_raw_response_start(self, async_client: AsyncContextualAI) -> None:
@@ -259,7 +259,7 @@ class TestAsyncQuery:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         query = await response.parse()
-        assert_matches_type(QueryStartResponse, query, path=["response"])
+        assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
     async def test_streaming_response_start(self, async_client: AsyncContextualAI) -> None:
@@ -276,7 +276,7 @@ class TestAsyncQuery:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             query = await response.parse()
-            assert_matches_type(QueryStartResponse, query, path=["response"])
+            assert_matches_type(QueryResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
