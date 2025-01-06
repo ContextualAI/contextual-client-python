@@ -26,8 +26,8 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.datastore import Datastore
+from ...pagination import SyncDatastoresListPagination, AsyncDatastoresListPagination
+from ..._base_client import AsyncPaginator, make_request_options
 from .documents.documents import (
     DocumentsResource,
     AsyncDocumentsResource,
@@ -37,6 +37,7 @@ from .documents.documents import (
     AsyncDocumentsResourceWithStreamingResponse,
 )
 from ...types.create_datastore_output import CreateDatastoreOutput
+from ...types.datastore_list_response import DatastoreListResponse
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
 
@@ -124,7 +125,7 @@ class DatastoresResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> Datastore:
+    ) -> SyncDatastoresListPagination[DatastoreListResponse]:
         """
         List all the `Datastores`.
 
@@ -149,8 +150,9 @@ class DatastoresResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/datastores",
+            page=SyncDatastoresListPagination[DatastoreListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -165,7 +167,7 @@ class DatastoresResource(SyncAPIResource):
                     datastore_list_params.DatastoreListParams,
                 ),
             ),
-            cast_to=Datastore,
+            model=DatastoreListResponse,
         )
 
     def delete(
@@ -277,7 +279,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
             cast_to=CreateDatastoreOutput,
         )
 
-    async def list(
+    def list(
         self,
         *,
         application_id: str | NotGiven = NOT_GIVEN,
@@ -289,7 +291,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> Datastore:
+    ) -> AsyncPaginator[DatastoreListResponse, AsyncDatastoresListPagination[DatastoreListResponse]]:
         """
         List all the `Datastores`.
 
@@ -314,14 +316,15 @@ class AsyncDatastoresResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/datastores",
+            page=AsyncDatastoresListPagination[DatastoreListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "application_id": application_id,
                         "cursor": cursor,
@@ -330,7 +333,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
                     datastore_list_params.DatastoreListParams,
                 ),
             ),
-            cast_to=Datastore,
+            model=DatastoreListResponse,
         )
 
     async def delete(

@@ -20,12 +20,12 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from contextual import ContextualAI, AsyncContextualAI, APIResponseValidationError
-from contextual._types import Omit
-from contextual._models import BaseModel, FinalRequestOptions
-from contextual._constants import RAW_RESPONSE_HEADER
-from contextual._exceptions import APIStatusError, APITimeoutError, ContextualAIError, APIResponseValidationError
-from contextual._base_client import (
+from contextual_sdk import ContextualAI, AsyncContextualAI, APIResponseValidationError
+from contextual_sdk._types import Omit
+from contextual_sdk._models import BaseModel, FinalRequestOptions
+from contextual_sdk._constants import RAW_RESPONSE_HEADER
+from contextual_sdk._exceptions import APIStatusError, APITimeoutError, ContextualAIError, APIResponseValidationError
+from contextual_sdk._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
@@ -229,10 +229,10 @@ class TestContextualAI:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "contextual/_legacy_response.py",
-                        "contextual/_response.py",
+                        "contextual_sdk/_legacy_response.py",
+                        "contextual_sdk/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "contextual/_compat.py",
+                        "contextual_sdk/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -718,7 +718,7 @@ class TestContextualAI:
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -733,7 +733,7 @@ class TestContextualAI:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(return_value=httpx.Response(500))
@@ -749,7 +749,7 @@ class TestContextualAI:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
@@ -780,7 +780,7 @@ class TestContextualAI:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_omit_retry_count_header(
         self, client: ContextualAI, failures_before_success: int, respx_mock: MockRouter
@@ -805,7 +805,7 @@ class TestContextualAI:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
         self, client: ContextualAI, failures_before_success: int, respx_mock: MockRouter
@@ -1005,10 +1005,10 @@ class TestAsyncContextualAI:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "contextual/_legacy_response.py",
-                        "contextual/_response.py",
+                        "contextual_sdk/_legacy_response.py",
+                        "contextual_sdk/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "contextual/_compat.py",
+                        "contextual_sdk/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -1498,7 +1498,7 @@ class TestAsyncContextualAI:
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -1513,7 +1513,7 @@ class TestAsyncContextualAI:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/datastores").mock(return_value=httpx.Response(500))
@@ -1529,7 +1529,7 @@ class TestAsyncContextualAI:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
@@ -1561,7 +1561,7 @@ class TestAsyncContextualAI:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_omit_retry_count_header(
@@ -1587,7 +1587,7 @@ class TestAsyncContextualAI:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("contextual_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_overwrite_retry_count_header(
@@ -1623,8 +1623,8 @@ class TestAsyncContextualAI:
         import nest_asyncio
         import threading
 
-        from contextual._utils import asyncify
-        from contextual._base_client import get_platform 
+        from contextual_sdk._utils import asyncify
+        from contextual_sdk._base_client import get_platform 
 
         async def test_main() -> None:
             result = await asyncify(get_platform)()

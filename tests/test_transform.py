@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from contextual._types import Base64FileInput
-from contextual._utils import (
+from contextual_sdk._types import Base64FileInput
+from contextual_sdk._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from contextual._compat import PYDANTIC_V2
-from contextual._models import BaseModel
+from contextual_sdk._compat import PYDANTIC_V2
+from contextual_sdk._models import BaseModel
 
 _T = TypeVar("_T")
 

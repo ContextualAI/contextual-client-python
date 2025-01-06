@@ -7,27 +7,40 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._utils import (
+from .metrics import (
+    MetricsResource,
+    AsyncMetricsResource,
+    MetricsResourceWithRawResponse,
+    AsyncMetricsResourceWithRawResponse,
+    MetricsResourceWithStreamingResponse,
+    AsyncMetricsResourceWithStreamingResponse,
+)
+from ...._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ...._utils import (
     maybe_transform,
     async_maybe_transform,
 )
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ...._compat import cached_property
+from ...._resource import SyncAPIResource, AsyncAPIResource
+from ...._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.applications import query_start_params, query_feedback_params
-from ...types.applications.query_response import QueryResponse
+from ...._base_client import make_request_options
+from ....types.applications import query_start_params, query_feedback_params, query_form_filling_params
+from ....types.applications.query_response import QueryResponse
+from ....types.applications.query_form_filling_response import QueryFormFillingResponse
 
 __all__ = ["QueryResource", "AsyncQueryResource"]
 
 
 class QueryResource(SyncAPIResource):
+    @cached_property
+    def metrics(self) -> MetricsResource:
+        return MetricsResource(self._client)
+
     @cached_property
     def with_raw_response(self) -> QueryResourceWithRawResponse:
         """
@@ -114,6 +127,56 @@ class QueryResource(SyncAPIResource):
             cast_to=object,
         )
 
+    def form_filling(
+        self,
+        application_id: str,
+        *,
+        queries: Iterable[query_form_filling_params.Query],
+        scope_metadata: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> QueryFormFillingResponse:
+        """
+        Start a conversation with an application and receive its generated response and
+        attributions.
+
+        Args:
+          application_id: Application ID of the application to query
+
+          queries: Queries used to fill the form
+
+          scope_metadata: Scope of the form filling. This is the metadata that is used to determine the
+              form filling strategy
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not application_id:
+            raise ValueError(f"Expected a non-empty value for `application_id` but received {application_id!r}")
+        return self._post(
+            f"/applications/{application_id}/form_filling",
+            body=maybe_transform(
+                {
+                    "queries": queries,
+                    "scope_metadata": scope_metadata,
+                },
+                query_form_filling_params.QueryFormFillingParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=QueryFormFillingResponse,
+        )
+
     def start(
         self,
         application_id: str,
@@ -182,6 +245,10 @@ class QueryResource(SyncAPIResource):
 
 
 class AsyncQueryResource(AsyncAPIResource):
+    @cached_property
+    def metrics(self) -> AsyncMetricsResource:
+        return AsyncMetricsResource(self._client)
+
     @cached_property
     def with_raw_response(self) -> AsyncQueryResourceWithRawResponse:
         """
@@ -268,6 +335,56 @@ class AsyncQueryResource(AsyncAPIResource):
             cast_to=object,
         )
 
+    async def form_filling(
+        self,
+        application_id: str,
+        *,
+        queries: Iterable[query_form_filling_params.Query],
+        scope_metadata: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> QueryFormFillingResponse:
+        """
+        Start a conversation with an application and receive its generated response and
+        attributions.
+
+        Args:
+          application_id: Application ID of the application to query
+
+          queries: Queries used to fill the form
+
+          scope_metadata: Scope of the form filling. This is the metadata that is used to determine the
+              form filling strategy
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not application_id:
+            raise ValueError(f"Expected a non-empty value for `application_id` but received {application_id!r}")
+        return await self._post(
+            f"/applications/{application_id}/form_filling",
+            body=await async_maybe_transform(
+                {
+                    "queries": queries,
+                    "scope_metadata": scope_metadata,
+                },
+                query_form_filling_params.QueryFormFillingParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=QueryFormFillingResponse,
+        )
+
     async def start(
         self,
         application_id: str,
@@ -344,9 +461,16 @@ class QueryResourceWithRawResponse:
         self.feedback = to_raw_response_wrapper(
             query.feedback,
         )
+        self.form_filling = to_raw_response_wrapper(
+            query.form_filling,
+        )
         self.start = to_raw_response_wrapper(
             query.start,
         )
+
+    @cached_property
+    def metrics(self) -> MetricsResourceWithRawResponse:
+        return MetricsResourceWithRawResponse(self._query.metrics)
 
 
 class AsyncQueryResourceWithRawResponse:
@@ -356,9 +480,16 @@ class AsyncQueryResourceWithRawResponse:
         self.feedback = async_to_raw_response_wrapper(
             query.feedback,
         )
+        self.form_filling = async_to_raw_response_wrapper(
+            query.form_filling,
+        )
         self.start = async_to_raw_response_wrapper(
             query.start,
         )
+
+    @cached_property
+    def metrics(self) -> AsyncMetricsResourceWithRawResponse:
+        return AsyncMetricsResourceWithRawResponse(self._query.metrics)
 
 
 class QueryResourceWithStreamingResponse:
@@ -368,9 +499,16 @@ class QueryResourceWithStreamingResponse:
         self.feedback = to_streamed_response_wrapper(
             query.feedback,
         )
+        self.form_filling = to_streamed_response_wrapper(
+            query.form_filling,
+        )
         self.start = to_streamed_response_wrapper(
             query.start,
         )
+
+    @cached_property
+    def metrics(self) -> MetricsResourceWithStreamingResponse:
+        return MetricsResourceWithStreamingResponse(self._query.metrics)
 
 
 class AsyncQueryResourceWithStreamingResponse:
@@ -380,6 +518,13 @@ class AsyncQueryResourceWithStreamingResponse:
         self.feedback = async_to_streamed_response_wrapper(
             query.feedback,
         )
+        self.form_filling = async_to_streamed_response_wrapper(
+            query.form_filling,
+        )
         self.start = async_to_streamed_response_wrapper(
             query.start,
         )
+
+    @cached_property
+    def metrics(self) -> AsyncMetricsResourceWithStreamingResponse:
+        return AsyncMetricsResourceWithStreamingResponse(self._query.metrics)
