@@ -5,7 +5,7 @@ from typing_extensions import Literal
 
 from ..._models import BaseModel
 
-__all__ = ["QueryStartResponse", "RetrievalContent", "Attribution", "Message"]
+__all__ = ["QueryResponse", "RetrievalContent", "Attribution", "Message"]
 
 
 class RetrievalContent(BaseModel):
@@ -62,7 +62,7 @@ class Message(BaseModel):
     """Role of sender"""
 
 
-class QueryStartResponse(BaseModel):
+class QueryResponse(BaseModel):
     conversation_id: str
     """A unique identifier for the conversation.
 
