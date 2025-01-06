@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
+from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from contextual_sdk import ContextualAI, AsyncContextualAI
-from contextual_sdk.types.applications import (
+from contextual.types.applications import (
     QueryResponse,
     QueryFormFillingResponse,
 )

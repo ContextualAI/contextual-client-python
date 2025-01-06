@@ -1,13 +1,5 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .lmunit import (
-    LmunitResource,
-    AsyncLmunitResource,
-    LmunitResourceWithRawResponse,
-    AsyncLmunitResourceWithRawResponse,
-    LmunitResourceWithStreamingResponse,
-    AsyncLmunitResourceWithStreamingResponse,
-)
 from .datastores import (
     DatastoresResource,
     AsyncDatastoresResource,
@@ -15,6 +7,14 @@ from .datastores import (
     AsyncDatastoresResourceWithRawResponse,
     DatastoresResourceWithStreamingResponse,
     AsyncDatastoresResourceWithStreamingResponse,
+)
+from .standalone import (
+    StandaloneResource,
+    AsyncStandaloneResource,
+    StandaloneResourceWithRawResponse,
+    AsyncStandaloneResourceWithRawResponse,
+    StandaloneResourceWithStreamingResponse,
+    AsyncStandaloneResourceWithStreamingResponse,
 )
 from .applications import (
     ApplicationsResource,
@@ -38,10 +38,10 @@ __all__ = [
     "AsyncApplicationsResourceWithRawResponse",
     "ApplicationsResourceWithStreamingResponse",
     "AsyncApplicationsResourceWithStreamingResponse",
-    "LmunitResource",
-    "AsyncLmunitResource",
-    "LmunitResourceWithRawResponse",
-    "AsyncLmunitResourceWithRawResponse",
-    "LmunitResourceWithStreamingResponse",
-    "AsyncLmunitResourceWithStreamingResponse",
+    "StandaloneResource",
+    "AsyncStandaloneResource",
+    "StandaloneResourceWithRawResponse",
+    "AsyncStandaloneResourceWithRawResponse",
+    "StandaloneResourceWithStreamingResponse",
+    "AsyncStandaloneResourceWithStreamingResponse",
 ]

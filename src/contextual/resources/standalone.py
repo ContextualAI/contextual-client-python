@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..types import lmunit_score_params
+from ..types import standalone_lmunit_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
     maybe_transform,
@@ -19,32 +19,32 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.lmunit_score_response import LmunitScoreResponse
+from ..types.standalone_lmunit_response import StandaloneLmunitResponse
 
-__all__ = ["LmunitResource", "AsyncLmunitResource"]
+__all__ = ["StandaloneResource", "AsyncStandaloneResource"]
 
 
-class LmunitResource(SyncAPIResource):
+class StandaloneResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> LmunitResourceWithRawResponse:
+    def with_raw_response(self) -> StandaloneResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
         """
-        return LmunitResourceWithRawResponse(self)
+        return StandaloneResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> LmunitResourceWithStreamingResponse:
+    def with_streaming_response(self) -> StandaloneResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
         """
-        return LmunitResourceWithStreamingResponse(self)
+        return StandaloneResourceWithStreamingResponse(self)
 
-    def score(
+    def lmunit(
         self,
         *,
         query: str,
@@ -56,7 +56,7 @@ class LmunitResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LmunitScoreResponse:
+    ) -> StandaloneLmunitResponse:
         """
         Given a `query`, `response`, and a `unit_test`, return the response's `score` on
         the unit test on a 5-point continuous scale. The total input cannot exceed 7000
@@ -92,36 +92,36 @@ class LmunitResource(SyncAPIResource):
                     "response": response,
                     "unit_test": unit_test,
                 },
-                lmunit_score_params.LmunitScoreParams,
+                standalone_lmunit_params.StandaloneLmunitParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=LmunitScoreResponse,
+            cast_to=StandaloneLmunitResponse,
         )
 
 
-class AsyncLmunitResource(AsyncAPIResource):
+class AsyncStandaloneResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncLmunitResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncStandaloneResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncLmunitResourceWithRawResponse(self)
+        return AsyncStandaloneResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncLmunitResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncStandaloneResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
         """
-        return AsyncLmunitResourceWithStreamingResponse(self)
+        return AsyncStandaloneResourceWithStreamingResponse(self)
 
-    async def score(
+    async def lmunit(
         self,
         *,
         query: str,
@@ -133,7 +133,7 @@ class AsyncLmunitResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LmunitScoreResponse:
+    ) -> StandaloneLmunitResponse:
         """
         Given a `query`, `response`, and a `unit_test`, return the response's `score` on
         the unit test on a 5-point continuous scale. The total input cannot exceed 7000
@@ -169,46 +169,46 @@ class AsyncLmunitResource(AsyncAPIResource):
                     "response": response,
                     "unit_test": unit_test,
                 },
-                lmunit_score_params.LmunitScoreParams,
+                standalone_lmunit_params.StandaloneLmunitParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=LmunitScoreResponse,
+            cast_to=StandaloneLmunitResponse,
         )
 
 
-class LmunitResourceWithRawResponse:
-    def __init__(self, lmunit: LmunitResource) -> None:
-        self._lmunit = lmunit
+class StandaloneResourceWithRawResponse:
+    def __init__(self, standalone: StandaloneResource) -> None:
+        self._standalone = standalone
 
-        self.score = to_raw_response_wrapper(
-            lmunit.score,
+        self.lmunit = to_raw_response_wrapper(
+            standalone.lmunit,
         )
 
 
-class AsyncLmunitResourceWithRawResponse:
-    def __init__(self, lmunit: AsyncLmunitResource) -> None:
-        self._lmunit = lmunit
+class AsyncStandaloneResourceWithRawResponse:
+    def __init__(self, standalone: AsyncStandaloneResource) -> None:
+        self._standalone = standalone
 
-        self.score = async_to_raw_response_wrapper(
-            lmunit.score,
+        self.lmunit = async_to_raw_response_wrapper(
+            standalone.lmunit,
         )
 
 
-class LmunitResourceWithStreamingResponse:
-    def __init__(self, lmunit: LmunitResource) -> None:
-        self._lmunit = lmunit
+class StandaloneResourceWithStreamingResponse:
+    def __init__(self, standalone: StandaloneResource) -> None:
+        self._standalone = standalone
 
-        self.score = to_streamed_response_wrapper(
-            lmunit.score,
+        self.lmunit = to_streamed_response_wrapper(
+            standalone.lmunit,
         )
 
 
-class AsyncLmunitResourceWithStreamingResponse:
-    def __init__(self, lmunit: AsyncLmunitResource) -> None:
-        self._lmunit = lmunit
+class AsyncStandaloneResourceWithStreamingResponse:
+    def __init__(self, standalone: AsyncStandaloneResource) -> None:
+        self._standalone = standalone
 
-        self.score = async_to_streamed_response_wrapper(
-            lmunit.score,
+        self.lmunit = async_to_streamed_response_wrapper(
+            standalone.lmunit,
         )
