@@ -5,8 +5,8 @@ from typing import Iterator, AsyncIterator
 import httpx
 import pytest
 
-from contextual import ContextualAI, AsyncContextualAI
-from contextual._streaming import Stream, AsyncStream, ServerSentEvent
+from contextual_sdk import ContextualAI, AsyncContextualAI
+from contextual_sdk._streaming import Stream, AsyncStream, ServerSentEvent
 
 
 @pytest.mark.asyncio

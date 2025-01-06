@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from contextual.types.datastores import GetDatastoreResponse
+from contextual_sdk import ContextualAI, AsyncContextualAI
+from contextual_sdk.types.datastores import GetDatastoreResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 

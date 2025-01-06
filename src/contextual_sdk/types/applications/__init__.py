@@ -16,4 +16,6 @@ from .evaluate_launch_params import EvaluateLaunchParams as EvaluateLaunchParams
 from .create_dataset_response import CreateDatasetResponse as CreateDatasetResponse
 from .dataset_retrieve_params import DatasetRetrieveParams as DatasetRetrieveParams
 from .get_application_response import GetApplicationResponse as GetApplicationResponse
+from .query_form_filling_params import QueryFormFillingParams as QueryFormFillingParams
 from .launch_evaluation_response import LaunchEvaluationResponse as LaunchEvaluationResponse
+from .query_form_filling_response import QueryFormFillingResponse as QueryFormFillingResponse
