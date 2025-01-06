@@ -51,7 +51,7 @@ class MetadataResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetApplicationResponse:
         """
-        Get details of a given application.
+        Get metadata and configuration of a given `Application`.
 
         Args:
           application_id: Application ID of the application to retrieve details for
@@ -107,7 +107,7 @@ class AsyncMetadataResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> GetApplicationResponse:
         """
-        Get details of a given application.
+        Get metadata and configuration of a given `Application`.
 
         Args:
           application_id: Application ID of the application to retrieve details for

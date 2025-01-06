@@ -113,6 +113,7 @@ class ApplicationsResource(SyncAPIResource):
         name: str,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
+        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -122,10 +123,17 @@ class ApplicationsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> CreateApplicationOutput:
         """
-        Create a new application with a given configuration.
+        Create a new `Application` with a specific configuration.
 
-        If no `datastore_id` is provided, automatically creates a datastore and
-        configures the application to use the newly created datastore.
+        An `Application` queries over a `Datastore` to retrieve relevant data on which
+        generations are grounded.
+
+        Retrieval and generation parameters are defined in the provided `Application`
+        configuration.
+
+        If no `datastore_id` is provided in the configuration, this API automatically
+        creates a datastore and configures the application to use the newly created
+        datastore.
 
         Args:
           name: Name of the application
@@ -134,6 +142,10 @@ class ApplicationsResource(SyncAPIResource):
               datastore. Leave empty to automatically create a new datastore.
 
           description: Description of the application
+
+          suggested_queries: These queries will show up as suggestions when users load the app. We recommend
+              including common queries that users will ask, as well as complex queries so
+              users understand the types of complex queries the system can handle.
 
           system_prompt: Instructions that your RAG system references when generating responses. Note
               that we do not guarantee that the system will follow these instructions exactly.
@@ -153,6 +165,7 @@ class ApplicationsResource(SyncAPIResource):
                     "name": name,
                     "datastore_ids": datastore_ids,
                     "description": description,
+                    "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
                 application_create_params.ApplicationCreateParams,
@@ -169,6 +182,7 @@ class ApplicationsResource(SyncAPIResource):
         *,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -178,7 +192,9 @@ class ApplicationsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Modify a given application.
+        Modify a given `Application` to utilize the provided configuration.
+
+        Fields not included in the request body will not be modified.
 
         Args:
           application_id: Application ID of the application to edit
@@ -189,6 +205,10 @@ class ApplicationsResource(SyncAPIResource):
               tuned on this application; tuned models cannot be used across applications. Uses
               default model if none is specified. Set to `default` to deactivate the tuned
               model and use the default model.
+
+          suggested_queries: These queries will show up as suggestions when users load the app. We recommend
+              including common queries that users will ask, as well as complex queries so
+              users understand the types of complex queries the system can handle.
 
           system_prompt: Instructions that your RAG system references when generating responses. Note
               that we do not guarantee that the system will follow these instructions exactly.
@@ -209,6 +229,7 @@ class ApplicationsResource(SyncAPIResource):
                 {
                     "datastore_ids": datastore_ids,
                     "llm_model_id": llm_model_id,
+                    "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
                 application_update_params.ApplicationUpdateParams,
@@ -224,6 +245,7 @@ class ApplicationsResource(SyncAPIResource):
         *,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
+        search: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -232,13 +254,15 @@ class ApplicationsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ApplicationList:
         """
-        Retrieve a list of all applications.
+        Retrieve a list of all `Applications`.
 
         Args:
           cursor: Cursor from the previous call to list applications, used to retrieve the next
               set of results
 
           limit: Maximum number of applications to return
+
+          search: Search text to filter applications by name
 
           extra_headers: Send extra headers
 
@@ -259,6 +283,7 @@ class ApplicationsResource(SyncAPIResource):
                     {
                         "cursor": cursor,
                         "limit": limit,
+                        "search": search,
                     },
                     application_list_params.ApplicationListParams,
                 ),
@@ -277,8 +302,13 @@ class ApplicationsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """
-        Delete a given application.
+        """Delete a given `Application`.
+
+        This is an irreversible operation.
+
+        Note: `Datastores` which are associated with the `Application` will not be
+        deleted, even if no other `Application` is using them. To delete a `Datastore`,
+        use the `DELETE /datastores/{datastore_id}` API.
 
         Args:
           application_id: Application ID of the application to delete
@@ -348,6 +378,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
         name: str,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
+        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -357,10 +388,17 @@ class AsyncApplicationsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> CreateApplicationOutput:
         """
-        Create a new application with a given configuration.
+        Create a new `Application` with a specific configuration.
 
-        If no `datastore_id` is provided, automatically creates a datastore and
-        configures the application to use the newly created datastore.
+        An `Application` queries over a `Datastore` to retrieve relevant data on which
+        generations are grounded.
+
+        Retrieval and generation parameters are defined in the provided `Application`
+        configuration.
+
+        If no `datastore_id` is provided in the configuration, this API automatically
+        creates a datastore and configures the application to use the newly created
+        datastore.
 
         Args:
           name: Name of the application
@@ -369,6 +407,10 @@ class AsyncApplicationsResource(AsyncAPIResource):
               datastore. Leave empty to automatically create a new datastore.
 
           description: Description of the application
+
+          suggested_queries: These queries will show up as suggestions when users load the app. We recommend
+              including common queries that users will ask, as well as complex queries so
+              users understand the types of complex queries the system can handle.
 
           system_prompt: Instructions that your RAG system references when generating responses. Note
               that we do not guarantee that the system will follow these instructions exactly.
@@ -388,6 +430,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
                     "name": name,
                     "datastore_ids": datastore_ids,
                     "description": description,
+                    "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
                 application_create_params.ApplicationCreateParams,
@@ -404,6 +447,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
         *,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -413,7 +457,9 @@ class AsyncApplicationsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Modify a given application.
+        Modify a given `Application` to utilize the provided configuration.
+
+        Fields not included in the request body will not be modified.
 
         Args:
           application_id: Application ID of the application to edit
@@ -424,6 +470,10 @@ class AsyncApplicationsResource(AsyncAPIResource):
               tuned on this application; tuned models cannot be used across applications. Uses
               default model if none is specified. Set to `default` to deactivate the tuned
               model and use the default model.
+
+          suggested_queries: These queries will show up as suggestions when users load the app. We recommend
+              including common queries that users will ask, as well as complex queries so
+              users understand the types of complex queries the system can handle.
 
           system_prompt: Instructions that your RAG system references when generating responses. Note
               that we do not guarantee that the system will follow these instructions exactly.
@@ -444,6 +494,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
                 {
                     "datastore_ids": datastore_ids,
                     "llm_model_id": llm_model_id,
+                    "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
                 application_update_params.ApplicationUpdateParams,
@@ -459,6 +510,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
         *,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
+        search: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -467,13 +519,15 @@ class AsyncApplicationsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ApplicationList:
         """
-        Retrieve a list of all applications.
+        Retrieve a list of all `Applications`.
 
         Args:
           cursor: Cursor from the previous call to list applications, used to retrieve the next
               set of results
 
           limit: Maximum number of applications to return
+
+          search: Search text to filter applications by name
 
           extra_headers: Send extra headers
 
@@ -494,6 +548,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
                     {
                         "cursor": cursor,
                         "limit": limit,
+                        "search": search,
                     },
                     application_list_params.ApplicationListParams,
                 ),
@@ -512,8 +567,13 @@ class AsyncApplicationsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """
-        Delete a given application.
+        """Delete a given `Application`.
+
+        This is an irreversible operation.
+
+        Note: `Datastores` which are associated with the `Application` will not be
+        deleted, even if no other `Application` is using them. To delete a `Datastore`,
+        use the `DELETE /datastores/{datastore_id}` API.
 
         Args:
           application_id: Application ID of the application to delete

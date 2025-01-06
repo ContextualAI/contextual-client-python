@@ -8,6 +8,12 @@ __all__ = ["DatastoreListParams"]
 
 
 class DatastoreListParams(TypedDict, total=False):
+    application_id: str
+    """ID of the application used to filter datastores.
+
+    If provided, only datastores linked to this application will be returned.
+    """
+
     cursor: str
     """
     Cursor from the previous call to list datastores, used to retrieve the next set

@@ -63,7 +63,8 @@ class JobsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListGetTuneJobResponse:
         """
-        Retrieve a list of all fine-tuning jobs for a specified application.
+        Retrieve a list of all tune jobs run on a specified `Application`, including
+        their `status`, `evaluation_results`, and resultant `model_id`.
 
         Args:
           application_id: Application ID of the application to list tuning jobs for
@@ -98,10 +99,11 @@ class JobsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """Cancel a specific fine-tuning job.
+        """Cancel a specific tuning job.
 
-        Terminates the fine-tuning job if it is still
-        in progress.
+        Terminates the tuning job if it is still in
+        progress. If the tuning job has already completed, the tuned model will not be
+        deleted.
 
         Args:
           application_id: Application ID of the application associated with the tuning job
@@ -165,7 +167,8 @@ class AsyncJobsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListGetTuneJobResponse:
         """
-        Retrieve a list of all fine-tuning jobs for a specified application.
+        Retrieve a list of all tune jobs run on a specified `Application`, including
+        their `status`, `evaluation_results`, and resultant `model_id`.
 
         Args:
           application_id: Application ID of the application to list tuning jobs for
@@ -200,10 +203,11 @@ class AsyncJobsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """Cancel a specific fine-tuning job.
+        """Cancel a specific tuning job.
 
-        Terminates the fine-tuning job if it is still
-        in progress.
+        Terminates the tuning job if it is still in
+        progress. If the tuning job has already completed, the tuned model will not be
+        deleted.
 
         Args:
           application_id: Application ID of the application associated with the tuning job

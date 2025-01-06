@@ -52,7 +52,7 @@ class MetadataResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvaluationRoundResponse:
         """
-        Get evaluation round status and results.
+        Get an `Evaluation` round's status and results.
 
         Args:
           application_id: Application ID for which to retrieve the evaluation
@@ -113,7 +113,7 @@ class AsyncMetadataResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvaluationRoundResponse:
         """
-        Get evaluation round status and results.
+        Get an `Evaluation` round's status and results.
 
         Args:
           application_id: Application ID for which to retrieve the evaluation

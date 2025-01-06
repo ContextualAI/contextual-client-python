@@ -63,7 +63,8 @@ class JobsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListEvaluationResponse:
         """
-        Retrieve a list of evaluation round results for a given application.
+        Retrieve a list of `Evaluation` rounds run on a given `Application`, including
+        the `Evaluation`'s status and other metadata.
 
         Args:
           application_id: Application ID for which to retrieve evaluations
@@ -99,7 +100,7 @@ class JobsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Cancels an evaluation round.
+        Cancels an `Evaluation` round.
 
         Args:
           application_id: Application ID for which to cancel the evaluation
@@ -163,7 +164,8 @@ class AsyncJobsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListEvaluationResponse:
         """
-        Retrieve a list of evaluation round results for a given application.
+        Retrieve a list of `Evaluation` rounds run on a given `Application`, including
+        the `Evaluation`'s status and other metadata.
 
         Args:
           application_id: Application ID for which to retrieve evaluations
@@ -199,7 +201,7 @@ class AsyncJobsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Cancels an evaluation round.
+        Cancels an `Evaluation` round.
 
         Args:
           application_id: Application ID for which to cancel the evaluation
