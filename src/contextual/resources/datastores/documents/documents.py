@@ -31,10 +31,11 @@ from ...._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...._base_client import make_request_options
+from ....pagination import SyncDatastoresDocumentsListPagination, AsyncDatastoresDocumentsListPagination
+from ...._base_client import AsyncPaginator, make_request_options
 from ....types.datastores import document_list_params, document_create_params
 from ....types.datastores.ingestion_response import IngestionResponse
-from ....types.datastores.get_documents_response import GetDocumentsResponse
+from ....types.datastores.documents.document_description import DocumentDescription
 
 __all__ = ["DocumentsResource", "AsyncDocumentsResource"]
 
@@ -135,7 +136,7 @@ class DocumentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDocumentsResponse:
+    ) -> SyncDatastoresDocumentsListPagination[DocumentDescription]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
         and ingestion job `status`.
@@ -170,8 +171,9 @@ class DocumentsResource(SyncAPIResource):
         """
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
-        return self._get(
+        return self._get_api_list(
             f"/datastores/{datastore_id}/documents",
+            page=SyncDatastoresDocumentsListPagination[DocumentDescription],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -188,7 +190,7 @@ class DocumentsResource(SyncAPIResource):
                     document_list_params.DocumentListParams,
                 ),
             ),
-            cast_to=GetDocumentsResponse,
+            model=DocumentDescription,
         )
 
     def delete(
@@ -313,7 +315,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
             cast_to=IngestionResponse,
         )
 
-    async def list(
+    def list(
         self,
         datastore_id: str,
         *,
@@ -329,7 +331,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDocumentsResponse:
+    ) -> AsyncPaginator[DocumentDescription, AsyncDatastoresDocumentsListPagination[DocumentDescription]]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
         and ingestion job `status`.
@@ -364,14 +366,15 @@ class AsyncDocumentsResource(AsyncAPIResource):
         """
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
-        return await self._get(
+        return self._get_api_list(
             f"/datastores/{datastore_id}/documents",
+            page=AsyncDatastoresDocumentsListPagination[DocumentDescription],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "cursor": cursor,
                         "ingestion_job_status": ingestion_job_status,
@@ -382,7 +385,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
                     document_list_params.DocumentListParams,
                 ),
             ),
-            cast_to=GetDocumentsResponse,
+            model=DocumentDescription,
         )
 
     async def delete(
