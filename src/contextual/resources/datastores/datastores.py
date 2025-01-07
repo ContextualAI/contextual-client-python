@@ -34,9 +34,9 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncDatastoresListResponse, AsyncDatastoresListResponse
+from ...pagination import SyncDatastoresPage, AsyncDatastoresPage
 from ..._base_client import AsyncPaginator, make_request_options
-from ...types.datastore_list_response import DatastoreListResponse
+from ...types.datastore import Datastore
 from ...types.create_datastore_response import CreateDatastoreResponse
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
@@ -126,7 +126,7 @@ class DatastoresResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncDatastoresListResponse[DatastoreListResponse]:
+    ) -> SyncDatastoresPage[Datastore]:
         """
         List all the `Datastores`.
 
@@ -155,7 +155,7 @@ class DatastoresResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/datastores",
-            page=SyncDatastoresListResponse[DatastoreListResponse],
+            page=SyncDatastoresPage[Datastore],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -171,7 +171,7 @@ class DatastoresResource(SyncAPIResource):
                     datastore_list_params.DatastoreListParams,
                 ),
             ),
-            model=DatastoreListResponse,
+            model=Datastore,
         )
 
     def delete(
@@ -296,7 +296,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[DatastoreListResponse, AsyncDatastoresListResponse[DatastoreListResponse]]:
+    ) -> AsyncPaginator[Datastore, AsyncDatastoresPage[Datastore]]:
         """
         List all the `Datastores`.
 
@@ -325,7 +325,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/datastores",
-            page=AsyncDatastoresListResponse[DatastoreListResponse],
+            page=AsyncDatastoresPage[Datastore],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -341,7 +341,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
                     datastore_list_params.DatastoreListParams,
                 ),
             ),
-            model=DatastoreListResponse,
+            model=Datastore,
         )
 
     async def delete(

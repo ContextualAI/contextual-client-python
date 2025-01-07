@@ -17,8 +17,8 @@ Types:
 ```python
 from contextual.types import (
     CreateDatastoreResponse,
+    Datastore,
     DatastoresResponse,
-    DatastoreListResponse,
     DatastoreDeleteResponse,
 )
 ```
@@ -26,7 +26,7 @@ from contextual.types import (
 Methods:
 
 - <code title="post /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">create</a>(\*\*<a href="src/contextual/types/datastore_create_params.py">params</a>) -> <a href="./src/contextual/types/create_datastore_response.py">CreateDatastoreResponse</a></code>
-- <code title="get /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">list</a>(\*\*<a href="src/contextual/types/datastore_list_params.py">params</a>) -> <a href="./src/contextual/types/datastore_list_response.py">SyncDatastoresListResponse[DatastoreListResponse]</a></code>
+- <code title="get /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">list</a>(\*\*<a href="src/contextual/types/datastore_list_params.py">params</a>) -> <a href="./src/contextual/types/datastore.py">SyncDatastoresPage[Datastore]</a></code>
 - <code title="delete /datastores/{datastore_id}">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">delete</a>(datastore_id) -> <a href="./src/contextual/types/datastore_delete_response.py">object</a></code>
 
 ## Metadata
@@ -58,7 +58,7 @@ Methods:
 
 - <code title="post /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">create</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_create_params.py">params</a>) -> <a href="./src/contextual/types/datastores/ingestion_response.py">IngestionResponse</a></code>
 - <code title="get /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">retrieve</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_description.py">DocumentDescription</a></code>
-- <code title="get /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/document_description.py">SyncDatastoresDocumentsListResponse[DocumentDescription]</a></code>
+- <code title="get /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/document_description.py">SyncDocumentsPage[DocumentDescription]</a></code>
 - <code title="delete /datastores/{datastore_id}/documents/{document_id}">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">delete</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_delete_response.py">object</a></code>
 
 # Applications
@@ -67,10 +67,10 @@ Types:
 
 ```python
 from contextual.types import (
+    Application,
     ApplicationsResponse,
     CreateApplicationOutput,
     ApplicationUpdateResponse,
-    ApplicationListResponse,
     ApplicationDeleteResponse,
 )
 ```
@@ -79,7 +79,7 @@ Methods:
 
 - <code title="post /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">create</a>(\*\*<a href="src/contextual/types/application_create_params.py">params</a>) -> <a href="./src/contextual/types/create_application_output.py">CreateApplicationOutput</a></code>
 - <code title="put /applications/{application_id}">client.applications.<a href="./src/contextual/resources/applications/applications.py">update</a>(application_id, \*\*<a href="src/contextual/types/application_update_params.py">params</a>) -> <a href="./src/contextual/types/application_update_response.py">object</a></code>
-- <code title="get /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">list</a>(\*\*<a href="src/contextual/types/application_list_params.py">params</a>) -> <a href="./src/contextual/types/application_list_response.py">SyncApplicationsListResponse[ApplicationListResponse]</a></code>
+- <code title="get /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">list</a>(\*\*<a href="src/contextual/types/application_list_params.py">params</a>) -> <a href="./src/contextual/types/application.py">SyncApplicationsPage[Application]</a></code>
 - <code title="delete /applications/{application_id}">client.applications.<a href="./src/contextual/resources/applications/applications.py">delete</a>(application_id) -> <a href="./src/contextual/types/application_delete_response.py">object</a></code>
 
 ## Metadata

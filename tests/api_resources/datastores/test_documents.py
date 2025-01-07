@@ -10,7 +10,7 @@ import pytest
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
 from contextual._utils import parse_datetime
-from contextual.pagination import SyncDatastoresDocumentsListResponse, AsyncDatastoresDocumentsListResponse
+from contextual.pagination import SyncDocumentsPage, AsyncDocumentsPage
 from contextual.types.datastores import (
     IngestionResponse,
     DocumentDescription,
@@ -117,7 +117,7 @@ class TestDocuments:
         document = client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(SyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+        assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
 
     @parametrize
     def test_method_list_with_all_params(self, client: ContextualAI) -> None:
@@ -129,7 +129,7 @@ class TestDocuments:
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             uploaded_before=parse_datetime("2019-12-27T18:11:19.117Z"),
         )
-        assert_matches_type(SyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+        assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: ContextualAI) -> None:
@@ -140,7 +140,7 @@ class TestDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = response.parse()
-        assert_matches_type(SyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+        assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
 
     @parametrize
     def test_streaming_response_list(self, client: ContextualAI) -> None:
@@ -151,7 +151,7 @@ class TestDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = response.parse()
-            assert_matches_type(SyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+            assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -309,7 +309,7 @@ class TestAsyncDocuments:
         document = await async_client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(AsyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+        assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
 
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -321,7 +321,7 @@ class TestAsyncDocuments:
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             uploaded_before=parse_datetime("2019-12-27T18:11:19.117Z"),
         )
-        assert_matches_type(AsyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+        assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -332,7 +332,7 @@ class TestAsyncDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = await response.parse()
-        assert_matches_type(AsyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+        assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -343,7 +343,7 @@ class TestAsyncDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = await response.parse()
-            assert_matches_type(AsyncDatastoresDocumentsListResponse[DocumentDescription], document, path=["response"])
+            assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

@@ -1,22 +1,11 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import List, Optional
-from datetime import datetime
 
 from .._models import BaseModel
+from .datastore import Datastore
 
-__all__ = ["DatastoresResponse", "Datastore"]
-
-
-class Datastore(BaseModel):
-    id: str
-    """ID of the datastore"""
-
-    created_at: datetime
-    """Timestamp of when the datastore was created"""
-
-    name: str
-    """Name of the datastore"""
+__all__ = ["DatastoresResponse"]
 
 
 class DatastoresResponse(BaseModel):
