@@ -63,6 +63,7 @@ class TestDatastores:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
             limit=1,
+            search="search",
         )
         assert_matches_type(SyncDatastoresListResponse[DatastoreListResponse], datastore, path=["response"])
 
@@ -170,6 +171,7 @@ class TestAsyncDatastores:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
             limit=1,
+            search="search",
         )
         assert_matches_type(AsyncDatastoresListResponse[DatastoreListResponse], datastore, path=["response"])
 

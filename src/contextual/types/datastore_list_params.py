@@ -22,3 +22,6 @@ class DatastoreListParams(TypedDict, total=False):
 
     limit: int
     """Maximum number of datastores to return"""
+
+    search: str
+    """Search text to filter datastores by name"""
