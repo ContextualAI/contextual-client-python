@@ -13,7 +13,7 @@ from contextual.types import (
     ApplicationListResponse,
     CreateApplicationOutput,
 )
-from contextual.pagination import SyncApplicationsListPagination, AsyncApplicationsListPagination
+from contextual.pagination import SyncApplicationsListResponse, AsyncApplicationsListResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -115,7 +115,7 @@ class TestApplications:
     @parametrize
     def test_method_list(self, client: ContextualAI) -> None:
         application = client.applications.list()
-        assert_matches_type(SyncApplicationsListPagination[ApplicationListResponse], application, path=["response"])
+        assert_matches_type(SyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
     @parametrize
     def test_method_list_with_all_params(self, client: ContextualAI) -> None:
@@ -124,7 +124,7 @@ class TestApplications:
             limit=1,
             search="search",
         )
-        assert_matches_type(SyncApplicationsListPagination[ApplicationListResponse], application, path=["response"])
+        assert_matches_type(SyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: ContextualAI) -> None:
@@ -133,7 +133,7 @@ class TestApplications:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         application = response.parse()
-        assert_matches_type(SyncApplicationsListPagination[ApplicationListResponse], application, path=["response"])
+        assert_matches_type(SyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
     @parametrize
     def test_streaming_response_list(self, client: ContextualAI) -> None:
@@ -142,7 +142,7 @@ class TestApplications:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             application = response.parse()
-            assert_matches_type(SyncApplicationsListPagination[ApplicationListResponse], application, path=["response"])
+            assert_matches_type(SyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -282,7 +282,7 @@ class TestAsyncApplications:
     @parametrize
     async def test_method_list(self, async_client: AsyncContextualAI) -> None:
         application = await async_client.applications.list()
-        assert_matches_type(AsyncApplicationsListPagination[ApplicationListResponse], application, path=["response"])
+        assert_matches_type(AsyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -291,7 +291,7 @@ class TestAsyncApplications:
             limit=1,
             search="search",
         )
-        assert_matches_type(AsyncApplicationsListPagination[ApplicationListResponse], application, path=["response"])
+        assert_matches_type(AsyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -300,7 +300,7 @@ class TestAsyncApplications:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         application = await response.parse()
-        assert_matches_type(AsyncApplicationsListPagination[ApplicationListResponse], application, path=["response"])
+        assert_matches_type(AsyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -309,9 +309,7 @@ class TestAsyncApplications:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             application = await response.parse()
-            assert_matches_type(
-                AsyncApplicationsListPagination[ApplicationListResponse], application, path=["response"]
-            )
+            assert_matches_type(AsyncApplicationsListResponse[ApplicationListResponse], application, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

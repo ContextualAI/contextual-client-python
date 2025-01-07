@@ -6,18 +6,18 @@ from typing_extensions import override
 from ._base_client import BasePage, PageInfo, BaseSyncPage, BaseAsyncPage
 
 __all__ = [
-    "SyncDatastoresList",
-    "AsyncDatastoresList",
-    "SyncDatastoresDocumentsListPagination",
-    "AsyncDatastoresDocumentsListPagination",
-    "SyncApplicationsListPagination",
-    "AsyncApplicationsListPagination",
+    "SyncDatastoresListResponse",
+    "AsyncDatastoresListResponse",
+    "SyncDatastoresDocumentsListResponse",
+    "AsyncDatastoresDocumentsListResponse",
+    "SyncApplicationsListResponse",
+    "AsyncApplicationsListResponse",
 ]
 
 _T = TypeVar("_T")
 
 
-class SyncDatastoresList(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncDatastoresListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     datastores: List[_T]
     next_cursor: Optional[str] = None
 
@@ -37,7 +37,7 @@ class SyncDatastoresList(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncDatastoresList(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncDatastoresListResponse(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     datastores: List[_T]
     next_cursor: Optional[str] = None
 
@@ -57,7 +57,7 @@ class AsyncDatastoresList(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class SyncDatastoresDocumentsListPagination(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncDatastoresDocumentsListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     documents: List[_T]
     next_cursor: Optional[str] = None
 
@@ -77,7 +77,7 @@ class SyncDatastoresDocumentsListPagination(BaseSyncPage[_T], BasePage[_T], Gene
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncDatastoresDocumentsListPagination(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncDatastoresDocumentsListResponse(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     documents: List[_T]
     next_cursor: Optional[str] = None
 
@@ -97,7 +97,7 @@ class AsyncDatastoresDocumentsListPagination(BaseAsyncPage[_T], BasePage[_T], Ge
         return PageInfo(params={"cursor": next_cursor})
 
 
-class SyncApplicationsListPagination(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncApplicationsListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     applications: List[_T]
     next_cursor: Optional[str] = None
 
@@ -117,7 +117,7 @@ class SyncApplicationsListPagination(BaseSyncPage[_T], BasePage[_T], Generic[_T]
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncApplicationsListPagination(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncApplicationsListResponse(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     applications: List[_T]
     next_cursor: Optional[str] = None
 

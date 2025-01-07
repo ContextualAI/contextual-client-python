@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["StandaloneLmunitParams"]
+__all__ = ["ClientLMUnitParams"]
 
 
-class StandaloneLmunitParams(TypedDict, total=False):
+class ClientLMUnitParams(TypedDict, total=False):
     query: Required[str]
     """The prompt to which the model responds"""
 

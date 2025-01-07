@@ -8,14 +8,6 @@ from .datastores import (
     DatastoresResourceWithStreamingResponse,
     AsyncDatastoresResourceWithStreamingResponse,
 )
-from .standalone import (
-    StandaloneResource,
-    AsyncStandaloneResource,
-    StandaloneResourceWithRawResponse,
-    AsyncStandaloneResourceWithRawResponse,
-    StandaloneResourceWithStreamingResponse,
-    AsyncStandaloneResourceWithStreamingResponse,
-)
 from .applications import (
     ApplicationsResource,
     AsyncApplicationsResource,
@@ -38,10 +30,4 @@ __all__ = [
     "AsyncApplicationsResourceWithRawResponse",
     "ApplicationsResourceWithStreamingResponse",
     "AsyncApplicationsResourceWithStreamingResponse",
-    "StandaloneResource",
-    "AsyncStandaloneResource",
-    "StandaloneResourceWithRawResponse",
-    "AsyncStandaloneResourceWithRawResponse",
-    "StandaloneResourceWithStreamingResponse",
-    "AsyncStandaloneResourceWithStreamingResponse",
 ]

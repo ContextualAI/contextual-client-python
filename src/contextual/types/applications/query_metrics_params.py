@@ -6,12 +6,12 @@ from typing import Union
 from datetime import datetime
 from typing_extensions import Annotated, TypedDict
 
-from ...._utils import PropertyInfo
+from ..._utils import PropertyInfo
 
-__all__ = ["MetricRetrieveParams"]
+__all__ = ["QueryMetricsParams"]
 
 
-class MetricRetrieveParams(TypedDict, total=False):
+class QueryMetricsParams(TypedDict, total=False):
     created_after: Annotated[Union[str, datetime], PropertyInfo(format="iso8601")]
     """Filters messages that are created before specified timestamp."""
 

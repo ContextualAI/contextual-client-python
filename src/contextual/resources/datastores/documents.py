@@ -8,43 +8,31 @@ from typing_extensions import Literal
 
 import httpx
 
-from .metadata import (
-    MetadataResource,
-    AsyncMetadataResource,
-    MetadataResourceWithRawResponse,
-    AsyncMetadataResourceWithRawResponse,
-    MetadataResourceWithStreamingResponse,
-    AsyncMetadataResourceWithStreamingResponse,
-)
-from ...._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
-from ...._utils import (
+from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
+from ..._utils import (
     extract_files,
     maybe_transform,
     deepcopy_minimal,
     async_maybe_transform,
 )
-from ...._compat import cached_property
-from ...._resource import SyncAPIResource, AsyncAPIResource
-from ...._response import (
+from ..._compat import cached_property
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ....pagination import SyncDatastoresDocumentsListPagination, AsyncDatastoresDocumentsListPagination
-from ...._base_client import AsyncPaginator, make_request_options
-from ....types.datastores import document_list_params, document_create_params
-from ....types.datastores.ingestion_response import IngestionResponse
-from ....types.datastores.documents.document_description import DocumentDescription
+from ...pagination import SyncDatastoresDocumentsListResponse, AsyncDatastoresDocumentsListResponse
+from ..._base_client import AsyncPaginator, make_request_options
+from ...types.datastores import document_list_params, document_create_params
+from ...types.datastores.ingestion_response import IngestionResponse
+from ...types.datastores.document_description import DocumentDescription
 
 __all__ = ["DocumentsResource", "AsyncDocumentsResource"]
 
 
 class DocumentsResource(SyncAPIResource):
-    @cached_property
-    def metadata(self) -> MetadataResource:
-        return MetadataResource(self._client)
-
     @cached_property
     def with_raw_response(self) -> DocumentsResourceWithRawResponse:
         """
@@ -120,6 +108,47 @@ class DocumentsResource(SyncAPIResource):
             cast_to=IngestionResponse,
         )
 
+    def retrieve(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentDescription:
+        """
+        Get details of a given document, including its `name` and ingestion job
+        `status`.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return self._get(
+            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DocumentDescription,
+        )
+
     def list(
         self,
         datastore_id: str,
@@ -136,7 +165,7 @@ class DocumentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncDatastoresDocumentsListPagination[DocumentDescription]:
+    ) -> SyncDatastoresDocumentsListResponse[DocumentDescription]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
         and ingestion job `status`.
@@ -173,7 +202,7 @@ class DocumentsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         return self._get_api_list(
             f"/datastores/{datastore_id}/documents",
-            page=SyncDatastoresDocumentsListPagination[DocumentDescription],
+            page=SyncDatastoresDocumentsListResponse[DocumentDescription],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -236,10 +265,6 @@ class DocumentsResource(SyncAPIResource):
 
 
 class AsyncDocumentsResource(AsyncAPIResource):
-    @cached_property
-    def metadata(self) -> AsyncMetadataResource:
-        return AsyncMetadataResource(self._client)
-
     @cached_property
     def with_raw_response(self) -> AsyncDocumentsResourceWithRawResponse:
         """
@@ -315,6 +340,47 @@ class AsyncDocumentsResource(AsyncAPIResource):
             cast_to=IngestionResponse,
         )
 
+    async def retrieve(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentDescription:
+        """
+        Get details of a given document, including its `name` and ingestion job
+        `status`.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return await self._get(
+            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DocumentDescription,
+        )
+
     def list(
         self,
         datastore_id: str,
@@ -331,7 +397,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[DocumentDescription, AsyncDatastoresDocumentsListPagination[DocumentDescription]]:
+    ) -> AsyncPaginator[DocumentDescription, AsyncDatastoresDocumentsListResponse[DocumentDescription]]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
         and ingestion job `status`.
@@ -368,7 +434,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         return self._get_api_list(
             f"/datastores/{datastore_id}/documents",
-            page=AsyncDatastoresDocumentsListPagination[DocumentDescription],
+            page=AsyncDatastoresDocumentsListResponse[DocumentDescription],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -437,16 +503,15 @@ class DocumentsResourceWithRawResponse:
         self.create = to_raw_response_wrapper(
             documents.create,
         )
+        self.retrieve = to_raw_response_wrapper(
+            documents.retrieve,
+        )
         self.list = to_raw_response_wrapper(
             documents.list,
         )
         self.delete = to_raw_response_wrapper(
             documents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> MetadataResourceWithRawResponse:
-        return MetadataResourceWithRawResponse(self._documents.metadata)
 
 
 class AsyncDocumentsResourceWithRawResponse:
@@ -456,16 +521,15 @@ class AsyncDocumentsResourceWithRawResponse:
         self.create = async_to_raw_response_wrapper(
             documents.create,
         )
+        self.retrieve = async_to_raw_response_wrapper(
+            documents.retrieve,
+        )
         self.list = async_to_raw_response_wrapper(
             documents.list,
         )
         self.delete = async_to_raw_response_wrapper(
             documents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> AsyncMetadataResourceWithRawResponse:
-        return AsyncMetadataResourceWithRawResponse(self._documents.metadata)
 
 
 class DocumentsResourceWithStreamingResponse:
@@ -475,16 +539,15 @@ class DocumentsResourceWithStreamingResponse:
         self.create = to_streamed_response_wrapper(
             documents.create,
         )
+        self.retrieve = to_streamed_response_wrapper(
+            documents.retrieve,
+        )
         self.list = to_streamed_response_wrapper(
             documents.list,
         )
         self.delete = to_streamed_response_wrapper(
             documents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> MetadataResourceWithStreamingResponse:
-        return MetadataResourceWithStreamingResponse(self._documents.metadata)
 
 
 class AsyncDocumentsResourceWithStreamingResponse:
@@ -494,13 +557,12 @@ class AsyncDocumentsResourceWithStreamingResponse:
         self.create = async_to_streamed_response_wrapper(
             documents.create,
         )
+        self.retrieve = async_to_streamed_response_wrapper(
+            documents.retrieve,
+        )
         self.list = async_to_streamed_response_wrapper(
             documents.list,
         )
         self.delete = async_to_streamed_response_wrapper(
             documents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> AsyncMetadataResourceWithStreamingResponse:
-        return AsyncMetadataResourceWithStreamingResponse(self._documents.metadata)
