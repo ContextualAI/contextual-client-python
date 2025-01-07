@@ -26,7 +26,7 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncDatastoresListPagination, AsyncDatastoresListPagination
+from ...pagination import SyncDatastoresList, AsyncDatastoresList
 from ..._base_client import AsyncPaginator, make_request_options
 from .documents.documents import (
     DocumentsResource,
@@ -125,7 +125,7 @@ class DatastoresResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncDatastoresListPagination[DatastoreListResponse]:
+    ) -> SyncDatastoresList[DatastoreListResponse]:
         """
         List all the `Datastores`.
 
@@ -152,7 +152,7 @@ class DatastoresResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/datastores",
-            page=SyncDatastoresListPagination[DatastoreListResponse],
+            page=SyncDatastoresList[DatastoreListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -291,7 +291,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[DatastoreListResponse, AsyncDatastoresListPagination[DatastoreListResponse]]:
+    ) -> AsyncPaginator[DatastoreListResponse, AsyncDatastoresList[DatastoreListResponse]]:
         """
         List all the `Datastores`.
 
@@ -318,7 +318,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/datastores",
-            page=AsyncDatastoresListPagination[DatastoreListResponse],
+            page=AsyncDatastoresList[DatastoreListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
