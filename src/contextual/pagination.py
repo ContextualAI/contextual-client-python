@@ -12,6 +12,8 @@ __all__ = [
     "AsyncDatastoresDocumentsListPagination",
     "SyncApplicationsListPagination",
     "AsyncApplicationsListPagination",
+    "SyncEvalJobsListPagination",
+    "AsyncEvalJobsListPagination",
 ]
 
 _T = TypeVar("_T")
@@ -87,6 +89,166 @@ class AsyncDatastoresDocumentsListPagination(BaseAsyncPage[_T], BasePage[_T], Ge
         if not documents:
             return []
         return documents
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class SyncApplicationsListPagination(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    applications: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        applications = self.applications
+        if not applications:
+            return []
+        return applications
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class AsyncApplicationsListPagination(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    applications: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        applications = self.applications
+        if not applications:
+            return []
+        return applications
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class SyncEvalJobsListPagination(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    evaluation_rounds: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        evaluation_rounds = self.evaluation_rounds
+        if not evaluation_rounds:
+            return []
+        return evaluation_rounds
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class AsyncEvalJobsListPagination(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    evaluation_rounds: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        evaluation_rounds = self.evaluation_rounds
+        if not evaluation_rounds:
+            return []
+        return evaluation_rounds
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class SyncApplicationsListPagination(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    applications: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        applications = self.applications
+        if not applications:
+            return []
+        return applications
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class AsyncApplicationsListPagination(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    applications: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        applications = self.applications
+        if not applications:
+            return []
+        return applications
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class SyncApplicationsListPagination(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    applications: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        applications = self.applications
+        if not applications:
+            return []
+        return applications
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class AsyncApplicationsListPagination(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    applications: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        applications = self.applications
+        if not applications:
+            return []
+        return applications
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:

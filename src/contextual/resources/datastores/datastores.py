@@ -36,8 +36,8 @@ from .documents.documents import (
     DocumentsResourceWithStreamingResponse,
     AsyncDocumentsResourceWithStreamingResponse,
 )
-from ...types.create_datastore_output import CreateDatastoreOutput
 from ...types.datastore_list_response import DatastoreListResponse
+from ...types.create_datastore_response import CreateDatastoreResponse
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
 
@@ -80,7 +80,7 @@ class DatastoresResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> CreateDatastoreOutput:
+    ) -> CreateDatastoreResponse:
         """Create a new `Datastore`.
 
         A `Datastore` is a collection of documents.
@@ -110,7 +110,7 @@ class DatastoresResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CreateDatastoreOutput,
+            cast_to=CreateDatastoreResponse,
         )
 
     def list(
@@ -246,7 +246,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> CreateDatastoreOutput:
+    ) -> CreateDatastoreResponse:
         """Create a new `Datastore`.
 
         A `Datastore` is a collection of documents.
@@ -276,7 +276,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CreateDatastoreOutput,
+            cast_to=CreateDatastoreResponse,
         )
 
     def list(

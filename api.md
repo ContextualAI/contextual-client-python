@@ -4,8 +4,8 @@ Types:
 
 ```python
 from contextual.types import (
-    CreateDatastoreOutput,
-    Datastore,
+    CreateDatastoreResponse,
+    DatastoresResponse,
     DatastoreListResponse,
     DatastoreDeleteResponse,
 )
@@ -13,7 +13,7 @@ from contextual.types import (
 
 Methods:
 
-- <code title="post /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">create</a>(\*\*<a href="src/contextual/types/datastore_create_params.py">params</a>) -> <a href="./src/contextual/types/create_datastore_output.py">CreateDatastoreOutput</a></code>
+- <code title="post /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">create</a>(\*\*<a href="src/contextual/types/datastore_create_params.py">params</a>) -> <a href="./src/contextual/types/create_datastore_response.py">CreateDatastoreResponse</a></code>
 - <code title="get /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">list</a>(\*\*<a href="src/contextual/types/datastore_list_params.py">params</a>) -> <a href="./src/contextual/types/datastore_list_response.py">SyncDatastoresListPagination[DatastoreListResponse]</a></code>
 - <code title="delete /datastores/{datastore_id}">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">delete</a>(datastore_id) -> <a href="./src/contextual/types/datastore_delete_response.py">object</a></code>
 
@@ -65,7 +65,7 @@ Types:
 
 ```python
 from contextual.types import (
-    ApplicationList,
+    ApplicationsResponse,
     CreateApplicationOutput,
     ApplicationUpdateResponse,
     ApplicationListResponse,
@@ -164,8 +164,8 @@ Types:
 ```python
 from contextual.types.applications import (
     CreateDatasetResponse,
+    DatasetsResponse,
     GetDatasetResponse,
-    ListDatasetResponse,
     DatasetRetrieveResponse,
     DatasetDeleteResponse,
 )
@@ -176,7 +176,7 @@ Methods:
 - <code title="post /applications/{application_id}/datasets">client.applications.datasets.<a href="./src/contextual/resources/applications/datasets/datasets.py">create</a>(application_id, \*\*<a href="src/contextual/types/applications/dataset_create_params.py">params</a>) -> <a href="./src/contextual/types/applications/create_dataset_response.py">CreateDatasetResponse</a></code>
 - <code title="get /applications/{application_id}/datasets/{dataset_name}">client.applications.datasets.<a href="./src/contextual/resources/applications/datasets/datasets.py">retrieve</a>(dataset_name, \*, application_id, \*\*<a href="src/contextual/types/applications/dataset_retrieve_params.py">params</a>) -> <a href="./src/contextual/types/applications/dataset_retrieve_response.py">object</a></code>
 - <code title="put /applications/{application_id}/datasets/{dataset_name}">client.applications.datasets.<a href="./src/contextual/resources/applications/datasets/datasets.py">update</a>(dataset_name, \*, application_id, \*\*<a href="src/contextual/types/applications/dataset_update_params.py">params</a>) -> <a href="./src/contextual/types/applications/create_dataset_response.py">CreateDatasetResponse</a></code>
-- <code title="get /applications/{application_id}/datasets">client.applications.datasets.<a href="./src/contextual/resources/applications/datasets/datasets.py">list</a>(application_id, \*\*<a href="src/contextual/types/applications/dataset_list_params.py">params</a>) -> <a href="./src/contextual/types/applications/list_dataset_response.py">ListDatasetResponse</a></code>
+- <code title="get /applications/{application_id}/datasets">client.applications.datasets.<a href="./src/contextual/resources/applications/datasets/datasets.py">list</a>(application_id, \*\*<a href="src/contextual/types/applications/dataset_list_params.py">params</a>) -> <a href="./src/contextual/types/applications/datasets_response.py">DatasetsResponse</a></code>
 - <code title="delete /applications/{application_id}/datasets/{dataset_name}">client.applications.datasets.<a href="./src/contextual/resources/applications/datasets/datasets.py">delete</a>(dataset_name, \*, application_id) -> <a href="./src/contextual/types/applications/dataset_delete_response.py">object</a></code>
 
 ### Metadata

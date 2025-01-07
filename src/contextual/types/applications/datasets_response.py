@@ -8,7 +8,7 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 
-__all__ = ["ListDatasetResponse", "DatasetSummary"]
+__all__ = ["DatasetsResponse", "DatasetSummary"]
 
 
 class DatasetSummary(BaseModel):
@@ -43,7 +43,7 @@ class DatasetSummary(BaseModel):
     """Version of the dataset"""
 
 
-class ListDatasetResponse(BaseModel):
+class DatasetsResponse(BaseModel):
     dataset_summaries: List[DatasetSummary]
 
     total_count: int

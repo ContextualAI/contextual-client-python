@@ -34,10 +34,10 @@ client = ContextualAI(
     api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
 )
 
-create_datastore_output = client.datastores.create(
+create_datastore_response = client.datastores.create(
     name="name",
 )
-print(create_datastore_output.id)
+print(create_datastore_response.id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -60,10 +60,10 @@ client = AsyncContextualAI(
 
 
 async def main() -> None:
-    create_datastore_output = await client.datastores.create(
+    create_datastore_response = await client.datastores.create(
         name="name",
     )
-    print(create_datastore_output.id)
+    print(create_datastore_response.id)
 
 
 asyncio.run(main())
