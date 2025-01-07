@@ -3,19 +3,9 @@
 from typing import List, Optional
 
 from .._models import BaseModel
+from .application import Application
 
-__all__ = ["ApplicationsResponse", "Application"]
-
-
-class Application(BaseModel):
-    id: str
-    """ID of the application"""
-
-    description: str
-    """Description of the application"""
-
-    name: str
-    """Name of the application"""
+__all__ = ["ApplicationsResponse"]
 
 
 class ApplicationsResponse(BaseModel):

@@ -23,7 +23,7 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncDatastoresDocumentsListResponse, AsyncDatastoresDocumentsListResponse
+from ...pagination import SyncDocumentsPage, AsyncDocumentsPage
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.datastores import document_list_params, document_create_params
 from ...types.datastores.ingestion_response import IngestionResponse
@@ -165,7 +165,7 @@ class DocumentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncDatastoresDocumentsListResponse[DocumentDescription]:
+    ) -> SyncDocumentsPage[DocumentDescription]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
         and ingestion job `status`.
@@ -202,7 +202,7 @@ class DocumentsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         return self._get_api_list(
             f"/datastores/{datastore_id}/documents",
-            page=SyncDatastoresDocumentsListResponse[DocumentDescription],
+            page=SyncDocumentsPage[DocumentDescription],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -397,7 +397,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[DocumentDescription, AsyncDatastoresDocumentsListResponse[DocumentDescription]]:
+    ) -> AsyncPaginator[DocumentDescription, AsyncDocumentsPage[DocumentDescription]]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
         and ingestion job `status`.
@@ -434,7 +434,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         return self._get_api_list(
             f"/datastores/{datastore_id}/documents",
-            page=AsyncDatastoresDocumentsListResponse[DocumentDescription],
+            page=AsyncDocumentsPage[DocumentDescription],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

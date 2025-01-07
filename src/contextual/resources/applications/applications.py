@@ -44,7 +44,7 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncApplicationsListResponse, AsyncApplicationsListResponse
+from ...pagination import SyncApplicationsPage, AsyncApplicationsPage
 from ..._base_client import AsyncPaginator, make_request_options
 from .datasets.datasets import (
     DatasetsResource,
@@ -62,7 +62,7 @@ from .evaluate.evaluate import (
     EvaluateResourceWithStreamingResponse,
     AsyncEvaluateResourceWithStreamingResponse,
 )
-from ...types.application_list_response import ApplicationListResponse
+from ...types.application import Application
 from ...types.create_application_output import CreateApplicationOutput
 
 __all__ = ["ApplicationsResource", "AsyncApplicationsResource"]
@@ -253,7 +253,7 @@ class ApplicationsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncApplicationsListResponse[ApplicationListResponse]:
+    ) -> SyncApplicationsPage[Application]:
         """
         Retrieve a list of all `Applications`.
 
@@ -275,7 +275,7 @@ class ApplicationsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/applications",
-            page=SyncApplicationsListResponse[ApplicationListResponse],
+            page=SyncApplicationsPage[Application],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -290,7 +290,7 @@ class ApplicationsResource(SyncAPIResource):
                     application_list_params.ApplicationListParams,
                 ),
             ),
-            model=ApplicationListResponse,
+            model=Application,
         )
 
     def delete(
@@ -519,7 +519,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[ApplicationListResponse, AsyncApplicationsListResponse[ApplicationListResponse]]:
+    ) -> AsyncPaginator[Application, AsyncApplicationsPage[Application]]:
         """
         Retrieve a list of all `Applications`.
 
@@ -541,7 +541,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/applications",
-            page=AsyncApplicationsListResponse[ApplicationListResponse],
+            page=AsyncApplicationsPage[Application],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -556,7 +556,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
                     application_list_params.ApplicationListParams,
                 ),
             ),
-            model=ApplicationListResponse,
+            model=Application,
         )
 
     async def delete(

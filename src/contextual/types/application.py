@@ -3,10 +3,10 @@
 
 from .._models import BaseModel
 
-__all__ = ["ApplicationListResponse"]
+__all__ = ["Application"]
 
 
-class ApplicationListResponse(BaseModel):
+class Application(BaseModel):
     id: str
     """ID of the application"""
 

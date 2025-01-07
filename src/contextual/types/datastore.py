@@ -4,10 +4,10 @@ from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["DatastoreListResponse"]
+__all__ = ["Datastore"]
 
 
-class DatastoreListResponse(BaseModel):
+class Datastore(BaseModel):
     id: str
     """ID of the datastore"""
 

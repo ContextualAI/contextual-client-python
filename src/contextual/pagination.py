@@ -6,18 +6,18 @@ from typing_extensions import override
 from ._base_client import BasePage, PageInfo, BaseSyncPage, BaseAsyncPage
 
 __all__ = [
-    "SyncDatastoresListResponse",
-    "AsyncDatastoresListResponse",
-    "SyncDatastoresDocumentsListResponse",
-    "AsyncDatastoresDocumentsListResponse",
-    "SyncApplicationsListResponse",
-    "AsyncApplicationsListResponse",
+    "SyncDatastoresPage",
+    "AsyncDatastoresPage",
+    "SyncDocumentsPage",
+    "AsyncDocumentsPage",
+    "SyncApplicationsPage",
+    "AsyncApplicationsPage",
 ]
 
 _T = TypeVar("_T")
 
 
-class SyncDatastoresListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncDatastoresPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     datastores: List[_T]
     next_cursor: Optional[str] = None
 
@@ -37,7 +37,7 @@ class SyncDatastoresListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncDatastoresListResponse(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncDatastoresPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     datastores: List[_T]
     next_cursor: Optional[str] = None
 
@@ -57,7 +57,7 @@ class AsyncDatastoresListResponse(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class SyncDatastoresDocumentsListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncDocumentsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     documents: List[_T]
     next_cursor: Optional[str] = None
 
@@ -77,7 +77,7 @@ class SyncDatastoresDocumentsListResponse(BaseSyncPage[_T], BasePage[_T], Generi
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncDatastoresDocumentsListResponse(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncDocumentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     documents: List[_T]
     next_cursor: Optional[str] = None
 
@@ -97,7 +97,7 @@ class AsyncDatastoresDocumentsListResponse(BaseAsyncPage[_T], BasePage[_T], Gene
         return PageInfo(params={"cursor": next_cursor})
 
 
-class SyncApplicationsListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncApplicationsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     applications: List[_T]
     next_cursor: Optional[str] = None
 
@@ -117,7 +117,7 @@ class SyncApplicationsListResponse(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncApplicationsListResponse(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncApplicationsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     applications: List[_T]
     next_cursor: Optional[str] = None
 
