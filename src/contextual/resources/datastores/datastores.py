@@ -119,6 +119,7 @@ class DatastoresResource(SyncAPIResource):
         application_id: str | NotGiven = NOT_GIVEN,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
+        search: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -142,6 +143,8 @@ class DatastoresResource(SyncAPIResource):
 
           limit: Maximum number of datastores to return
 
+          search: Search text to filter datastores by name
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -163,6 +166,7 @@ class DatastoresResource(SyncAPIResource):
                         "application_id": application_id,
                         "cursor": cursor,
                         "limit": limit,
+                        "search": search,
                     },
                     datastore_list_params.DatastoreListParams,
                 ),
@@ -285,6 +289,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         application_id: str | NotGiven = NOT_GIVEN,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
+        search: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -308,6 +313,8 @@ class AsyncDatastoresResource(AsyncAPIResource):
 
           limit: Maximum number of datastores to return
 
+          search: Search text to filter datastores by name
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -329,6 +336,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
                         "application_id": application_id,
                         "cursor": cursor,
                         "limit": limit,
+                        "search": search,
                     },
                     datastore_list_params.DatastoreListParams,
                 ),
