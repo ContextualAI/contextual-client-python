@@ -3,9 +3,9 @@
 
 from .._models import BaseModel
 
-__all__ = ["CreateDatastoreOutput"]
+__all__ = ["CreateDatastoreResponse"]
 
 
-class CreateDatastoreOutput(BaseModel):
+class CreateDatastoreResponse(BaseModel):
     id: str
     """ID of the datastore"""

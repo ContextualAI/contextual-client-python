@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from .._models import BaseModel
 
-__all__ = ["ApplicationList", "Application"]
+__all__ = ["ApplicationsResponse", "Application"]
 
 
 class Application(BaseModel):
@@ -18,7 +18,7 @@ class Application(BaseModel):
     """Name of the application"""
 
 
-class ApplicationList(BaseModel):
+class ApplicationsResponse(BaseModel):
     total_count: int
     """Total number of available applications"""
 

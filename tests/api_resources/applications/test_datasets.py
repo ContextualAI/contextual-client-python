@@ -10,7 +10,7 @@ import pytest
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
 from contextual.types.applications import (
-    ListDatasetResponse,
+    DatasetsResponse,
     CreateDatasetResponse,
 )
 
@@ -191,7 +191,7 @@ class TestDatasets:
         dataset = client.applications.datasets.list(
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+        assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
     @parametrize
     def test_method_list_with_all_params(self, client: ContextualAI) -> None:
@@ -199,7 +199,7 @@ class TestDatasets:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             dataset_name="dataset_name",
         )
-        assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+        assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: ContextualAI) -> None:
@@ -210,7 +210,7 @@ class TestDatasets:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         dataset = response.parse()
-        assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+        assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
     @parametrize
     def test_streaming_response_list(self, client: ContextualAI) -> None:
@@ -221,7 +221,7 @@ class TestDatasets:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             dataset = response.parse()
-            assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+            assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -455,7 +455,7 @@ class TestAsyncDatasets:
         dataset = await async_client.applications.datasets.list(
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+        assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -463,7 +463,7 @@ class TestAsyncDatasets:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             dataset_name="dataset_name",
         )
-        assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+        assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -474,7 +474,7 @@ class TestAsyncDatasets:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         dataset = await response.parse()
-        assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+        assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -485,7 +485,7 @@ class TestAsyncDatasets:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             dataset = await response.parse()
-            assert_matches_type(ListDatasetResponse, dataset, path=["response"])
+            assert_matches_type(DatasetsResponse, dataset, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

@@ -37,7 +37,7 @@ from ....types.applications import (
     dataset_update_params,
     dataset_retrieve_params,
 )
-from ....types.applications.list_dataset_response import ListDatasetResponse
+from ....types.applications.datasets_response import DatasetsResponse
 from ....types.applications.create_dataset_response import CreateDatasetResponse
 
 __all__ = ["DatasetsResource", "AsyncDatasetsResource"]
@@ -294,7 +294,7 @@ class DatasetsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ListDatasetResponse:
+    ) -> DatasetsResponse:
         """
         List all `Datasets` and their versions belonging to a particular `Application`.
 
@@ -328,7 +328,7 @@ class DatasetsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform({"dataset_name": dataset_name}, dataset_list_params.DatasetListParams),
             ),
-            cast_to=ListDatasetResponse,
+            cast_to=DatasetsResponse,
         )
 
     def delete(
@@ -627,7 +627,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ListDatasetResponse:
+    ) -> DatasetsResponse:
         """
         List all `Datasets` and their versions belonging to a particular `Application`.
 
@@ -663,7 +663,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
                     {"dataset_name": dataset_name}, dataset_list_params.DatasetListParams
                 ),
             ),
-            cast_to=ListDatasetResponse,
+            cast_to=DatasetsResponse,
         )
 
     async def delete(

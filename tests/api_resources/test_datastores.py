@@ -10,8 +10,8 @@ import pytest
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
 from contextual.types import (
-    CreateDatastoreOutput,
     DatastoreListResponse,
+    CreateDatastoreResponse,
 )
 from contextual.pagination import SyncDatastoresListPagination, AsyncDatastoresListPagination
 
@@ -26,7 +26,7 @@ class TestDatastores:
         datastore = client.datastores.create(
             name="name",
         )
-        assert_matches_type(CreateDatastoreOutput, datastore, path=["response"])
+        assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
     @parametrize
     def test_raw_response_create(self, client: ContextualAI) -> None:
@@ -37,7 +37,7 @@ class TestDatastores:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         datastore = response.parse()
-        assert_matches_type(CreateDatastoreOutput, datastore, path=["response"])
+        assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
     @parametrize
     def test_streaming_response_create(self, client: ContextualAI) -> None:
@@ -48,7 +48,7 @@ class TestDatastores:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             datastore = response.parse()
-            assert_matches_type(CreateDatastoreOutput, datastore, path=["response"])
+            assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -133,7 +133,7 @@ class TestAsyncDatastores:
         datastore = await async_client.datastores.create(
             name="name",
         )
-        assert_matches_type(CreateDatastoreOutput, datastore, path=["response"])
+        assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
@@ -144,7 +144,7 @@ class TestAsyncDatastores:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         datastore = await response.parse()
-        assert_matches_type(CreateDatastoreOutput, datastore, path=["response"])
+        assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
@@ -155,7 +155,7 @@ class TestAsyncDatastores:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             datastore = await response.parse()
-            assert_matches_type(CreateDatastoreOutput, datastore, path=["response"])
+            assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
