@@ -19,16 +19,7 @@ from .metadata import (
     AsyncMetadataResourceWithStreamingResponse,
 )
 from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
-    to_raw_response_wrapper,
-    to_streamed_response_wrapper,
-    async_to_raw_response_wrapper,
-    async_to_streamed_response_wrapper,
-)
-from ...pagination import SyncDatastoresList, AsyncDatastoresList
-from ..._base_client import AsyncPaginator, make_request_options
-from .documents.documents import (
+from .documents import (
     DocumentsResource,
     AsyncDocumentsResource,
     DocumentsResourceWithRawResponse,
@@ -36,6 +27,15 @@ from .documents.documents import (
     DocumentsResourceWithStreamingResponse,
     AsyncDocumentsResourceWithStreamingResponse,
 )
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
+from ...pagination import SyncDatastoresListResponse, AsyncDatastoresListResponse
+from ..._base_client import AsyncPaginator, make_request_options
 from ...types.datastore_list_response import DatastoreListResponse
 from ...types.create_datastore_response import CreateDatastoreResponse
 
@@ -125,7 +125,7 @@ class DatastoresResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncDatastoresList[DatastoreListResponse]:
+    ) -> SyncDatastoresListResponse[DatastoreListResponse]:
         """
         List all the `Datastores`.
 
@@ -152,7 +152,7 @@ class DatastoresResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/datastores",
-            page=SyncDatastoresList[DatastoreListResponse],
+            page=SyncDatastoresListResponse[DatastoreListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -291,7 +291,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[DatastoreListResponse, AsyncDatastoresList[DatastoreListResponse]]:
+    ) -> AsyncPaginator[DatastoreListResponse, AsyncDatastoresListResponse[DatastoreListResponse]]:
         """
         List all the `Datastores`.
 
@@ -318,7 +318,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/datastores",
-            page=AsyncDatastoresList[DatastoreListResponse],
+            page=AsyncDatastoresListResponse[DatastoreListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

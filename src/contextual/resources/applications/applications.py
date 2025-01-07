@@ -6,6 +6,14 @@ from typing import List
 
 import httpx
 
+from .query import (
+    QueryResource,
+    AsyncQueryResource,
+    QueryResourceWithRawResponse,
+    AsyncQueryResourceWithRawResponse,
+    QueryResourceWithStreamingResponse,
+    AsyncQueryResourceWithStreamingResponse,
+)
 from ...types import application_list_params, application_create_params, application_update_params
 from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from ..._utils import (
@@ -36,15 +44,7 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .query.query import (
-    QueryResource,
-    AsyncQueryResource,
-    QueryResourceWithRawResponse,
-    AsyncQueryResourceWithRawResponse,
-    QueryResourceWithStreamingResponse,
-    AsyncQueryResourceWithStreamingResponse,
-)
-from ...pagination import SyncApplicationsListPagination, AsyncApplicationsListPagination
+from ...pagination import SyncApplicationsListResponse, AsyncApplicationsListResponse
 from ..._base_client import AsyncPaginator, make_request_options
 from .datasets.datasets import (
     DatasetsResource,
@@ -253,7 +253,7 @@ class ApplicationsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncApplicationsListPagination[ApplicationListResponse]:
+    ) -> SyncApplicationsListResponse[ApplicationListResponse]:
         """
         Retrieve a list of all `Applications`.
 
@@ -275,7 +275,7 @@ class ApplicationsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/applications",
-            page=SyncApplicationsListPagination[ApplicationListResponse],
+            page=SyncApplicationsListResponse[ApplicationListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -519,7 +519,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[ApplicationListResponse, AsyncApplicationsListPagination[ApplicationListResponse]]:
+    ) -> AsyncPaginator[ApplicationListResponse, AsyncApplicationsListResponse[ApplicationListResponse]]:
         """
         Retrieve a list of all `Applications`.
 
@@ -541,7 +541,7 @@ class AsyncApplicationsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/applications",
-            page=AsyncApplicationsListPagination[ApplicationListResponse],
+            page=AsyncApplicationsListResponse[ApplicationListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

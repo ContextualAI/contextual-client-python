@@ -3,7 +3,7 @@
 from typing import List, Optional
 
 from ..._models import BaseModel
-from .documents.document_description import DocumentDescription
+from .document_description import DocumentDescription
 
 __all__ = ["GetDocumentsResponse"]
 

@@ -2,12 +2,12 @@
 
 from typing import List, Optional
 
-from ...._models import BaseModel
+from ..._models import BaseModel
 
-__all__ = ["MetricRetrieveResponse"]
+__all__ = ["QueryMetricsResponse"]
 
 
-class MetricRetrieveResponse(BaseModel):
+class QueryMetricsResponse(BaseModel):
     total_count: int
     """Total number of messages."""
 

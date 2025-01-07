@@ -1,3 +1,15 @@
+# ContextualAI
+
+Types:
+
+```python
+from contextual.types import LMUnitResponse
+```
+
+Methods:
+
+- <code title="post /lmunit">client.<a href="./src/contextual/_client.py">lmunit</a>(\*\*<a href="src/contextual/types/client_lmunit_params.py">params</a>) -> <a href="./src/contextual/types/lmunit_response.py">LMUnitResponse</a></code>
+
 # Datastores
 
 Types:
@@ -14,7 +26,7 @@ from contextual.types import (
 Methods:
 
 - <code title="post /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">create</a>(\*\*<a href="src/contextual/types/datastore_create_params.py">params</a>) -> <a href="./src/contextual/types/create_datastore_response.py">CreateDatastoreResponse</a></code>
-- <code title="get /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">list</a>(\*\*<a href="src/contextual/types/datastore_list_params.py">params</a>) -> <a href="./src/contextual/types/datastore_list_response.py">SyncDatastoresList[DatastoreListResponse]</a></code>
+- <code title="get /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">list</a>(\*\*<a href="src/contextual/types/datastore_list_params.py">params</a>) -> <a href="./src/contextual/types/datastore_list_response.py">SyncDatastoresListResponse[DatastoreListResponse]</a></code>
 - <code title="delete /datastores/{datastore_id}">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">delete</a>(datastore_id) -> <a href="./src/contextual/types/datastore_delete_response.py">object</a></code>
 
 ## Metadata
@@ -35,6 +47,7 @@ Types:
 
 ```python
 from contextual.types.datastores import (
+    DocumentDescription,
     GetDocumentsResponse,
     IngestionResponse,
     DocumentDeleteResponse,
@@ -43,21 +56,10 @@ from contextual.types.datastores import (
 
 Methods:
 
-- <code title="post /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents/documents.py">create</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_create_params.py">params</a>) -> <a href="./src/contextual/types/datastores/ingestion_response.py">IngestionResponse</a></code>
-- <code title="get /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents/documents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/documents/document_description.py">SyncDatastoresDocumentsListPagination[DocumentDescription]</a></code>
-- <code title="delete /datastores/{datastore_id}/documents/{document_id}">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents/documents.py">delete</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_delete_response.py">object</a></code>
-
-### Metadata
-
-Types:
-
-```python
-from contextual.types.datastores.documents import DocumentDescription
-```
-
-Methods:
-
-- <code title="get /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.metadata.<a href="./src/contextual/resources/datastores/documents/metadata.py">retrieve</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/documents/document_description.py">DocumentDescription</a></code>
+- <code title="post /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">create</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_create_params.py">params</a>) -> <a href="./src/contextual/types/datastores/ingestion_response.py">IngestionResponse</a></code>
+- <code title="get /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">retrieve</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_description.py">DocumentDescription</a></code>
+- <code title="get /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/document_description.py">SyncDatastoresDocumentsListResponse[DocumentDescription]</a></code>
+- <code title="delete /datastores/{datastore_id}/documents/{document_id}">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">delete</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_delete_response.py">object</a></code>
 
 # Applications
 
@@ -77,7 +79,7 @@ Methods:
 
 - <code title="post /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">create</a>(\*\*<a href="src/contextual/types/application_create_params.py">params</a>) -> <a href="./src/contextual/types/create_application_output.py">CreateApplicationOutput</a></code>
 - <code title="put /applications/{application_id}">client.applications.<a href="./src/contextual/resources/applications/applications.py">update</a>(application_id, \*\*<a href="src/contextual/types/application_update_params.py">params</a>) -> <a href="./src/contextual/types/application_update_response.py">object</a></code>
-- <code title="get /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">list</a>(\*\*<a href="src/contextual/types/application_list_params.py">params</a>) -> <a href="./src/contextual/types/application_list_response.py">SyncApplicationsListPagination[ApplicationListResponse]</a></code>
+- <code title="get /applications">client.applications.<a href="./src/contextual/resources/applications/applications.py">list</a>(\*\*<a href="src/contextual/types/application_list_params.py">params</a>) -> <a href="./src/contextual/types/application_list_response.py">SyncApplicationsListResponse[ApplicationListResponse]</a></code>
 - <code title="delete /applications/{application_id}">client.applications.<a href="./src/contextual/resources/applications/applications.py">delete</a>(application_id) -> <a href="./src/contextual/types/application_delete_response.py">object</a></code>
 
 ## Metadata
@@ -97,30 +99,14 @@ Methods:
 Types:
 
 ```python
-from contextual.types.applications import (
-    QueryResponse,
-    QueryFeedbackResponse,
-    QueryFormFillingResponse,
-)
+from contextual.types.applications import QueryResponse, QueryFeedbackResponse, QueryMetricsResponse
 ```
 
 Methods:
 
-- <code title="post /applications/{application_id}/feedback">client.applications.query.<a href="./src/contextual/resources/applications/query/query.py">feedback</a>(application_id, \*\*<a href="src/contextual/types/applications/query_feedback_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_feedback_response.py">object</a></code>
-- <code title="post /applications/{application_id}/form_filling">client.applications.query.<a href="./src/contextual/resources/applications/query/query.py">form_filling</a>(application_id, \*\*<a href="src/contextual/types/applications/query_form_filling_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_form_filling_response.py">QueryFormFillingResponse</a></code>
-- <code title="post /applications/{application_id}/query">client.applications.query.<a href="./src/contextual/resources/applications/query/query.py">start</a>(application_id, \*\*<a href="src/contextual/types/applications/query_start_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_response.py">QueryResponse</a></code>
-
-### Metrics
-
-Types:
-
-```python
-from contextual.types.applications.query import MetricRetrieveResponse
-```
-
-Methods:
-
-- <code title="get /applications/{application_id}/metrics">client.applications.query.metrics.<a href="./src/contextual/resources/applications/query/metrics.py">retrieve</a>(application_id, \*\*<a href="src/contextual/types/applications/query/metric_retrieve_params.py">params</a>) -> <a href="./src/contextual/types/applications/query/metric_retrieve_response.py">MetricRetrieveResponse</a></code>
+- <code title="post /applications/{application_id}/feedback">client.applications.query.<a href="./src/contextual/resources/applications/query.py">feedback</a>(application_id, \*\*<a href="src/contextual/types/applications/query_feedback_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_feedback_response.py">object</a></code>
+- <code title="get /applications/{application_id}/metrics">client.applications.query.<a href="./src/contextual/resources/applications/query.py">metrics</a>(application_id, \*\*<a href="src/contextual/types/applications/query_metrics_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_metrics_response.py">QueryMetricsResponse</a></code>
+- <code title="post /applications/{application_id}/query">client.applications.query.<a href="./src/contextual/resources/applications/query.py">start</a>(application_id, \*\*<a href="src/contextual/types/applications/query_start_params.py">params</a>) -> <a href="./src/contextual/types/applications/query_response.py">QueryResponse</a></code>
 
 ## Evaluate
 
@@ -231,15 +217,3 @@ from contextual.types.applications.tune import ModelListResponse
 Methods:
 
 - <code title="get /applications/{application_id}/tune/models">client.applications.tune.models.<a href="./src/contextual/resources/applications/tune/models.py">list</a>(application_id) -> <a href="./src/contextual/types/applications/tune/model_list_response.py">ModelListResponse</a></code>
-
-# Standalone
-
-Types:
-
-```python
-from contextual.types import StandaloneLmunitResponse
-```
-
-Methods:
-
-- <code title="post /lmunit">client.standalone.<a href="./src/contextual/resources/standalone.py">lmunit</a>(\*\*<a href="src/contextual/types/standalone_lmunit_params.py">params</a>) -> <a href="./src/contextual/types/standalone_lmunit_response.py">StandaloneLmunitResponse</a></code>
