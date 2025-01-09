@@ -1,5 +1,5 @@
 [project]
-name = "contextual-sdk"
+name = "contextual-client"
 version = "0.0.1-alpha.0"
 description = "The official Python library for the Contextual AI API"
 dynamic = ["readme"]

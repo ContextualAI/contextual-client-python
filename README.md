@@ -1,6 +1,6 @@
 # Contextual AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/contextual-sdk.svg)](https://pypi.org/project/contextual-sdk/)
+[![PyPI version](https://img.shields.io/pypi/v/contextual-client.svg)](https://pypi.org/project/contextual-client/)
 
 The Contextual AI Python library provides convenient access to the Contextual AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/stainless-sdks/sunrise-python.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre contextual-sdk`
+> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre contextual-client`
 
 ## Usage
 
@@ -34,10 +34,10 @@ client = ContextualAI(
     api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
 )
 
-create_datastore_response = client.datastores.create(
-    name="name",
+create_application_output = client.applications.create(
+    name="xxx",
 )
-print(create_datastore_response.id)
+print(create_application_output.application_id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -60,10 +60,10 @@ client = AsyncContextualAI(
 
 
 async def main() -> None:
-    create_datastore_response = await client.datastores.create(
-        name="name",
+    create_application_output = await client.applications.create(
+        name="xxx",
     )
-    print(create_datastore_response.id)
+    print(create_application_output.application_id)
 
 
 asyncio.run(main())
@@ -91,12 +91,12 @@ from contextual import ContextualAI
 
 client = ContextualAI()
 
-all_datastores = []
+all_applications = []
 # Automatically fetches more pages as needed.
-for datastore in client.datastores.list():
-    # Do something with datastore here
-    all_datastores.append(datastore)
-print(all_datastores)
+for application in client.applications.list():
+    # Do something with application here
+    all_applications.append(application)
+print(all_applications)
 ```
 
 Or, asynchronously:
@@ -109,11 +109,11 @@ client = AsyncContextualAI()
 
 
 async def main() -> None:
-    all_datastores = []
+    all_applications = []
     # Iterate through items across all pages, issuing requests as needed.
-    async for datastore in client.datastores.list():
-        all_datastores.append(datastore)
-    print(all_datastores)
+    async for application in client.applications.list():
+        all_applications.append(application)
+    print(all_applications)
 
 
 asyncio.run(main())
@@ -122,11 +122,11 @@ asyncio.run(main())
 Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
 
 ```python
-first_page = await client.datastores.list()
+first_page = await client.applications.list()
 if first_page.has_next_page():
     print(f"will fetch next page using these details: {first_page.next_page_info()}")
     next_page = await first_page.get_next_page()
-    print(f"number of items we just fetched: {len(next_page.datastores)}")
+    print(f"number of items we just fetched: {len(next_page.applications)}")
 
 # Remove `await` for non-async usage.
 ```
@@ -134,11 +134,11 @@ if first_page.has_next_page():
 Or just work directly with the returned data:
 
 ```python
-first_page = await client.datastores.list()
+first_page = await client.applications.list()
 
 print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
-for datastore in first_page.datastores:
-    print(datastore.id)
+for application in first_page.applications:
+    print(application.id)
 
 # Remove `await` for non-async usage.
 ```
@@ -159,8 +159,8 @@ from contextual import ContextualAI
 client = ContextualAI()
 
 try:
-    client.datastores.create(
-        name="name",
+    client.applications.create(
+        name="xxx",
     )
 except contextual.APIConnectionError as e:
     print("The server could not be reached")
@@ -204,8 +204,8 @@ client = ContextualAI(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).datastores.create(
-    name="name",
+client.with_options(max_retries=5).applications.create(
+    name="xxx",
 )
 ```
 
@@ -229,8 +229,8 @@ client = ContextualAI(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).datastores.create(
-    name="name",
+client.with_options(timeout=5.0).applications.create(
+    name="xxx",
 )
 ```
 
@@ -272,13 +272,13 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from contextual import ContextualAI
 
 client = ContextualAI()
-response = client.datastores.with_raw_response.create(
-    name="name",
+response = client.applications.with_raw_response.create(
+    name="xxx",
 )
 print(response.headers.get('X-My-Header'))
 
-datastore = response.parse()  # get the object that `datastores.create()` would have returned
-print(datastore.id)
+application = response.parse()  # get the object that `applications.create()` would have returned
+print(application.application_id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual/_response.py) object.
@@ -292,8 +292,8 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.datastores.with_streaming_response.create(
-    name="name",
+with client.applications.with_streaming_response.create(
+    name="xxx",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
