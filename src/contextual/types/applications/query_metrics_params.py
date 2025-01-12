@@ -18,9 +18,6 @@ class QueryMetricsParams(TypedDict, total=False):
     created_before: Annotated[Union[str, datetime], PropertyInfo(format="iso8601")]
     """Filters messages that are created after specified timestamp."""
 
-    include_contextual: bool
-    """Filters messages from contextual."""
-
     limit: int
     """Limits the number of messages to return."""
 

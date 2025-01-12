@@ -2,8 +2,7 @@
 
 from typing import Dict, Optional
 
-from pydantic import Field as FieldInfo
-
+from ...._compat import PYDANTIC_V2, ConfigDict
 from ...._models import BaseModel
 
 __all__ = ["GetTuneJobResponse"]
@@ -20,8 +19,12 @@ class GetTuneJobResponse(BaseModel):
     still in progress.
     """
 
-    api_model_id: Optional[str] = FieldInfo(alias="model_id", default=None)
+    model_id: Optional[str] = None
     """ID of the trained model.
 
     Omitted if the tuning job failed or is still in progress.
     """
+
+    if PYDANTIC_V2:
+        # allow fields with a `model_` prefix
+        model_config = ConfigDict(protected_namespaces=tuple())

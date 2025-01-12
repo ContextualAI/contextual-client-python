@@ -91,7 +91,6 @@ class TestQuery:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
-            include_contextual=True,
             limit=0,
             offset=0,
         )
@@ -281,7 +280,6 @@ class TestAsyncQuery:
             application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
-            include_contextual=True,
             limit=0,
             offset=0,
         )
