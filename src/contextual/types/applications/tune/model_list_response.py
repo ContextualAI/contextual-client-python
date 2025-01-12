@@ -4,8 +4,7 @@ from typing import List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
-from pydantic import Field as FieldInfo
-
+from ...._compat import PYDANTIC_V2, ConfigDict
 from ...._models import BaseModel
 
 __all__ = ["ModelListResponse", "Model"]
@@ -21,11 +20,15 @@ class Model(BaseModel):
     job_id: str
     """ID of the tuning job that produced the model"""
 
-    api_model_id: str = FieldInfo(alias="model_id")
+    model_id: str
     """ID of the registered model"""
 
     task_type: Literal["tune", "align"]
     """Type of specialization task that produced the model"""
+
+    if PYDANTIC_V2:
+        # allow fields with a `model_` prefix
+        model_config = ConfigDict(protected_namespaces=tuple())
 
 
 class ModelListResponse(BaseModel):

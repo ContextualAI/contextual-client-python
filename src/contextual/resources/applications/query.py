@@ -122,7 +122,6 @@ class QueryResource(SyncAPIResource):
         *,
         created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
         created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        include_contextual: bool | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         offset: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -141,8 +140,6 @@ class QueryResource(SyncAPIResource):
           created_after: Filters messages that are created before specified timestamp.
 
           created_before: Filters messages that are created after specified timestamp.
-
-          include_contextual: Filters messages from contextual.
 
           limit: Limits the number of messages to return.
 
@@ -169,7 +166,6 @@ class QueryResource(SyncAPIResource):
                     {
                         "created_after": created_after,
                         "created_before": created_before,
-                        "include_contextual": include_contextual,
                         "limit": limit,
                         "offset": offset,
                     },
@@ -339,7 +335,6 @@ class AsyncQueryResource(AsyncAPIResource):
         *,
         created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
         created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        include_contextual: bool | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         offset: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -358,8 +353,6 @@ class AsyncQueryResource(AsyncAPIResource):
           created_after: Filters messages that are created before specified timestamp.
 
           created_before: Filters messages that are created after specified timestamp.
-
-          include_contextual: Filters messages from contextual.
 
           limit: Limits the number of messages to return.
 
@@ -386,7 +379,6 @@ class AsyncQueryResource(AsyncAPIResource):
                     {
                         "created_after": created_after,
                         "created_before": created_before,
-                        "include_contextual": include_contextual,
                         "limit": limit,
                         "offset": offset,
                     },
