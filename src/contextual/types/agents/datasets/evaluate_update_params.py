@@ -6,10 +6,10 @@ from typing_extensions import Literal, Required, TypedDict
 
 from ...._types import FileTypes
 
-__all__ = ["EvaluationUpdateParams"]
+__all__ = ["EvaluateUpdateParams"]
 
 
-class EvaluationUpdateParams(TypedDict, total=False):
+class EvaluateUpdateParams(TypedDict, total=False):
     agent_id: Required[str]
     """Agent ID associated with the evaluation dataset"""
 

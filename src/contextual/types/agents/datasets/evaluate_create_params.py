@@ -6,10 +6,10 @@ from typing_extensions import Literal, Required, TypedDict
 
 from ...._types import FileTypes
 
-__all__ = ["EvaluationCreateParams"]
+__all__ = ["EvaluateCreateParams"]
 
 
-class EvaluationCreateParams(TypedDict, total=False):
+class EvaluateCreateParams(TypedDict, total=False):
     dataset_name: Required[str]
     """Name of the evaluation dataset"""
 

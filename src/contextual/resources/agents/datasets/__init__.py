@@ -16,13 +16,13 @@ from .datasets import (
     DatasetsResourceWithStreamingResponse,
     AsyncDatasetsResourceWithStreamingResponse,
 )
-from .evaluation import (
-    EvaluationResource,
-    AsyncEvaluationResource,
-    EvaluationResourceWithRawResponse,
-    AsyncEvaluationResourceWithRawResponse,
-    EvaluationResourceWithStreamingResponse,
-    AsyncEvaluationResourceWithStreamingResponse,
+from .evaluate import (
+    EvaluateResource,
+    AsyncEvaluateResource,
+    EvaluateResourceWithRawResponse,
+    AsyncEvaluateResourceWithRawResponse,
+    EvaluateResourceWithStreamingResponse,
+    AsyncEvaluateResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -32,12 +32,12 @@ __all__ = [
     "AsyncTuneResourceWithRawResponse",
     "TuneResourceWithStreamingResponse",
     "AsyncTuneResourceWithStreamingResponse",
-    "EvaluationResource",
-    "AsyncEvaluationResource",
-    "EvaluationResourceWithRawResponse",
-    "AsyncEvaluationResourceWithRawResponse",
-    "EvaluationResourceWithStreamingResponse",
-    "AsyncEvaluationResourceWithStreamingResponse",
+    "EvaluateResource",
+    "AsyncEvaluateResource",
+    "EvaluateResourceWithRawResponse",
+    "AsyncEvaluateResourceWithRawResponse",
+    "EvaluateResourceWithStreamingResponse",
+    "AsyncEvaluateResourceWithStreamingResponse",
     "DatasetsResource",
     "AsyncDatasetsResource",
     "DatasetsResourceWithRawResponse",

@@ -93,6 +93,7 @@ class EvaluateResource(SyncAPIResource):
           agent_id: Agent ID of the agent to evaluate
 
           metrics: List of metrics to use. Supported metrics are `equivalence` and `groundedness`.
+              Use comma-separated list to pass multiple values or use repeated keys.
 
           evalset_file: Evalset file (CSV) to use for evaluation, containing the columns `prompt`
               (`question`), `reference` (`ground truth response`), and optional additional
@@ -195,6 +196,7 @@ class AsyncEvaluateResource(AsyncAPIResource):
           agent_id: Agent ID of the agent to evaluate
 
           metrics: List of metrics to use. Supported metrics are `equivalence` and `groundedness`.
+              Use comma-separated list to pass multiple values or use repeated keys.
 
           evalset_file: Evalset file (CSV) to use for evaluation, containing the columns `prompt`
               (`question`), `reference` (`ground truth response`), and optional additional

@@ -12,7 +12,11 @@ __all__ = ["EvaluateCreateParams"]
 
 class EvaluateCreateParams(TypedDict, total=False):
     metrics: Required[List[Literal["equivalence", "groundedness"]]]
-    """List of metrics to use. Supported metrics are `equivalence` and `groundedness`."""
+    """List of metrics to use.
+
+    Supported metrics are `equivalence` and `groundedness`. Use comma-separated list
+    to pass multiple values or use repeated keys.
+    """
 
     evalset_file: FileTypes
     """
