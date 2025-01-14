@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from ..._models import BaseModel
 
-__all__ = ["QueryRetrievalInfoResponse", "ContentMetadata"]
+__all__ = ["RetrievalInfoResponse", "ContentMetadata"]
 
 
 class ContentMetadata(BaseModel):
@@ -33,6 +33,6 @@ class ContentMetadata(BaseModel):
     """Y coordinate of the bottom right corner on the bounding box."""
 
 
-class QueryRetrievalInfoResponse(BaseModel):
+class RetrievalInfoResponse(BaseModel):
     content_metadatas: Optional[List[ContentMetadata]] = None
     """List of content metadatas."""

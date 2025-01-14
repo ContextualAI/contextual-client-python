@@ -18,6 +18,6 @@ from .evaluate_launch_params import EvaluateLaunchParams as EvaluateLaunchParams
 from .query_metrics_response import QueryMetricsResponse as QueryMetricsResponse
 from .create_dataset_response import CreateDatasetResponse as CreateDatasetResponse
 from .dataset_retrieve_params import DatasetRetrieveParams as DatasetRetrieveParams
+from .retrieval_info_response import RetrievalInfoResponse as RetrievalInfoResponse
 from .launch_evaluation_response import LaunchEvaluationResponse as LaunchEvaluationResponse
 from .query_retrieval_info_params import QueryRetrievalInfoParams as QueryRetrievalInfoParams
-from .query_retrieval_info_response import QueryRetrievalInfoResponse as QueryRetrievalInfoResponse

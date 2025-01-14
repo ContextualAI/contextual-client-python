@@ -30,7 +30,7 @@ from ...types.agents import (
 )
 from ...types.agents.query_response import QueryResponse
 from ...types.agents.query_metrics_response import QueryMetricsResponse
-from ...types.agents.query_retrieval_info_response import QueryRetrievalInfoResponse
+from ...types.agents.retrieval_info_response import RetrievalInfoResponse
 
 __all__ = ["QueryResource", "AsyncQueryResource"]
 
@@ -259,7 +259,7 @@ class QueryResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryRetrievalInfoResponse:
+    ) -> RetrievalInfoResponse:
         """
         Return content metadata of the contents used to generate response for a given
         message.
@@ -294,7 +294,7 @@ class QueryResource(SyncAPIResource):
                     {"content_ids": content_ids}, query_retrieval_info_params.QueryRetrievalInfoParams
                 ),
             ),
-            cast_to=QueryRetrievalInfoResponse,
+            cast_to=RetrievalInfoResponse,
         )
 
 
@@ -524,7 +524,7 @@ class AsyncQueryResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryRetrievalInfoResponse:
+    ) -> RetrievalInfoResponse:
         """
         Return content metadata of the contents used to generate response for a given
         message.
@@ -559,7 +559,7 @@ class AsyncQueryResource(AsyncAPIResource):
                     {"content_ids": content_ids}, query_retrieval_info_params.QueryRetrievalInfoParams
                 ),
             ),
-            cast_to=QueryRetrievalInfoResponse,
+            cast_to=RetrievalInfoResponse,
         )
 
 

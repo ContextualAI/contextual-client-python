@@ -13,7 +13,7 @@ from contextual._utils import parse_datetime
 from contextual.types.agents import (
     QueryResponse,
     QueryMetricsResponse,
-    QueryRetrievalInfoResponse,
+    RetrievalInfoResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -214,7 +214,7 @@ class TestQuery:
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
         )
-        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+        assert_matches_type(RetrievalInfoResponse, query, path=["response"])
 
     @parametrize
     def test_raw_response_retrieval_info(self, client: ContextualAI) -> None:
@@ -227,7 +227,7 @@ class TestQuery:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         query = response.parse()
-        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+        assert_matches_type(RetrievalInfoResponse, query, path=["response"])
 
     @parametrize
     def test_streaming_response_retrieval_info(self, client: ContextualAI) -> None:
@@ -240,7 +240,7 @@ class TestQuery:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             query = response.parse()
-            assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+            assert_matches_type(RetrievalInfoResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -456,7 +456,7 @@ class TestAsyncQuery:
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
         )
-        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+        assert_matches_type(RetrievalInfoResponse, query, path=["response"])
 
     @parametrize
     async def test_raw_response_retrieval_info(self, async_client: AsyncContextualAI) -> None:
@@ -469,7 +469,7 @@ class TestAsyncQuery:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         query = await response.parse()
-        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+        assert_matches_type(RetrievalInfoResponse, query, path=["response"])
 
     @parametrize
     async def test_streaming_response_retrieval_info(self, async_client: AsyncContextualAI) -> None:
@@ -482,7 +482,7 @@ class TestAsyncQuery:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             query = await response.parse()
-            assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+            assert_matches_type(RetrievalInfoResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
