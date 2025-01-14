@@ -31,7 +31,7 @@ class LMUnitResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
         """
         return LMUnitResourceWithRawResponse(self)
 
@@ -40,7 +40,7 @@ class LMUnitResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
+        For more information, see https://www.github.com/ContextualAI/contextual-client-python#with_streaming_response
         """
         return LMUnitResourceWithStreamingResponse(self)
 
@@ -108,7 +108,7 @@ class AsyncLMUnitResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
         """
         return AsyncLMUnitResourceWithRawResponse(self)
 
@@ -117,7 +117,7 @@ class AsyncLMUnitResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
+        For more information, see https://www.github.com/ContextualAI/contextual-client-python#with_streaming_response
         """
         return AsyncLMUnitResourceWithStreamingResponse(self)
 
