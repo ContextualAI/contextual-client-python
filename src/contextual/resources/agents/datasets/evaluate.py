@@ -32,38 +32,38 @@ from ...._response import (
 )
 from ...._base_client import make_request_options
 from ....types.agents.datasets import (
-    evaluation_list_params,
-    evaluation_create_params,
-    evaluation_update_params,
-    evaluation_metadata_params,
-    evaluation_retrieve_params,
+    evaluate_list_params,
+    evaluate_create_params,
+    evaluate_update_params,
+    evaluate_metadata_params,
+    evaluate_retrieve_params,
 )
 from ....types.agents.dataset_metadata import DatasetMetadata
 from ....types.agents.list_datasets_response import ListDatasetsResponse
 from ....types.agents.create_dataset_response import CreateDatasetResponse
 
-__all__ = ["EvaluationResource", "AsyncEvaluationResource"]
+__all__ = ["EvaluateResource", "AsyncEvaluateResource"]
 
 
-class EvaluationResource(SyncAPIResource):
+class EvaluateResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> EvaluationResourceWithRawResponse:
+    def with_raw_response(self) -> EvaluateResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
         """
-        return EvaluationResourceWithRawResponse(self)
+        return EvaluateResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> EvaluationResourceWithStreamingResponse:
+    def with_streaming_response(self) -> EvaluateResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
         """
-        return EvaluationResourceWithStreamingResponse(self)
+        return EvaluateResourceWithStreamingResponse(self)
 
     def create(
         self,
@@ -135,8 +135,8 @@ class EvaluationResource(SyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return self._post(
-            f"/agents/{agent_id}/datasets/evaluation",
-            body=maybe_transform(body, evaluation_create_params.EvaluationCreateParams),
+            f"/agents/{agent_id}/datasets/evaluate",
+            body=maybe_transform(body, evaluate_create_params.EvaluateCreateParams),
             files=files,
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -194,7 +194,7 @@ class EvaluationResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `dataset_name` but received {dataset_name!r}")
         extra_headers = {"Accept": "application/octet-stream", **(extra_headers or {})}
         return self._get(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}",
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -205,7 +205,7 @@ class EvaluationResource(SyncAPIResource):
                         "batch_size": batch_size,
                         "version": version,
                     },
-                    evaluation_retrieve_params.EvaluationRetrieveParams,
+                    evaluate_retrieve_params.EvaluateRetrieveParams,
                 ),
             ),
             cast_to=BinaryAPIResponse,
@@ -279,8 +279,8 @@ class EvaluationResource(SyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return self._put(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}",
-            body=maybe_transform(body, evaluation_update_params.EvaluationUpdateParams),
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}",
+            body=maybe_transform(body, evaluate_update_params.EvaluateUpdateParams),
             files=files,
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -326,13 +326,13 @@ class EvaluationResource(SyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._get(
-            f"/agents/{agent_id}/datasets/evaluation",
+            f"/agents/{agent_id}/datasets/evaluate",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"dataset_name": dataset_name}, evaluation_list_params.EvaluationListParams),
+                query=maybe_transform({"dataset_name": dataset_name}, evaluate_list_params.EvaluateListParams),
             ),
             cast_to=ListDatasetsResponse,
         )
@@ -374,7 +374,7 @@ class EvaluationResource(SyncAPIResource):
         if not dataset_name:
             raise ValueError(f"Expected a non-empty value for `dataset_name` but received {dataset_name!r}")
         return self._delete(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}",
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -421,37 +421,37 @@ class EvaluationResource(SyncAPIResource):
         if not dataset_name:
             raise ValueError(f"Expected a non-empty value for `dataset_name` but received {dataset_name!r}")
         return self._get(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}/metadata",
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}/metadata",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"version": version}, evaluation_metadata_params.EvaluationMetadataParams),
+                query=maybe_transform({"version": version}, evaluate_metadata_params.EvaluateMetadataParams),
             ),
             cast_to=DatasetMetadata,
         )
 
 
-class AsyncEvaluationResource(AsyncAPIResource):
+class AsyncEvaluateResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncEvaluationResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncEvaluateResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncEvaluationResourceWithRawResponse(self)
+        return AsyncEvaluateResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncEvaluationResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncEvaluateResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
         """
-        return AsyncEvaluationResourceWithStreamingResponse(self)
+        return AsyncEvaluateResourceWithStreamingResponse(self)
 
     async def create(
         self,
@@ -523,8 +523,8 @@ class AsyncEvaluationResource(AsyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return await self._post(
-            f"/agents/{agent_id}/datasets/evaluation",
-            body=await async_maybe_transform(body, evaluation_create_params.EvaluationCreateParams),
+            f"/agents/{agent_id}/datasets/evaluate",
+            body=await async_maybe_transform(body, evaluate_create_params.EvaluateCreateParams),
             files=files,
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -582,7 +582,7 @@ class AsyncEvaluationResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `dataset_name` but received {dataset_name!r}")
         extra_headers = {"Accept": "application/octet-stream", **(extra_headers or {})}
         return await self._get(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}",
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -593,7 +593,7 @@ class AsyncEvaluationResource(AsyncAPIResource):
                         "batch_size": batch_size,
                         "version": version,
                     },
-                    evaluation_retrieve_params.EvaluationRetrieveParams,
+                    evaluate_retrieve_params.EvaluateRetrieveParams,
                 ),
             ),
             cast_to=AsyncBinaryAPIResponse,
@@ -667,8 +667,8 @@ class AsyncEvaluationResource(AsyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return await self._put(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}",
-            body=await async_maybe_transform(body, evaluation_update_params.EvaluationUpdateParams),
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}",
+            body=await async_maybe_transform(body, evaluate_update_params.EvaluateUpdateParams),
             files=files,
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -714,14 +714,14 @@ class AsyncEvaluationResource(AsyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._get(
-            f"/agents/{agent_id}/datasets/evaluation",
+            f"/agents/{agent_id}/datasets/evaluate",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {"dataset_name": dataset_name}, evaluation_list_params.EvaluationListParams
+                    {"dataset_name": dataset_name}, evaluate_list_params.EvaluateListParams
                 ),
             ),
             cast_to=ListDatasetsResponse,
@@ -764,7 +764,7 @@ class AsyncEvaluationResource(AsyncAPIResource):
         if not dataset_name:
             raise ValueError(f"Expected a non-empty value for `dataset_name` but received {dataset_name!r}")
         return await self._delete(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}",
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -811,115 +811,115 @@ class AsyncEvaluationResource(AsyncAPIResource):
         if not dataset_name:
             raise ValueError(f"Expected a non-empty value for `dataset_name` but received {dataset_name!r}")
         return await self._get(
-            f"/agents/{agent_id}/datasets/evaluation/{dataset_name}/metadata",
+            f"/agents/{agent_id}/datasets/evaluate/{dataset_name}/metadata",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {"version": version}, evaluation_metadata_params.EvaluationMetadataParams
+                    {"version": version}, evaluate_metadata_params.EvaluateMetadataParams
                 ),
             ),
             cast_to=DatasetMetadata,
         )
 
 
-class EvaluationResourceWithRawResponse:
-    def __init__(self, evaluation: EvaluationResource) -> None:
-        self._evaluation = evaluation
+class EvaluateResourceWithRawResponse:
+    def __init__(self, evaluate: EvaluateResource) -> None:
+        self._evaluate = evaluate
 
         self.create = to_raw_response_wrapper(
-            evaluation.create,
+            evaluate.create,
         )
         self.retrieve = to_custom_raw_response_wrapper(
-            evaluation.retrieve,
+            evaluate.retrieve,
             BinaryAPIResponse,
         )
         self.update = to_raw_response_wrapper(
-            evaluation.update,
+            evaluate.update,
         )
         self.list = to_raw_response_wrapper(
-            evaluation.list,
+            evaluate.list,
         )
         self.delete = to_raw_response_wrapper(
-            evaluation.delete,
+            evaluate.delete,
         )
         self.metadata = to_raw_response_wrapper(
-            evaluation.metadata,
+            evaluate.metadata,
         )
 
 
-class AsyncEvaluationResourceWithRawResponse:
-    def __init__(self, evaluation: AsyncEvaluationResource) -> None:
-        self._evaluation = evaluation
+class AsyncEvaluateResourceWithRawResponse:
+    def __init__(self, evaluate: AsyncEvaluateResource) -> None:
+        self._evaluate = evaluate
 
         self.create = async_to_raw_response_wrapper(
-            evaluation.create,
+            evaluate.create,
         )
         self.retrieve = async_to_custom_raw_response_wrapper(
-            evaluation.retrieve,
+            evaluate.retrieve,
             AsyncBinaryAPIResponse,
         )
         self.update = async_to_raw_response_wrapper(
-            evaluation.update,
+            evaluate.update,
         )
         self.list = async_to_raw_response_wrapper(
-            evaluation.list,
+            evaluate.list,
         )
         self.delete = async_to_raw_response_wrapper(
-            evaluation.delete,
+            evaluate.delete,
         )
         self.metadata = async_to_raw_response_wrapper(
-            evaluation.metadata,
+            evaluate.metadata,
         )
 
 
-class EvaluationResourceWithStreamingResponse:
-    def __init__(self, evaluation: EvaluationResource) -> None:
-        self._evaluation = evaluation
+class EvaluateResourceWithStreamingResponse:
+    def __init__(self, evaluate: EvaluateResource) -> None:
+        self._evaluate = evaluate
 
         self.create = to_streamed_response_wrapper(
-            evaluation.create,
+            evaluate.create,
         )
         self.retrieve = to_custom_streamed_response_wrapper(
-            evaluation.retrieve,
+            evaluate.retrieve,
             StreamedBinaryAPIResponse,
         )
         self.update = to_streamed_response_wrapper(
-            evaluation.update,
+            evaluate.update,
         )
         self.list = to_streamed_response_wrapper(
-            evaluation.list,
+            evaluate.list,
         )
         self.delete = to_streamed_response_wrapper(
-            evaluation.delete,
+            evaluate.delete,
         )
         self.metadata = to_streamed_response_wrapper(
-            evaluation.metadata,
+            evaluate.metadata,
         )
 
 
-class AsyncEvaluationResourceWithStreamingResponse:
-    def __init__(self, evaluation: AsyncEvaluationResource) -> None:
-        self._evaluation = evaluation
+class AsyncEvaluateResourceWithStreamingResponse:
+    def __init__(self, evaluate: AsyncEvaluateResource) -> None:
+        self._evaluate = evaluate
 
         self.create = async_to_streamed_response_wrapper(
-            evaluation.create,
+            evaluate.create,
         )
         self.retrieve = async_to_custom_streamed_response_wrapper(
-            evaluation.retrieve,
+            evaluate.retrieve,
             AsyncStreamedBinaryAPIResponse,
         )
         self.update = async_to_streamed_response_wrapper(
-            evaluation.update,
+            evaluate.update,
         )
         self.list = async_to_streamed_response_wrapper(
-            evaluation.list,
+            evaluate.list,
         )
         self.delete = async_to_streamed_response_wrapper(
-            evaluation.delete,
+            evaluate.delete,
         )
         self.metadata = async_to_streamed_response_wrapper(
-            evaluation.metadata,
+            evaluate.metadata,
         )
