@@ -117,7 +117,7 @@ class ContextualAI(SyncAPIClient):
     @property
     @override
     def qs(self) -> Querystring:
-        return Querystring(array_format="brackets")
+        return Querystring(array_format="repeat")
 
     @property
     @override
@@ -289,7 +289,7 @@ class AsyncContextualAI(AsyncAPIClient):
     @property
     @override
     def qs(self) -> Querystring:
-        return Querystring(array_format="brackets")
+        return Querystring(array_format="repeat")
 
     @property
     @override
