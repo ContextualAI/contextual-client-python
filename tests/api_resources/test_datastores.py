@@ -57,10 +57,9 @@ class TestDatastores:
     @parametrize
     def test_method_list_with_all_params(self, client: ContextualAI) -> None:
         datastore = client.datastores.list(
-            application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
             limit=1,
-            search="search",
         )
         assert_matches_type(SyncDatastoresPage[Datastore], datastore, path=["response"])
 
@@ -165,10 +164,9 @@ class TestAsyncDatastores:
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncContextualAI) -> None:
         datastore = await async_client.datastores.list(
-            application_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
             limit=1,
-            search="search",
         )
         assert_matches_type(AsyncDatastoresPage[Datastore], datastore, path=["response"])
 

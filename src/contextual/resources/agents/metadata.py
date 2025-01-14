@@ -14,7 +14,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.datastores.get_datastore_response import GetDatastoreResponse
+from ...types.agents.get_agent_response import GetAgentResponse
 
 __all__ = ["MetadataResource", "AsyncMetadataResource"]
 
@@ -41,7 +41,7 @@ class MetadataResource(SyncAPIResource):
 
     def retrieve(
         self,
-        datastore_id: str,
+        agent_id: str,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -49,13 +49,12 @@ class MetadataResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
+    ) -> GetAgentResponse:
         """
-        Get the details of a given `Datastore`, including its name, create time, and the
-        list of `Agents` which are currently configured to use the `Datastore`.
+        Get metadata and configuration of a given `Agent`.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          agent_id: Agent ID of the agent to retrieve details for
 
           extra_headers: Send extra headers
 
@@ -65,14 +64,14 @@ class MetadataResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not datastore_id:
-            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._get(
-            f"/datastores/{datastore_id}/metadata",
+            f"/agents/{agent_id}/metadata",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=GetAgentResponse,
         )
 
 
@@ -98,7 +97,7 @@ class AsyncMetadataResource(AsyncAPIResource):
 
     async def retrieve(
         self,
-        datastore_id: str,
+        agent_id: str,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -106,13 +105,12 @@ class AsyncMetadataResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
+    ) -> GetAgentResponse:
         """
-        Get the details of a given `Datastore`, including its name, create time, and the
-        list of `Agents` which are currently configured to use the `Datastore`.
+        Get metadata and configuration of a given `Agent`.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          agent_id: Agent ID of the agent to retrieve details for
 
           extra_headers: Send extra headers
 
@@ -122,14 +120,14 @@ class AsyncMetadataResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not datastore_id:
-            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._get(
-            f"/datastores/{datastore_id}/metadata",
+            f"/agents/{agent_id}/metadata",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=GetAgentResponse,
         )
 
 

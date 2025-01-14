@@ -8,10 +8,10 @@ __all__ = ["DatastoreListParams"]
 
 
 class DatastoreListParams(TypedDict, total=False):
-    application_id: str
-    """ID of the application used to filter datastores.
+    agent_id: str
+    """ID of the agent used to filter datastores.
 
-    If provided, only datastores linked to this application will be returned.
+    If provided, only datastores linked to this agent will be returned.
     """
 
     cursor: str
@@ -22,6 +22,3 @@ class DatastoreListParams(TypedDict, total=False):
 
     limit: int
     """Maximum number of datastores to return"""
-
-    search: str
-    """Search text to filter datastores by name"""
