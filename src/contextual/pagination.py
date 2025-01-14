@@ -10,8 +10,8 @@ __all__ = [
     "AsyncDatastoresPage",
     "SyncDocumentsPage",
     "AsyncDocumentsPage",
-    "SyncApplicationsPage",
-    "AsyncApplicationsPage",
+    "SyncPage",
+    "AsyncPage",
 ]
 
 _T = TypeVar("_T")
@@ -97,16 +97,16 @@ class AsyncDocumentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class SyncApplicationsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
-    applications: List[_T]
+class SyncPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    data: List[_T]
     next_cursor: Optional[str] = None
 
     @override
     def _get_page_items(self) -> List[_T]:
-        applications = self.applications
-        if not applications:
+        data = self.data
+        if not data:
             return []
-        return applications
+        return data
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
@@ -117,16 +117,16 @@ class SyncApplicationsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncApplicationsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
-    applications: List[_T]
+class AsyncPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    data: List[_T]
     next_cursor: Optional[str] = None
 
     @override
     def _get_page_items(self) -> List[_T]:
-        applications = self.applications
-        if not applications:
+        data = self.data
+        if not data:
             return []
-        return applications
+        return data
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:

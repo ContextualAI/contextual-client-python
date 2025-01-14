@@ -9,8 +9,8 @@ __all__ = ["GetDatastoreResponse"]
 
 
 class GetDatastoreResponse(BaseModel):
-    application_ids: List[str]
-    """List of applications using this datastore"""
+    agent_ids: List[str]
+    """List of agents using this datastore"""
 
     created_at: datetime
     """Timestamp of when the datastore was created"""

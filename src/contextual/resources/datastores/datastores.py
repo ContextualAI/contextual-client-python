@@ -88,10 +88,9 @@ class DatastoresResource(SyncAPIResource):
         Documents can be ingested into and
         deleted from a `Datastore`.
 
-        A `Datastore` can be linked to one or more `Applications` to provide data on
-        which the `Application` can ground its answers. This linkage of `Datastore` to
-        `Application` is done through the `Create Application` or `Edit Application`
-        APIs.
+        A `Datastore` can be linked to one or more `Agents` to provide data on which the
+        `Agent` can ground its answers. This linkage of `Datastore` to `Agent` is done
+        through the `Create Agent` or `Edit Agent` APIs.
 
         Args:
           name: Name of the datastore
@@ -116,10 +115,9 @@ class DatastoresResource(SyncAPIResource):
     def list(
         self,
         *,
-        application_id: str | NotGiven = NOT_GIVEN,
+        agent_id: str | NotGiven = NOT_GIVEN,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
-        search: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -135,15 +133,13 @@ class DatastoresResource(SyncAPIResource):
         `GET /datastores` call to retrieve the next set of `Datastores`.
 
         Args:
-          application_id: ID of the application used to filter datastores. If provided, only datastores
-              linked to this application will be returned.
+          agent_id: ID of the agent used to filter datastores. If provided, only datastores linked
+              to this agent will be returned.
 
           cursor: Cursor from the previous call to list datastores, used to retrieve the next set
               of results
 
           limit: Maximum number of datastores to return
-
-          search: Search text to filter datastores by name
 
           extra_headers: Send extra headers
 
@@ -163,10 +159,9 @@ class DatastoresResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "application_id": application_id,
+                        "agent_id": agent_id,
                         "cursor": cursor,
                         "limit": limit,
-                        "search": search,
                     },
                     datastore_list_params.DatastoreListParams,
                 ),
@@ -189,6 +184,9 @@ class DatastoresResource(SyncAPIResource):
 
         This
         operation is irreversible.
+
+        This operation will fail with status code 400 if there is an active `Agent`
+        associated with the `Datastore`.
 
         Args:
           datastore_id: Datastore ID of the datastore to delete
@@ -258,10 +256,9 @@ class AsyncDatastoresResource(AsyncAPIResource):
         Documents can be ingested into and
         deleted from a `Datastore`.
 
-        A `Datastore` can be linked to one or more `Applications` to provide data on
-        which the `Application` can ground its answers. This linkage of `Datastore` to
-        `Application` is done through the `Create Application` or `Edit Application`
-        APIs.
+        A `Datastore` can be linked to one or more `Agents` to provide data on which the
+        `Agent` can ground its answers. This linkage of `Datastore` to `Agent` is done
+        through the `Create Agent` or `Edit Agent` APIs.
 
         Args:
           name: Name of the datastore
@@ -286,10 +283,9 @@ class AsyncDatastoresResource(AsyncAPIResource):
     def list(
         self,
         *,
-        application_id: str | NotGiven = NOT_GIVEN,
+        agent_id: str | NotGiven = NOT_GIVEN,
         cursor: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
-        search: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -305,15 +301,13 @@ class AsyncDatastoresResource(AsyncAPIResource):
         `GET /datastores` call to retrieve the next set of `Datastores`.
 
         Args:
-          application_id: ID of the application used to filter datastores. If provided, only datastores
-              linked to this application will be returned.
+          agent_id: ID of the agent used to filter datastores. If provided, only datastores linked
+              to this agent will be returned.
 
           cursor: Cursor from the previous call to list datastores, used to retrieve the next set
               of results
 
           limit: Maximum number of datastores to return
-
-          search: Search text to filter datastores by name
 
           extra_headers: Send extra headers
 
@@ -333,10 +327,9 @@ class AsyncDatastoresResource(AsyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "application_id": application_id,
+                        "agent_id": agent_id,
                         "cursor": cursor,
                         "limit": limit,
-                        "search": search,
                     },
                     datastore_list_params.DatastoreListParams,
                 ),
@@ -359,6 +352,9 @@ class AsyncDatastoresResource(AsyncAPIResource):
 
         This
         operation is irreversible.
+
+        This operation will fail with status code 400 if there is an active `Agent`
+        associated with the `Datastore`.
 
         Args:
           datastore_id: Datastore ID of the datastore to delete

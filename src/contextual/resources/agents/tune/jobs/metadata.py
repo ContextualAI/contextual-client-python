@@ -4,17 +4,17 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ....._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ....._compat import cached_property
+from ....._resource import SyncAPIResource, AsyncAPIResource
+from ....._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.datastores.get_datastore_response import GetDatastoreResponse
+from ....._base_client import make_request_options
+from .....types.agents.tune.get_tune_job_response import GetTuneJobResponse
 
 __all__ = ["MetadataResource", "AsyncMetadataResource"]
 
@@ -41,21 +41,25 @@ class MetadataResource(SyncAPIResource):
 
     def retrieve(
         self,
-        datastore_id: str,
+        job_id: str,
         *,
+        agent_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
-        """
-        Get the details of a given `Datastore`, including its name, create time, and the
-        list of `Agents` which are currently configured to use the `Datastore`.
+    ) -> GetTuneJobResponse:
+        """Retrieve the status of a specific tuning job.
+
+        Fetches the current status and
+        evaluation results, if available, for the specified tuning job.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          agent_id: Agent ID of the agent associated with the tuning job
+
+          job_id: ID of the tuning job to retrieve the status for
 
           extra_headers: Send extra headers
 
@@ -65,14 +69,16 @@ class MetadataResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not datastore_id:
-            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        if not job_id:
+            raise ValueError(f"Expected a non-empty value for `job_id` but received {job_id!r}")
         return self._get(
-            f"/datastores/{datastore_id}/metadata",
+            f"/agents/{agent_id}/tune/jobs/{job_id}/metadata",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=GetTuneJobResponse,
         )
 
 
@@ -98,21 +104,25 @@ class AsyncMetadataResource(AsyncAPIResource):
 
     async def retrieve(
         self,
-        datastore_id: str,
+        job_id: str,
         *,
+        agent_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
-        """
-        Get the details of a given `Datastore`, including its name, create time, and the
-        list of `Agents` which are currently configured to use the `Datastore`.
+    ) -> GetTuneJobResponse:
+        """Retrieve the status of a specific tuning job.
+
+        Fetches the current status and
+        evaluation results, if available, for the specified tuning job.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          agent_id: Agent ID of the agent associated with the tuning job
+
+          job_id: ID of the tuning job to retrieve the status for
 
           extra_headers: Send extra headers
 
@@ -122,14 +132,16 @@ class AsyncMetadataResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not datastore_id:
-            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        if not job_id:
+            raise ValueError(f"Expected a non-empty value for `job_id` but received {job_id!r}")
         return await self._get(
-            f"/datastores/{datastore_id}/metadata",
+            f"/agents/{agent_id}/tune/jobs/{job_id}/metadata",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=GetTuneJobResponse,
         )
 
 

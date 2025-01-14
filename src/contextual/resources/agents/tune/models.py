@@ -4,44 +4,44 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ...._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ...._compat import cached_property
+from ...._resource import SyncAPIResource, AsyncAPIResource
+from ...._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.datastores.get_datastore_response import GetDatastoreResponse
+from ...._base_client import make_request_options
+from ....types.agents.tune.model_list_response import ModelListResponse
 
-__all__ = ["MetadataResource", "AsyncMetadataResource"]
+__all__ = ["ModelsResource", "AsyncModelsResource"]
 
 
-class MetadataResource(SyncAPIResource):
+class ModelsResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> MetadataResourceWithRawResponse:
+    def with_raw_response(self) -> ModelsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
         """
-        return MetadataResourceWithRawResponse(self)
+        return ModelsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> MetadataResourceWithStreamingResponse:
+    def with_streaming_response(self) -> ModelsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
         """
-        return MetadataResourceWithStreamingResponse(self)
+        return ModelsResourceWithStreamingResponse(self)
 
-    def retrieve(
+    def list(
         self,
-        datastore_id: str,
+        agent_id: str,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -49,13 +49,12 @@ class MetadataResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
+    ) -> ModelListResponse:
         """
-        Get the details of a given `Datastore`, including its name, create time, and the
-        list of `Agents` which are currently configured to use the `Datastore`.
+        Retrieves a list of tuned models associated with the specified agent.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          agent_id: Agent ID of the agent from which to retrieve tuned models
 
           extra_headers: Send extra headers
 
@@ -65,40 +64,40 @@ class MetadataResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not datastore_id:
-            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._get(
-            f"/datastores/{datastore_id}/metadata",
+            f"/agents/{agent_id}/tune/models",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=ModelListResponse,
         )
 
 
-class AsyncMetadataResource(AsyncAPIResource):
+class AsyncModelsResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncMetadataResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncModelsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncMetadataResourceWithRawResponse(self)
+        return AsyncModelsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncMetadataResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncModelsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/sunrise-python#with_streaming_response
         """
-        return AsyncMetadataResourceWithStreamingResponse(self)
+        return AsyncModelsResourceWithStreamingResponse(self)
 
-    async def retrieve(
+    async def list(
         self,
-        datastore_id: str,
+        agent_id: str,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -106,13 +105,12 @@ class AsyncMetadataResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
+    ) -> ModelListResponse:
         """
-        Get the details of a given `Datastore`, including its name, create time, and the
-        list of `Agents` which are currently configured to use the `Datastore`.
+        Retrieves a list of tuned models associated with the specified agent.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          agent_id: Agent ID of the agent from which to retrieve tuned models
 
           extra_headers: Send extra headers
 
@@ -122,48 +120,48 @@ class AsyncMetadataResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not datastore_id:
-            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._get(
-            f"/datastores/{datastore_id}/metadata",
+            f"/agents/{agent_id}/tune/models",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=ModelListResponse,
         )
 
 
-class MetadataResourceWithRawResponse:
-    def __init__(self, metadata: MetadataResource) -> None:
-        self._metadata = metadata
+class ModelsResourceWithRawResponse:
+    def __init__(self, models: ModelsResource) -> None:
+        self._models = models
 
-        self.retrieve = to_raw_response_wrapper(
-            metadata.retrieve,
+        self.list = to_raw_response_wrapper(
+            models.list,
         )
 
 
-class AsyncMetadataResourceWithRawResponse:
-    def __init__(self, metadata: AsyncMetadataResource) -> None:
-        self._metadata = metadata
+class AsyncModelsResourceWithRawResponse:
+    def __init__(self, models: AsyncModelsResource) -> None:
+        self._models = models
 
-        self.retrieve = async_to_raw_response_wrapper(
-            metadata.retrieve,
+        self.list = async_to_raw_response_wrapper(
+            models.list,
         )
 
 
-class MetadataResourceWithStreamingResponse:
-    def __init__(self, metadata: MetadataResource) -> None:
-        self._metadata = metadata
+class ModelsResourceWithStreamingResponse:
+    def __init__(self, models: ModelsResource) -> None:
+        self._models = models
 
-        self.retrieve = to_streamed_response_wrapper(
-            metadata.retrieve,
+        self.list = to_streamed_response_wrapper(
+            models.list,
         )
 
 
-class AsyncMetadataResourceWithStreamingResponse:
-    def __init__(self, metadata: AsyncMetadataResource) -> None:
-        self._metadata = metadata
+class AsyncModelsResourceWithStreamingResponse:
+    def __init__(self, models: AsyncModelsResource) -> None:
+        self._models = models
 
-        self.retrieve = async_to_streamed_response_wrapper(
-            metadata.retrieve,
+        self.list = async_to_streamed_response_wrapper(
+            models.list,
         )

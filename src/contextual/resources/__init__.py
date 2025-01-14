@@ -1,5 +1,13 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .agents import (
+    AgentsResource,
+    AsyncAgentsResource,
+    AgentsResourceWithRawResponse,
+    AsyncAgentsResourceWithRawResponse,
+    AgentsResourceWithStreamingResponse,
+    AsyncAgentsResourceWithStreamingResponse,
+)
 from .datastores import (
     DatastoresResource,
     AsyncDatastoresResource,
@@ -7,14 +15,6 @@ from .datastores import (
     AsyncDatastoresResourceWithRawResponse,
     DatastoresResourceWithStreamingResponse,
     AsyncDatastoresResourceWithStreamingResponse,
-)
-from .applications import (
-    ApplicationsResource,
-    AsyncApplicationsResource,
-    ApplicationsResourceWithRawResponse,
-    AsyncApplicationsResourceWithRawResponse,
-    ApplicationsResourceWithStreamingResponse,
-    AsyncApplicationsResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -24,10 +24,10 @@ __all__ = [
     "AsyncDatastoresResourceWithRawResponse",
     "DatastoresResourceWithStreamingResponse",
     "AsyncDatastoresResourceWithStreamingResponse",
-    "ApplicationsResource",
-    "AsyncApplicationsResource",
-    "ApplicationsResourceWithRawResponse",
-    "AsyncApplicationsResourceWithRawResponse",
-    "ApplicationsResourceWithStreamingResponse",
-    "AsyncApplicationsResourceWithStreamingResponse",
+    "AgentsResource",
+    "AsyncAgentsResource",
+    "AgentsResourceWithRawResponse",
+    "AsyncAgentsResourceWithRawResponse",
+    "AgentsResourceWithStreamingResponse",
+    "AsyncAgentsResourceWithStreamingResponse",
 ]
