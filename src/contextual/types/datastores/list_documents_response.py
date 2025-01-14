@@ -3,13 +3,13 @@
 from typing import List, Optional
 
 from ..._models import BaseModel
-from .document_description import DocumentDescription
+from .document_metadata import DocumentMetadata
 
 __all__ = ["ListDocumentsResponse"]
 
 
 class ListDocumentsResponse(BaseModel):
-    documents: List[DocumentDescription]
+    documents: List[DocumentMetadata]
     """List of documents retrieved based on the user's GET request"""
 
     next_cursor: Optional[str] = None

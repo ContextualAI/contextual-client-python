@@ -6,7 +6,7 @@ from typing_extensions import Literal
 
 from ...._models import BaseModel
 
-__all__ = ["ListEvaluationResponse", "EvaluationRound"]
+__all__ = ["ListEvaluationJobsResponse", "EvaluationRound"]
 
 
 class EvaluationRound(BaseModel):
@@ -23,6 +23,6 @@ class EvaluationRound(BaseModel):
     """Email of the user who launched the evaluation round"""
 
 
-class ListEvaluationResponse(BaseModel):
+class ListEvaluationJobsResponse(BaseModel):
     evaluation_rounds: List[EvaluationRound]
     """List of evaluation results"""

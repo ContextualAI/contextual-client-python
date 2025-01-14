@@ -3,12 +3,12 @@
 from typing import List
 from datetime import datetime
 
-from ..._models import BaseModel
+from .._models import BaseModel
 
-__all__ = ["DatastoreMetadataResponse"]
+__all__ = ["DatastoreMetadata"]
 
 
-class DatastoreMetadataResponse(BaseModel):
+class DatastoreMetadata(BaseModel):
     agent_ids: List[str]
     """List of agents using this datastore"""
 

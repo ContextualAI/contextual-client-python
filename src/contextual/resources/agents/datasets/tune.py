@@ -38,7 +38,7 @@ from ....types.agents.datasets import (
     tune_metadata_params,
     tune_retrieve_params,
 )
-from ....types.agents.dataset_response import DatasetResponse
+from ....types.agents.dataset_metadata import DatasetMetadata
 from ....types.agents.list_datasets_response import ListDatasetsResponse
 from ....types.agents.create_dataset_response import CreateDatasetResponse
 
@@ -388,7 +388,7 @@ class TuneResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DatasetResponse:
+    ) -> DatasetMetadata:
         """
         Retrieve details of a specific tuning `Dataset` version, or the latest version
         if no `version` is specified.
@@ -424,7 +424,7 @@ class TuneResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform({"version": version}, tune_metadata_params.TuneMetadataParams),
             ),
-            cast_to=DatasetResponse,
+            cast_to=DatasetMetadata,
         )
 
 
@@ -771,7 +771,7 @@ class AsyncTuneResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DatasetResponse:
+    ) -> DatasetMetadata:
         """
         Retrieve details of a specific tuning `Dataset` version, or the latest version
         if no `version` is specified.
@@ -807,7 +807,7 @@ class AsyncTuneResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform({"version": version}, tune_metadata_params.TuneMetadataParams),
             ),
-            cast_to=DatasetResponse,
+            cast_to=DatasetMetadata,
         )
 
 

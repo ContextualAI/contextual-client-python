@@ -5,10 +5,10 @@ from typing import Dict, Optional
 from ...._compat import PYDANTIC_V2, ConfigDict
 from ...._models import BaseModel
 
-__all__ = ["TuneJobResponse"]
+__all__ = ["TuneJobMetadata"]
 
 
-class TuneJobResponse(BaseModel):
+class TuneJobMetadata(BaseModel):
     job_status: str
     """Status of the tune job"""
 
