@@ -8,28 +8,40 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._utils import (
+from ...._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ...._utils import (
     maybe_transform,
     async_maybe_transform,
 )
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from .retrieval import (
+    RetrievalResource,
+    AsyncRetrievalResource,
+    RetrievalResourceWithRawResponse,
+    AsyncRetrievalResourceWithRawResponse,
+    RetrievalResourceWithStreamingResponse,
+    AsyncRetrievalResourceWithStreamingResponse,
+)
+from ...._compat import cached_property
+from ...._resource import SyncAPIResource, AsyncAPIResource
+from ...._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.agents import query_start_params, query_metrics_params, query_feedback_params
-from ...types.agents.query_response import QueryResponse
-from ...types.agents.query_metrics_response import QueryMetricsResponse
+from ...._base_client import make_request_options
+from ....types.agents import query_start_params, query_metrics_params, query_feedback_params
+from ....types.agents.query_response import QueryResponse
+from ....types.agents.query_metrics_response import QueryMetricsResponse
 
 __all__ = ["QueryResource", "AsyncQueryResource"]
 
 
 class QueryResource(SyncAPIResource):
+    @cached_property
+    def retrieval(self) -> RetrievalResource:
+        return RetrievalResource(self._client)
+
     @cached_property
     def with_raw_response(self) -> QueryResourceWithRawResponse:
         """
@@ -243,6 +255,10 @@ class QueryResource(SyncAPIResource):
 
 
 class AsyncQueryResource(AsyncAPIResource):
+    @cached_property
+    def retrieval(self) -> AsyncRetrievalResource:
+        return AsyncRetrievalResource(self._client)
+
     @cached_property
     def with_raw_response(self) -> AsyncQueryResourceWithRawResponse:
         """
@@ -471,6 +487,10 @@ class QueryResourceWithRawResponse:
             query.start,
         )
 
+    @cached_property
+    def retrieval(self) -> RetrievalResourceWithRawResponse:
+        return RetrievalResourceWithRawResponse(self._query.retrieval)
+
 
 class AsyncQueryResourceWithRawResponse:
     def __init__(self, query: AsyncQueryResource) -> None:
@@ -485,6 +505,10 @@ class AsyncQueryResourceWithRawResponse:
         self.start = async_to_raw_response_wrapper(
             query.start,
         )
+
+    @cached_property
+    def retrieval(self) -> AsyncRetrievalResourceWithRawResponse:
+        return AsyncRetrievalResourceWithRawResponse(self._query.retrieval)
 
 
 class QueryResourceWithStreamingResponse:
@@ -501,6 +525,10 @@ class QueryResourceWithStreamingResponse:
             query.start,
         )
 
+    @cached_property
+    def retrieval(self) -> RetrievalResourceWithStreamingResponse:
+        return RetrievalResourceWithStreamingResponse(self._query.retrieval)
+
 
 class AsyncQueryResourceWithStreamingResponse:
     def __init__(self, query: AsyncQueryResource) -> None:
@@ -515,3 +543,7 @@ class AsyncQueryResourceWithStreamingResponse:
         self.start = async_to_streamed_response_wrapper(
             query.start,
         )
+
+    @cached_property
+    def retrieval(self) -> AsyncRetrievalResourceWithStreamingResponse:
+        return AsyncRetrievalResourceWithStreamingResponse(self._query.retrieval)
