@@ -9,26 +9,26 @@ import pytest
 
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from contextual.types import LMUnitResponse
+from contextual.types import LMUnitCreateResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
 
-class TestClient:
+class TestLMUnit:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
-    def test_method_lmunit(self, client: ContextualAI) -> None:
-        client_ = client.lmunit(
+    def test_method_create(self, client: ContextualAI) -> None:
+        lmunit = client.lmunit.create(
             query="query",
             response="response",
             unit_test="unit_test",
         )
-        assert_matches_type(LMUnitResponse, client_, path=["response"])
+        assert_matches_type(LMUnitCreateResponse, lmunit, path=["response"])
 
     @parametrize
-    def test_raw_response_lmunit(self, client: ContextualAI) -> None:
-        response = client.with_raw_response.lmunit(
+    def test_raw_response_create(self, client: ContextualAI) -> None:
+        response = client.lmunit.with_raw_response.create(
             query="query",
             response="response",
             unit_test="unit_test",
@@ -36,12 +36,12 @@ class TestClient:
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        client_ = response.parse()
-        assert_matches_type(LMUnitResponse, client_, path=["response"])
+        lmunit = response.parse()
+        assert_matches_type(LMUnitCreateResponse, lmunit, path=["response"])
 
     @parametrize
-    def test_streaming_response_lmunit(self, client: ContextualAI) -> None:
-        with client.with_streaming_response.lmunit(
+    def test_streaming_response_create(self, client: ContextualAI) -> None:
+        with client.lmunit.with_streaming_response.create(
             query="query",
             response="response",
             unit_test="unit_test",
@@ -49,27 +49,27 @@ class TestClient:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            client_ = response.parse()
-            assert_matches_type(LMUnitResponse, client_, path=["response"])
+            lmunit = response.parse()
+            assert_matches_type(LMUnitCreateResponse, lmunit, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
 
-class TestAsyncClient:
+class TestAsyncLMUnit:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
-    async def test_method_lmunit(self, async_client: AsyncContextualAI) -> None:
-        client = await async_client.lmunit(
+    async def test_method_create(self, async_client: AsyncContextualAI) -> None:
+        lmunit = await async_client.lmunit.create(
             query="query",
             response="response",
             unit_test="unit_test",
         )
-        assert_matches_type(LMUnitResponse, client, path=["response"])
+        assert_matches_type(LMUnitCreateResponse, lmunit, path=["response"])
 
     @parametrize
-    async def test_raw_response_lmunit(self, async_client: AsyncContextualAI) -> None:
-        response = await async_client.with_raw_response.lmunit(
+    async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.lmunit.with_raw_response.create(
             query="query",
             response="response",
             unit_test="unit_test",
@@ -77,12 +77,12 @@ class TestAsyncClient:
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        client = await response.parse()
-        assert_matches_type(LMUnitResponse, client, path=["response"])
+        lmunit = await response.parse()
+        assert_matches_type(LMUnitCreateResponse, lmunit, path=["response"])
 
     @parametrize
-    async def test_streaming_response_lmunit(self, async_client: AsyncContextualAI) -> None:
-        async with async_client.with_streaming_response.lmunit(
+    async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.lmunit.with_streaming_response.create(
             query="query",
             response="response",
             unit_test="unit_test",
@@ -90,7 +90,7 @@ class TestAsyncClient:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            client = await response.parse()
-            assert_matches_type(LMUnitResponse, client, path=["response"])
+            lmunit = await response.parse()
+            assert_matches_type(LMUnitCreateResponse, lmunit, path=["response"])
 
         assert cast(Any, response.is_closed) is True

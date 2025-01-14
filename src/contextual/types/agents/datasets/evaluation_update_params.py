@@ -4,20 +4,20 @@ from __future__ import annotations
 
 from typing_extensions import Literal, Required, TypedDict
 
-from ..._types import FileTypes
+from ...._types import FileTypes
 
-__all__ = ["DatasetUpdateParams"]
+__all__ = ["EvaluationUpdateParams"]
 
 
-class DatasetUpdateParams(TypedDict, total=False):
+class EvaluationUpdateParams(TypedDict, total=False):
     agent_id: Required[str]
-    """Agent ID associated with the dataset"""
+    """Agent ID associated with the evaluation dataset"""
 
     dataset_type: Required[Literal["evaluation_set"]]
-    """Type of dataset which determines its schema and validation rules.
+    """Type of evaluation dataset which determines its schema and validation rules.
 
     Must match the `dataset_type` used at dataset creation time.
     """
 
     file: Required[FileTypes]
-    """JSONL file containing the dataset"""
+    """JSONL file containing the entries to append to the evaluation dataset"""

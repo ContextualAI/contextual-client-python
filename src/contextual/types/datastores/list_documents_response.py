@@ -5,10 +5,10 @@ from typing import List, Optional
 from ..._models import BaseModel
 from .document_description import DocumentDescription
 
-__all__ = ["GetDocumentsResponse"]
+__all__ = ["ListDocumentsResponse"]
 
 
-class GetDocumentsResponse(BaseModel):
+class ListDocumentsResponse(BaseModel):
     documents: List[DocumentDescription]
     """List of documents retrieved based on the user's GET request"""
 

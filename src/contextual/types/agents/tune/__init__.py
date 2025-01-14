@@ -2,6 +2,6 @@
 
 from __future__ import annotations
 
+from .tune_job_response import TuneJobResponse as TuneJobResponse
 from .model_list_response import ModelListResponse as ModelListResponse
-from .get_tune_job_response import GetTuneJobResponse as GetTuneJobResponse
-from .list_get_tune_job_response import ListGetTuneJobResponse as ListGetTuneJobResponse
+from .list_tune_jobs_response import ListTuneJobsResponse as ListTuneJobsResponse

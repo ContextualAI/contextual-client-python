@@ -11,16 +11,7 @@ class CreateDatasetResponse(BaseModel):
     name: str
     """Name of the dataset"""
 
-    type: Literal[
-        "response_generation_train",
-        "grounded_generation_train",
-        "response_generation_validation",
-        "grounded_generation_validation",
-        "evaluation_run",
-        "evaluation_set",
-        "evaluation_set_prediction",
-        "evaluation_run_result",
-    ]
+    type: Literal["tuning_set", "evaluation_set", "evaluation_set_prediction", "evaluation_run_result"]
     """Type of the dataset"""
 
     version: str

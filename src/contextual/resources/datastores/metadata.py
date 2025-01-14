@@ -14,7 +14,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.datastores.get_datastore_response import GetDatastoreResponse
+from ...types.datastores.datastore_metadata_response import DatastoreMetadataResponse
 
 __all__ = ["MetadataResource", "AsyncMetadataResource"]
 
@@ -49,7 +49,7 @@ class MetadataResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
+    ) -> DatastoreMetadataResponse:
         """
         Get the details of a given `Datastore`, including its name, create time, and the
         list of `Agents` which are currently configured to use the `Datastore`.
@@ -72,7 +72,7 @@ class MetadataResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=DatastoreMetadataResponse,
         )
 
 
@@ -106,7 +106,7 @@ class AsyncMetadataResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetDatastoreResponse:
+    ) -> DatastoreMetadataResponse:
         """
         Get the details of a given `Datastore`, including its name, create time, and the
         list of `Agents` which are currently configured to use the `Datastore`.
@@ -129,7 +129,7 @@ class AsyncMetadataResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetDatastoreResponse,
+            cast_to=DatastoreMetadataResponse,
         )
 
 

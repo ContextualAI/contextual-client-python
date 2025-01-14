@@ -3,10 +3,10 @@
 
 from .._models import BaseModel
 
-__all__ = ["LMUnitResponse"]
+__all__ = ["LMUnitCreateResponse"]
 
 
-class LMUnitResponse(BaseModel):
+class LMUnitCreateResponse(BaseModel):
     score: float
     """The response is scored on a continuous scale from 1 to 5 on the unit test.
 

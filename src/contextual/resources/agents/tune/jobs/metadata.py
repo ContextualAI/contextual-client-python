@@ -14,7 +14,7 @@ from ....._response import (
     async_to_streamed_response_wrapper,
 )
 from ....._base_client import make_request_options
-from .....types.agents.tune.get_tune_job_response import GetTuneJobResponse
+from .....types.agents.tune.tune_job_response import TuneJobResponse
 
 __all__ = ["MetadataResource", "AsyncMetadataResource"]
 
@@ -50,7 +50,7 @@ class MetadataResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetTuneJobResponse:
+    ) -> TuneJobResponse:
         """Retrieve the status of a specific tuning job.
 
         Fetches the current status and
@@ -78,7 +78,7 @@ class MetadataResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetTuneJobResponse,
+            cast_to=TuneJobResponse,
         )
 
 
@@ -113,7 +113,7 @@ class AsyncMetadataResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GetTuneJobResponse:
+    ) -> TuneJobResponse:
         """Retrieve the status of a specific tuning job.
 
         Fetches the current status and
@@ -141,7 +141,7 @@ class AsyncMetadataResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GetTuneJobResponse,
+            cast_to=TuneJobResponse,
         )
 
 
