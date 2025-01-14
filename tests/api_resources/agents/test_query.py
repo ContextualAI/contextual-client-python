@@ -13,6 +13,7 @@ from contextual._utils import parse_datetime
 from contextual.types.agents import (
     QueryResponse,
     QueryMetricsResponse,
+    QueryRetrievalInfoResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -20,6 +21,85 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
 class TestQuery:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
+
+    @parametrize
+    def test_method_create(self, client: ContextualAI) -> None:
+        query = client.agents.query.create(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            messages=[
+                {
+                    "content": "content",
+                    "role": "user",
+                }
+            ],
+        )
+        assert_matches_type(QueryResponse, query, path=["response"])
+
+    @parametrize
+    def test_method_create_with_all_params(self, client: ContextualAI) -> None:
+        query = client.agents.query.create(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            messages=[
+                {
+                    "content": "content",
+                    "role": "user",
+                }
+            ],
+            retrievals_only=True,
+            conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            model_id="model_id",
+            stream=True,
+        )
+        assert_matches_type(QueryResponse, query, path=["response"])
+
+    @parametrize
+    def test_raw_response_create(self, client: ContextualAI) -> None:
+        response = client.agents.query.with_raw_response.create(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            messages=[
+                {
+                    "content": "content",
+                    "role": "user",
+                }
+            ],
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        query = response.parse()
+        assert_matches_type(QueryResponse, query, path=["response"])
+
+    @parametrize
+    def test_streaming_response_create(self, client: ContextualAI) -> None:
+        with client.agents.query.with_streaming_response.create(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            messages=[
+                {
+                    "content": "content",
+                    "role": "user",
+                }
+            ],
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            query = response.parse()
+            assert_matches_type(QueryResponse, query, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_create(self, client: ContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
+            client.agents.query.with_raw_response.create(
+                agent_id="",
+                messages=[
+                    {
+                        "content": "content",
+                        "role": "user",
+                    }
+                ],
+            )
 
     @parametrize
     def test_method_feedback(self, client: ContextualAI) -> None:
@@ -128,8 +208,65 @@ class TestQuery:
             )
 
     @parametrize
-    def test_method_start(self, client: ContextualAI) -> None:
-        query = client.agents.query.start(
+    def test_method_retrieval_info(self, client: ContextualAI) -> None:
+        query = client.agents.query.retrieval_info(
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+        )
+        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+
+    @parametrize
+    def test_raw_response_retrieval_info(self, client: ContextualAI) -> None:
+        response = client.agents.query.with_raw_response.retrieval_info(
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        query = response.parse()
+        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+
+    @parametrize
+    def test_streaming_response_retrieval_info(self, client: ContextualAI) -> None:
+        with client.agents.query.with_streaming_response.retrieval_info(
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            query = response.parse()
+            assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_retrieval_info(self, client: ContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
+            client.agents.query.with_raw_response.retrieval_info(
+                message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                agent_id="",
+                content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            client.agents.query.with_raw_response.retrieval_info(
+                message_id="",
+                agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            )
+
+
+class TestAsyncQuery:
+    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+
+    @parametrize
+    async def test_method_create(self, async_client: AsyncContextualAI) -> None:
+        query = await async_client.agents.query.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             messages=[
                 {
@@ -141,8 +278,8 @@ class TestQuery:
         assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
-    def test_method_start_with_all_params(self, client: ContextualAI) -> None:
-        query = client.agents.query.start(
+    async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
+        query = await async_client.agents.query.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             messages=[
                 {
@@ -158,8 +295,8 @@ class TestQuery:
         assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
-    def test_raw_response_start(self, client: ContextualAI) -> None:
-        response = client.agents.query.with_raw_response.start(
+    async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.agents.query.with_raw_response.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             messages=[
                 {
@@ -171,12 +308,12 @@ class TestQuery:
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        query = response.parse()
+        query = await response.parse()
         assert_matches_type(QueryResponse, query, path=["response"])
 
     @parametrize
-    def test_streaming_response_start(self, client: ContextualAI) -> None:
-        with client.agents.query.with_streaming_response.start(
+    async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.agents.query.with_streaming_response.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             messages=[
                 {
@@ -188,15 +325,15 @@ class TestQuery:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            query = response.parse()
+            query = await response.parse()
             assert_matches_type(QueryResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    def test_path_params_start(self, client: ContextualAI) -> None:
+    async def test_path_params_create(self, async_client: AsyncContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            client.agents.query.with_raw_response.start(
+            await async_client.agents.query.with_raw_response.create(
                 agent_id="",
                 messages=[
                     {
@@ -205,10 +342,6 @@ class TestQuery:
                     }
                 ],
             )
-
-
-class TestAsyncQuery:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
     async def test_method_feedback(self, async_client: AsyncContextualAI) -> None:
@@ -317,80 +450,54 @@ class TestAsyncQuery:
             )
 
     @parametrize
-    async def test_method_start(self, async_client: AsyncContextualAI) -> None:
-        query = await async_client.agents.query.start(
+    async def test_method_retrieval_info(self, async_client: AsyncContextualAI) -> None:
+        query = await async_client.agents.query.retrieval_info(
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            messages=[
-                {
-                    "content": "content",
-                    "role": "user",
-                }
-            ],
+            content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
         )
-        assert_matches_type(QueryResponse, query, path=["response"])
+        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
 
     @parametrize
-    async def test_method_start_with_all_params(self, async_client: AsyncContextualAI) -> None:
-        query = await async_client.agents.query.start(
+    async def test_raw_response_retrieval_info(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.agents.query.with_raw_response.retrieval_info(
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            messages=[
-                {
-                    "content": "content",
-                    "role": "user",
-                }
-            ],
-            retrievals_only=True,
-            conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            model_id="model_id",
-            stream=True,
-        )
-        assert_matches_type(QueryResponse, query, path=["response"])
-
-    @parametrize
-    async def test_raw_response_start(self, async_client: AsyncContextualAI) -> None:
-        response = await async_client.agents.query.with_raw_response.start(
-            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            messages=[
-                {
-                    "content": "content",
-                    "role": "user",
-                }
-            ],
+            content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         query = await response.parse()
-        assert_matches_type(QueryResponse, query, path=["response"])
+        assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
 
     @parametrize
-    async def test_streaming_response_start(self, async_client: AsyncContextualAI) -> None:
-        async with async_client.agents.query.with_streaming_response.start(
+    async def test_streaming_response_retrieval_info(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.agents.query.with_streaming_response.retrieval_info(
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            messages=[
-                {
-                    "content": "content",
-                    "role": "user",
-                }
-            ],
+            content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             query = await response.parse()
-            assert_matches_type(QueryResponse, query, path=["response"])
+            assert_matches_type(QueryRetrievalInfoResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_path_params_start(self, async_client: AsyncContextualAI) -> None:
+    async def test_path_params_retrieval_info(self, async_client: AsyncContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            await async_client.agents.query.with_raw_response.start(
+            await async_client.agents.query.with_raw_response.retrieval_info(
+                message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
                 agent_id="",
-                messages=[
-                    {
-                        "content": "content",
-                        "role": "user",
-                    }
-                ],
+                content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            await async_client.agents.query.with_raw_response.retrieval_info(
+                message_id="",
+                agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                content_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             )

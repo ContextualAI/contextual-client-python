@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Iterable
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["QueryStartParams", "Message"]
+__all__ = ["QueryCreateParams", "Message"]
 
 
-class QueryStartParams(TypedDict, total=False):
+class QueryCreateParams(TypedDict, total=False):
     messages: Required[Iterable[Message]]
     """Message objects in the conversation"""
 

@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import List
 from typing_extensions import Required, TypedDict
 
-__all__ = ["RetrievalInfoParams"]
+__all__ = ["QueryRetrievalInfoParams"]
 
 
-class RetrievalInfoParams(TypedDict, total=False):
+class QueryRetrievalInfoParams(TypedDict, total=False):
     agent_id: Required[str]
     """Agent ID of the agent which sent the provided message."""
 
