@@ -5,10 +5,10 @@ from datetime import datetime
 
 from ..._models import BaseModel
 
-__all__ = ["GetDatastoreResponse"]
+__all__ = ["DatastoreMetadataResponse"]
 
 
-class GetDatastoreResponse(BaseModel):
+class DatastoreMetadataResponse(BaseModel):
     agent_ids: List[str]
     """List of agents using this datastore"""
 

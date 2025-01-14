@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["MetadataRetrieveParams"]
+__all__ = ["TuneMetadataParams"]
 
 
-class MetadataRetrieveParams(TypedDict, total=False):
+class TuneMetadataParams(TypedDict, total=False):
     agent_id: Required[str]
-    """Agent ID associated with dataset"""
+    """Agent ID associated with the tune dataset"""
 
     version: str
     """Version number of the dataset. Defaults to the latest version if not specified."""

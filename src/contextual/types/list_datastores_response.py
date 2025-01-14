@@ -5,10 +5,10 @@ from typing import List, Optional
 from .._models import BaseModel
 from .datastore import Datastore
 
-__all__ = ["DatastoresResponse"]
+__all__ = ["ListDatastoresResponse"]
 
 
-class DatastoresResponse(BaseModel):
+class ListDatastoresResponse(BaseModel):
     datastores: List[Datastore]
     """List of all datastores"""
 

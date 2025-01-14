@@ -4,10 +4,10 @@ from typing import List, Optional
 
 from ..._models import BaseModel
 
-__all__ = ["GetAgentResponse"]
+__all__ = ["AgentMetadataResponse"]
 
 
-class GetAgentResponse(BaseModel):
+class AgentMetadataResponse(BaseModel):
     datastore_ids: List[str]
     """The IDs of the datastore(s) associated with the agent"""
 

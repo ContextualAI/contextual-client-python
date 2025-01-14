@@ -5,10 +5,10 @@ from typing import List, Optional
 from .agent import Agent
 from .._models import BaseModel
 
-__all__ = ["AgentsResponse"]
+__all__ = ["ListAgentsResponse"]
 
 
-class AgentsResponse(BaseModel):
+class ListAgentsResponse(BaseModel):
     total_count: int
     """Total number of available agents"""
 

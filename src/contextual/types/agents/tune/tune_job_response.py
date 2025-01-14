@@ -1,17 +1,14 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 from ...._compat import PYDANTIC_V2, ConfigDict
 from ...._models import BaseModel
 
-__all__ = ["ListGetTuneJobResponse", "Job"]
+__all__ = ["TuneJobResponse"]
 
 
-class Job(BaseModel):
-    id: str
-    """ID of the tune job"""
-
+class TuneJobResponse(BaseModel):
     job_status: str
     """Status of the tune job"""
 
@@ -31,17 +28,3 @@ class Job(BaseModel):
     if PYDANTIC_V2:
         # allow fields with a `model_` prefix
         model_config = ConfigDict(protected_namespaces=tuple())
-
-
-class ListGetTuneJobResponse(BaseModel):
-    jobs: List[Job]
-    """List of tune jobs"""
-
-    next_cursor: Optional[str] = None
-    """Next cursor to continue pagination.
-
-    Omitted if there are no more specialization jobs.
-    """
-
-    total_count: Optional[int] = None
-    """Total number of available specialization jobs"""

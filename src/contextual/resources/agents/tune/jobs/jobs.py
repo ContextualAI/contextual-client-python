@@ -22,7 +22,7 @@ from ....._response import (
     async_to_streamed_response_wrapper,
 )
 from ....._base_client import make_request_options
-from .....types.agents.tune.list_get_tune_job_response import ListGetTuneJobResponse
+from .....types.agents.tune.list_tune_jobs_response import ListTuneJobsResponse
 
 __all__ = ["JobsResource", "AsyncJobsResource"]
 
@@ -61,7 +61,7 @@ class JobsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ListGetTuneJobResponse:
+    ) -> ListTuneJobsResponse:
         """
         Retrieve a list of all tune jobs run on a specified `Agent`, including their
         `status`, `evaluation_results`, and resultant `model_id`.
@@ -84,7 +84,7 @@ class JobsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ListGetTuneJobResponse,
+            cast_to=ListTuneJobsResponse,
         )
 
     def delete(
@@ -165,7 +165,7 @@ class AsyncJobsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ListGetTuneJobResponse:
+    ) -> ListTuneJobsResponse:
         """
         Retrieve a list of all tune jobs run on a specified `Agent`, including their
         `status`, `evaluation_results`, and resultant `model_id`.
@@ -188,7 +188,7 @@ class AsyncJobsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ListGetTuneJobResponse,
+            cast_to=ListTuneJobsResponse,
         )
 
     async def delete(

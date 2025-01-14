@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["DatasetListParams"]
+__all__ = ["TuneListParams"]
 
 
-class DatasetListParams(TypedDict, total=False):
+class TuneListParams(TypedDict, total=False):
     dataset_name: str
     """Optional dataset name to filter the results by.
 
