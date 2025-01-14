@@ -38,7 +38,7 @@ from ....types.agents.datasets import (
     evaluation_metadata_params,
     evaluation_retrieve_params,
 )
-from ....types.agents.dataset_response import DatasetResponse
+from ....types.agents.dataset_metadata import DatasetMetadata
 from ....types.agents.list_datasets_response import ListDatasetsResponse
 from ....types.agents.create_dataset_response import CreateDatasetResponse
 
@@ -393,7 +393,7 @@ class EvaluationResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DatasetResponse:
+    ) -> DatasetMetadata:
         """
         Retrieve details of a specific evaluation `Dataset` version, or the latest
         version if no `version` is specified.
@@ -429,7 +429,7 @@ class EvaluationResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform({"version": version}, evaluation_metadata_params.EvaluationMetadataParams),
             ),
-            cast_to=DatasetResponse,
+            cast_to=DatasetMetadata,
         )
 
 
@@ -783,7 +783,7 @@ class AsyncEvaluationResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DatasetResponse:
+    ) -> DatasetMetadata:
         """
         Retrieve details of a specific evaluation `Dataset` version, or the latest
         version if no `version` is specified.
@@ -821,7 +821,7 @@ class AsyncEvaluationResource(AsyncAPIResource):
                     {"version": version}, evaluation_metadata_params.EvaluationMetadataParams
                 ),
             ),
-            cast_to=DatasetResponse,
+            cast_to=DatasetMetadata,
         )
 
 

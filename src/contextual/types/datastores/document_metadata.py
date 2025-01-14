@@ -3,10 +3,10 @@
 
 from ..._models import BaseModel
 
-__all__ = ["DocumentDescription"]
+__all__ = ["DocumentMetadata"]
 
 
-class DocumentDescription(BaseModel):
+class DocumentMetadata(BaseModel):
     id: str
     """ID of the document that was ingested"""
 

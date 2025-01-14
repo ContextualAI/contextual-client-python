@@ -5,7 +5,7 @@ from typing_extensions import Literal
 
 from ...._models import BaseModel
 
-__all__ = ["EvaluationRoundResponse", "JobMetadata"]
+__all__ = ["EvaluationJobMetadata", "JobMetadata"]
 
 
 class JobMetadata(BaseModel):
@@ -19,7 +19,7 @@ class JobMetadata(BaseModel):
     """Number of predictions that were successful during the evaluation job"""
 
 
-class EvaluationRoundResponse(BaseModel):
+class EvaluationJobMetadata(BaseModel):
     dataset_name: str
     """Dataset name containing the individual results of the evaluation round"""
 

@@ -7,10 +7,10 @@ from typing_extensions import Literal, Required, TypedDict
 
 from ..._types import FileTypes
 
-__all__ = ["EvaluateLaunchParams"]
+__all__ = ["EvaluateCreateParams"]
 
 
-class EvaluateLaunchParams(TypedDict, total=False):
+class EvaluateCreateParams(TypedDict, total=False):
     metrics: Required[List[Literal["equivalence", "groundedness"]]]
     """List of metrics to use. Supported metrics are `equivalence` and `groundedness`."""
 

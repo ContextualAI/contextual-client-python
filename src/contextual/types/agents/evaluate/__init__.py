@@ -2,5 +2,5 @@
 
 from __future__ import annotations
 
-from .list_evaluation_response import ListEvaluationResponse as ListEvaluationResponse
-from .evaluation_round_response import EvaluationRoundResponse as EvaluationRoundResponse
+from .evaluation_job_metadata import EvaluationJobMetadata as EvaluationJobMetadata
+from .list_evaluation_jobs_response import ListEvaluationJobsResponse as ListEvaluationJobsResponse

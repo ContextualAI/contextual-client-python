@@ -6,7 +6,7 @@ from datetime import datetime
 from ...._compat import PYDANTIC_V2, ConfigDict
 from ...._models import BaseModel
 
-__all__ = ["ModelListResponse", "Model"]
+__all__ = ["ListTuneModelsResponse", "Model"]
 
 
 class Model(BaseModel):
@@ -24,7 +24,7 @@ class Model(BaseModel):
         model_config = ConfigDict(protected_namespaces=tuple())
 
 
-class ModelListResponse(BaseModel):
+class ListTuneModelsResponse(BaseModel):
     has_more: bool
     """Whether there are more models to retrieve"""
 

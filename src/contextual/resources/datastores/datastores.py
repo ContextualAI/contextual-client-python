@@ -10,14 +10,6 @@ from ..._utils import (
     maybe_transform,
     async_maybe_transform,
 )
-from .metadata import (
-    MetadataResource,
-    AsyncMetadataResource,
-    MetadataResourceWithRawResponse,
-    AsyncMetadataResourceWithRawResponse,
-    MetadataResourceWithStreamingResponse,
-    AsyncMetadataResourceWithStreamingResponse,
-)
 from ..._compat import cached_property
 from .documents import (
     DocumentsResource,
@@ -37,16 +29,13 @@ from ..._response import (
 from ...pagination import SyncDatastoresPage, AsyncDatastoresPage
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.datastore import Datastore
+from ...types.datastore_metadata import DatastoreMetadata
 from ...types.create_datastore_response import CreateDatastoreResponse
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
 
 
 class DatastoresResource(SyncAPIResource):
-    @cached_property
-    def metadata(self) -> MetadataResource:
-        return MetadataResource(self._client)
-
     @cached_property
     def documents(self) -> DocumentsResource:
         return DocumentsResource(self._client)
@@ -209,12 +198,44 @@ class DatastoresResource(SyncAPIResource):
             cast_to=object,
         )
 
+    def metadata(
+        self,
+        datastore_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DatastoreMetadata:
+        """
+        Get the details of a given `Datastore`, including its name, create time, and the
+        list of `Agents` which are currently configured to use the `Datastore`.
+
+        Args:
+          datastore_id: Datastore ID of the datastore to get details of
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return self._get(
+            f"/datastores/{datastore_id}/metadata",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreMetadata,
+        )
+
 
 class AsyncDatastoresResource(AsyncAPIResource):
-    @cached_property
-    def metadata(self) -> AsyncMetadataResource:
-        return AsyncMetadataResource(self._client)
-
     @cached_property
     def documents(self) -> AsyncDocumentsResource:
         return AsyncDocumentsResource(self._client)
@@ -377,6 +398,42 @@ class AsyncDatastoresResource(AsyncAPIResource):
             cast_to=object,
         )
 
+    async def metadata(
+        self,
+        datastore_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DatastoreMetadata:
+        """
+        Get the details of a given `Datastore`, including its name, create time, and the
+        list of `Agents` which are currently configured to use the `Datastore`.
+
+        Args:
+          datastore_id: Datastore ID of the datastore to get details of
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return await self._get(
+            f"/datastores/{datastore_id}/metadata",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreMetadata,
+        )
+
 
 class DatastoresResourceWithRawResponse:
     def __init__(self, datastores: DatastoresResource) -> None:
@@ -391,10 +448,9 @@ class DatastoresResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             datastores.delete,
         )
-
-    @cached_property
-    def metadata(self) -> MetadataResourceWithRawResponse:
-        return MetadataResourceWithRawResponse(self._datastores.metadata)
+        self.metadata = to_raw_response_wrapper(
+            datastores.metadata,
+        )
 
     @cached_property
     def documents(self) -> DocumentsResourceWithRawResponse:
@@ -414,10 +470,9 @@ class AsyncDatastoresResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             datastores.delete,
         )
-
-    @cached_property
-    def metadata(self) -> AsyncMetadataResourceWithRawResponse:
-        return AsyncMetadataResourceWithRawResponse(self._datastores.metadata)
+        self.metadata = async_to_raw_response_wrapper(
+            datastores.metadata,
+        )
 
     @cached_property
     def documents(self) -> AsyncDocumentsResourceWithRawResponse:
@@ -437,10 +492,9 @@ class DatastoresResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             datastores.delete,
         )
-
-    @cached_property
-    def metadata(self) -> MetadataResourceWithStreamingResponse:
-        return MetadataResourceWithStreamingResponse(self._datastores.metadata)
+        self.metadata = to_streamed_response_wrapper(
+            datastores.metadata,
+        )
 
     @cached_property
     def documents(self) -> DocumentsResourceWithStreamingResponse:
@@ -460,10 +514,9 @@ class AsyncDatastoresResourceWithStreamingResponse:
         self.delete = async_to_streamed_response_wrapper(
             datastores.delete,
         )
-
-    @cached_property
-    def metadata(self) -> AsyncMetadataResourceWithStreamingResponse:
-        return AsyncMetadataResourceWithStreamingResponse(self._datastores.metadata)
+        self.metadata = async_to_streamed_response_wrapper(
+            datastores.metadata,
+        )
 
     @cached_property
     def documents(self) -> AsyncDocumentsResourceWithStreamingResponse:

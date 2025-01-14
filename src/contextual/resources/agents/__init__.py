@@ -40,22 +40,8 @@ from .evaluate import (
     EvaluateResourceWithStreamingResponse,
     AsyncEvaluateResourceWithStreamingResponse,
 )
-from .metadata import (
-    MetadataResource,
-    AsyncMetadataResource,
-    MetadataResourceWithRawResponse,
-    AsyncMetadataResourceWithRawResponse,
-    MetadataResourceWithStreamingResponse,
-    AsyncMetadataResourceWithStreamingResponse,
-)
 
 __all__ = [
-    "MetadataResource",
-    "AsyncMetadataResource",
-    "MetadataResourceWithRawResponse",
-    "AsyncMetadataResourceWithRawResponse",
-    "MetadataResourceWithStreamingResponse",
-    "AsyncMetadataResourceWithStreamingResponse",
     "QueryResource",
     "AsyncQueryResource",
     "QueryResourceWithRawResponse",

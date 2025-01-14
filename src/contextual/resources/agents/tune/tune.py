@@ -6,6 +6,14 @@ from typing import Mapping, cast
 
 import httpx
 
+from .jobs import (
+    JobsResource,
+    AsyncJobsResource,
+    JobsResourceWithRawResponse,
+    AsyncJobsResourceWithRawResponse,
+    JobsResourceWithStreamingResponse,
+    AsyncJobsResourceWithStreamingResponse,
+)
 from .models import (
     ModelsResource,
     AsyncModelsResource,
@@ -21,14 +29,6 @@ from ...._utils import (
     deepcopy_minimal,
     async_maybe_transform,
 )
-from .jobs.jobs import (
-    JobsResource,
-    AsyncJobsResource,
-    JobsResourceWithRawResponse,
-    AsyncJobsResourceWithRawResponse,
-    JobsResourceWithStreamingResponse,
-    AsyncJobsResourceWithStreamingResponse,
-)
 from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
 from ...._response import (
@@ -39,7 +39,7 @@ from ...._response import (
 )
 from ...._base_client import make_request_options
 from ....types.agents import tune_create_params
-from ....types.agents.tune_response import TuneResponse
+from ....types.agents.create_tune_response import CreateTuneResponse
 
 __all__ = ["TuneResource", "AsyncTuneResource"]
 
@@ -85,7 +85,7 @@ class TuneResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> TuneResponse:
+    ) -> CreateTuneResponse:
         """Create a tuning job for the specified `Agent`.
 
         Tuning jobs are asynchronous
@@ -175,7 +175,7 @@ class TuneResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TuneResponse,
+            cast_to=CreateTuneResponse,
         )
 
 
@@ -220,7 +220,7 @@ class AsyncTuneResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> TuneResponse:
+    ) -> CreateTuneResponse:
         """Create a tuning job for the specified `Agent`.
 
         Tuning jobs are asynchronous
@@ -310,7 +310,7 @@ class AsyncTuneResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TuneResponse,
+            cast_to=CreateTuneResponse,
         )
 
 

@@ -9,7 +9,7 @@ import pytest
 
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from contextual.types.agents.tune import ModelListResponse
+from contextual.types.agents.tune import ListTuneModelsResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -22,7 +22,7 @@ class TestModels:
         model = client.agents.tune.models.list(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(ModelListResponse, model, path=["response"])
+        assert_matches_type(ListTuneModelsResponse, model, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: ContextualAI) -> None:
@@ -33,7 +33,7 @@ class TestModels:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         model = response.parse()
-        assert_matches_type(ModelListResponse, model, path=["response"])
+        assert_matches_type(ListTuneModelsResponse, model, path=["response"])
 
     @parametrize
     def test_streaming_response_list(self, client: ContextualAI) -> None:
@@ -44,7 +44,7 @@ class TestModels:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             model = response.parse()
-            assert_matches_type(ModelListResponse, model, path=["response"])
+            assert_matches_type(ListTuneModelsResponse, model, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -64,7 +64,7 @@ class TestAsyncModels:
         model = await async_client.agents.tune.models.list(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(ModelListResponse, model, path=["response"])
+        assert_matches_type(ListTuneModelsResponse, model, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -75,7 +75,7 @@ class TestAsyncModels:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         model = await response.parse()
-        assert_matches_type(ModelListResponse, model, path=["response"])
+        assert_matches_type(ListTuneModelsResponse, model, path=["response"])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -86,7 +86,7 @@ class TestAsyncModels:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             model = await response.parse()
-            assert_matches_type(ModelListResponse, model, path=["response"])
+            assert_matches_type(ListTuneModelsResponse, model, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

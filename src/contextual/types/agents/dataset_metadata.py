@@ -7,10 +7,10 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 
-__all__ = ["DatasetResponse"]
+__all__ = ["DatasetMetadata"]
 
 
-class DatasetResponse(BaseModel):
+class DatasetMetadata(BaseModel):
     created_at: datetime
     """Timestamp indicating when the dataset was created"""
 

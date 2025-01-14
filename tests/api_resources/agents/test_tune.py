@@ -9,7 +9,7 @@ import pytest
 
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
-from contextual.types.agents import TuneResponse
+from contextual.types.agents import CreateTuneResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -23,7 +23,7 @@ class TestTune:
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             training_file=b"raw file contents",
         )
-        assert_matches_type(TuneResponse, tune, path=["response"])
+        assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
     @parametrize
     def test_method_create_with_all_params(self, client: ContextualAI) -> None:
@@ -33,7 +33,7 @@ class TestTune:
             model_id="model_id",
             test_file=b"raw file contents",
         )
-        assert_matches_type(TuneResponse, tune, path=["response"])
+        assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
     @parametrize
     def test_raw_response_create(self, client: ContextualAI) -> None:
@@ -45,7 +45,7 @@ class TestTune:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         tune = response.parse()
-        assert_matches_type(TuneResponse, tune, path=["response"])
+        assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
     @parametrize
     def test_streaming_response_create(self, client: ContextualAI) -> None:
@@ -57,7 +57,7 @@ class TestTune:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             tune = response.parse()
-            assert_matches_type(TuneResponse, tune, path=["response"])
+            assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -79,7 +79,7 @@ class TestAsyncTune:
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             training_file=b"raw file contents",
         )
-        assert_matches_type(TuneResponse, tune, path=["response"])
+        assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -89,7 +89,7 @@ class TestAsyncTune:
             model_id="model_id",
             test_file=b"raw file contents",
         )
-        assert_matches_type(TuneResponse, tune, path=["response"])
+        assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
@@ -101,7 +101,7 @@ class TestAsyncTune:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         tune = await response.parse()
-        assert_matches_type(TuneResponse, tune, path=["response"])
+        assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
@@ -113,7 +113,7 @@ class TestAsyncTune:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             tune = await response.parse()
-            assert_matches_type(TuneResponse, tune, path=["response"])
+            assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

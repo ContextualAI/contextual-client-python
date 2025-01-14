@@ -2,12 +2,12 @@
 
 from typing import List, Optional
 
-from ..._models import BaseModel
+from .._models import BaseModel
 
-__all__ = ["AgentMetadataResponse"]
+__all__ = ["AgentMetadata"]
 
 
-class AgentMetadataResponse(BaseModel):
+class AgentMetadata(BaseModel):
     datastore_ids: List[str]
     """The IDs of the datastore(s) associated with the agent"""
 

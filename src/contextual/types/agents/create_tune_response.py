@@ -3,9 +3,9 @@
 
 from ..._models import BaseModel
 
-__all__ = ["LaunchEvaluationResponse"]
+__all__ = ["CreateTuneResponse"]
 
 
-class LaunchEvaluationResponse(BaseModel):
+class CreateTuneResponse(BaseModel):
     id: str
-    """ID of the launched evaluation"""
+    """ID of the created tune job"""

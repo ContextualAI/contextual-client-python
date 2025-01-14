@@ -20,14 +20,6 @@ from ..._utils import (
     maybe_transform,
     async_maybe_transform,
 )
-from .metadata import (
-    MetadataResource,
-    AsyncMetadataResource,
-    MetadataResourceWithRawResponse,
-    AsyncMetadataResourceWithRawResponse,
-    MetadataResourceWithStreamingResponse,
-    AsyncMetadataResourceWithStreamingResponse,
-)
 from ..._compat import cached_property
 from .tune.tune import (
     TuneResource,
@@ -63,16 +55,13 @@ from .evaluate.evaluate import (
     EvaluateResourceWithStreamingResponse,
     AsyncEvaluateResourceWithStreamingResponse,
 )
+from ...types.agent_metadata import AgentMetadata
 from ...types.create_agent_output import CreateAgentOutput
 
 __all__ = ["AgentsResource", "AsyncAgentsResource"]
 
 
 class AgentsResource(SyncAPIResource):
-    @cached_property
-    def metadata(self) -> MetadataResource:
-        return MetadataResource(self._client)
-
     @cached_property
     def query(self) -> QueryResource:
         return QueryResource(self._client)
@@ -331,12 +320,43 @@ class AgentsResource(SyncAPIResource):
             cast_to=object,
         )
 
+    def metadata(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> AgentMetadata:
+        """
+        Get metadata and configuration of a given `Agent`.
+
+        Args:
+          agent_id: Agent ID of the agent to retrieve details for
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return self._get(
+            f"/agents/{agent_id}/metadata",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AgentMetadata,
+        )
+
 
 class AsyncAgentsResource(AsyncAPIResource):
-    @cached_property
-    def metadata(self) -> AsyncMetadataResource:
-        return AsyncMetadataResource(self._client)
-
     @cached_property
     def query(self) -> AsyncQueryResource:
         return AsyncQueryResource(self._client)
@@ -595,6 +615,41 @@ class AsyncAgentsResource(AsyncAPIResource):
             cast_to=object,
         )
 
+    async def metadata(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> AgentMetadata:
+        """
+        Get metadata and configuration of a given `Agent`.
+
+        Args:
+          agent_id: Agent ID of the agent to retrieve details for
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return await self._get(
+            f"/agents/{agent_id}/metadata",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AgentMetadata,
+        )
+
 
 class AgentsResourceWithRawResponse:
     def __init__(self, agents: AgentsResource) -> None:
@@ -612,10 +667,9 @@ class AgentsResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             agents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> MetadataResourceWithRawResponse:
-        return MetadataResourceWithRawResponse(self._agents.metadata)
+        self.metadata = to_raw_response_wrapper(
+            agents.metadata,
+        )
 
     @cached_property
     def query(self) -> QueryResourceWithRawResponse:
@@ -650,10 +704,9 @@ class AsyncAgentsResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             agents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> AsyncMetadataResourceWithRawResponse:
-        return AsyncMetadataResourceWithRawResponse(self._agents.metadata)
+        self.metadata = async_to_raw_response_wrapper(
+            agents.metadata,
+        )
 
     @cached_property
     def query(self) -> AsyncQueryResourceWithRawResponse:
@@ -688,10 +741,9 @@ class AgentsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             agents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> MetadataResourceWithStreamingResponse:
-        return MetadataResourceWithStreamingResponse(self._agents.metadata)
+        self.metadata = to_streamed_response_wrapper(
+            agents.metadata,
+        )
 
     @cached_property
     def query(self) -> QueryResourceWithStreamingResponse:
@@ -726,10 +778,9 @@ class AsyncAgentsResourceWithStreamingResponse:
         self.delete = async_to_streamed_response_wrapper(
             agents.delete,
         )
-
-    @cached_property
-    def metadata(self) -> AsyncMetadataResourceWithStreamingResponse:
-        return AsyncMetadataResourceWithStreamingResponse(self._agents.metadata)
+        self.metadata = async_to_streamed_response_wrapper(
+            agents.metadata,
+        )
 
     @cached_property
     def query(self) -> AsyncQueryResourceWithStreamingResponse:

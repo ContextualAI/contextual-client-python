@@ -14,7 +14,7 @@ from ...._response import (
     async_to_streamed_response_wrapper,
 )
 from ...._base_client import make_request_options
-from ....types.agents.tune.model_list_response import ModelListResponse
+from ....types.agents.tune.list_tune_models_response import ListTuneModelsResponse
 
 __all__ = ["ModelsResource", "AsyncModelsResource"]
 
@@ -49,7 +49,7 @@ class ModelsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ModelListResponse:
+    ) -> ListTuneModelsResponse:
         """
         Retrieves a list of tuned models associated with the specified agent.
 
@@ -71,7 +71,7 @@ class ModelsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ModelListResponse,
+            cast_to=ListTuneModelsResponse,
         )
 
 
@@ -105,7 +105,7 @@ class AsyncModelsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ModelListResponse:
+    ) -> ListTuneModelsResponse:
         """
         Retrieves a list of tuned models associated with the specified agent.
 
@@ -127,7 +127,7 @@ class AsyncModelsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ModelListResponse,
+            cast_to=ListTuneModelsResponse,
         )
 
 

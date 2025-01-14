@@ -6,9 +6,9 @@ from typing_extensions import Required, TypedDict
 
 from ..._types import FileTypes
 
-__all__ = ["DocumentCreateParams"]
+__all__ = ["DocumentIngestParams"]
 
 
-class DocumentCreateParams(TypedDict, total=False):
+class DocumentIngestParams(TypedDict, total=False):
     file: Required[FileTypes]
     """File to ingest"""
