@@ -6,9 +6,9 @@ from .tune_response import TuneResponse as TuneResponse
 from .query_response import QueryResponse as QueryResponse
 from .datasets_response import DatasetsResponse as DatasetsResponse
 from .get_agent_response import GetAgentResponse as GetAgentResponse
-from .query_start_params import QueryStartParams as QueryStartParams
 from .tune_create_params import TuneCreateParams as TuneCreateParams
 from .dataset_list_params import DatasetListParams as DatasetListParams
+from .query_create_params import QueryCreateParams as QueryCreateParams
 from .get_dataset_response import GetDatasetResponse as GetDatasetResponse
 from .query_metrics_params import QueryMetricsParams as QueryMetricsParams
 from .dataset_create_params import DatasetCreateParams as DatasetCreateParams
@@ -19,3 +19,5 @@ from .query_metrics_response import QueryMetricsResponse as QueryMetricsResponse
 from .create_dataset_response import CreateDatasetResponse as CreateDatasetResponse
 from .dataset_retrieve_params import DatasetRetrieveParams as DatasetRetrieveParams
 from .launch_evaluation_response import LaunchEvaluationResponse as LaunchEvaluationResponse
+from .query_retrieval_info_params import QueryRetrievalInfoParams as QueryRetrievalInfoParams
+from .query_retrieval_info_response import QueryRetrievalInfoResponse as QueryRetrievalInfoResponse

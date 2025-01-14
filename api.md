@@ -99,26 +99,20 @@ Methods:
 Types:
 
 ```python
-from contextual.types.agents import QueryResponse, QueryFeedbackResponse, QueryMetricsResponse
+from contextual.types.agents import (
+    QueryResponse,
+    QueryFeedbackResponse,
+    QueryMetricsResponse,
+    QueryRetrievalInfoResponse,
+)
 ```
 
 Methods:
 
-- <code title="post /agents/{agent_id}/feedback">client.agents.query.<a href="./src/contextual/resources/agents/query/query.py">feedback</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_feedback_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_feedback_response.py">object</a></code>
-- <code title="get /agents/{agent_id}/metrics">client.agents.query.<a href="./src/contextual/resources/agents/query/query.py">metrics</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_metrics_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_metrics_response.py">QueryMetricsResponse</a></code>
-- <code title="post /agents/{agent_id}/query">client.agents.query.<a href="./src/contextual/resources/agents/query/query.py">start</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_start_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_response.py">QueryResponse</a></code>
-
-### Retrieval
-
-Types:
-
-```python
-from contextual.types.agents.query import RetrievalInfoResponse
-```
-
-Methods:
-
-- <code title="get /agents/{agent_id}/query/{message_id}/retrieval/info">client.agents.query.retrieval.<a href="./src/contextual/resources/agents/query/retrieval.py">info</a>(message_id, \*, agent_id, \*\*<a href="src/contextual/types/agents/query/retrieval_info_params.py">params</a>) -> <a href="./src/contextual/types/agents/query/retrieval_info_response.py">RetrievalInfoResponse</a></code>
+- <code title="post /agents/{agent_id}/query">client.agents.query.<a href="./src/contextual/resources/agents/query.py">create</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_create_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_response.py">QueryResponse</a></code>
+- <code title="post /agents/{agent_id}/feedback">client.agents.query.<a href="./src/contextual/resources/agents/query.py">feedback</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_feedback_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_feedback_response.py">object</a></code>
+- <code title="get /agents/{agent_id}/metrics">client.agents.query.<a href="./src/contextual/resources/agents/query.py">metrics</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_metrics_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_metrics_response.py">QueryMetricsResponse</a></code>
+- <code title="get /agents/{agent_id}/query/{message_id}/retrieval/info">client.agents.query.<a href="./src/contextual/resources/agents/query.py">retrieval_info</a>(message_id, \*, agent_id, \*\*<a href="src/contextual/types/agents/query_retrieval_info_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_retrieval_info_response.py">QueryRetrievalInfoResponse</a></code>
 
 ## Evaluate
 
