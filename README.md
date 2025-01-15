@@ -16,7 +16,7 @@ The REST API documentation can be found on [docs.contextual.ai](https://docs.con
 
 ```sh
 # install from PyPI
-pip install --pre contextual-client
+pip install contextual-client
 ```
 
 ## Usage
