@@ -36,7 +36,7 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncAgentsPage, AsyncAgentsPage
+from ...pagination import SyncPage, AsyncPage
 from ...types.agent import Agent
 from ..._base_client import AsyncPaginator, make_request_options
 from .datasets.datasets import (
@@ -242,7 +242,7 @@ class AgentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncAgentsPage[Agent]:
+    ) -> SyncPage[Agent]:
         """
         Retrieve a list of all `Agents`.
 
@@ -262,7 +262,7 @@ class AgentsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/agents",
-            page=SyncAgentsPage[Agent],
+            page=SyncPage[Agent],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -536,7 +536,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[Agent, AsyncAgentsPage[Agent]]:
+    ) -> AsyncPaginator[Agent, AsyncPage[Agent]]:
         """
         Retrieve a list of all `Agents`.
 
@@ -556,7 +556,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/agents",
-            page=AsyncAgentsPage[Agent],
+            page=AsyncPage[Agent],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
