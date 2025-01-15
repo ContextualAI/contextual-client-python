@@ -10,13 +10,17 @@ __all__ = ["TuneJobMetadata"]
 
 class TuneJobMetadata(BaseModel):
     job_status: str
-    """Status of the tune job"""
+    """Status of the tune job.
+
+    There are four possible statuses: 'failed', 'pending', 'processing',
+    'completed'.
+    """
 
     evaluation_results: Optional[Dict[str, float]] = None
     """
-    Evaluation results of the tuned model, represented as an object mapping metric
-    names (strings) to their scores (floats). Omitted if the tuning job failed or is
-    still in progress.
+    Evaluation results of the tuned model, represented as a dictionary mapping
+    metric names (strings) to their scores (floats). Omitted if the tuning job
+    failed or is still in progress.
     """
 
     model_id: Optional[str] = None

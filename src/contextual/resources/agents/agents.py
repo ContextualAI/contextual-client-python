@@ -115,8 +115,8 @@ class AgentsResource(SyncAPIResource):
         """
         Create a new `Agent` with a specific configuration.
 
-        This creates a specialized RAG `Agent` which queries over a `Datastore` to
-        retrieve relevant data on which its generations are grounded.
+        This creates a specialized RAG `Agent` which queries over one or multiple
+        `Datastores` to retrieve relevant data on which its generations are grounded.
 
         Retrieval and generation parameters are defined in the provided `Agent`
         configuration.
@@ -188,14 +188,13 @@ class AgentsResource(SyncAPIResource):
         Fields not included in the request body will not be modified.
 
         Args:
-          agent_id: Agent ID of the agent to edit
+          agent_id: ID of the agent to edit
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
-          llm_model_id: Optional model ID of a tuned model to use for generation. Model must have been
-              tuned on this agent; tuned models cannot be used across agents. Uses default
-              model if none is specified. Set to `default` to deactivate the tuned model and
-              use the default model.
+          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
+              on which they were tuned. If no model is specified, the default model is used.
+              Set to `default` to switch from a tuned model to the default model.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
@@ -300,7 +299,7 @@ class AgentsResource(SyncAPIResource):
         `DELETE /datastores/{datastore_id}` API.
 
         Args:
-          agent_id: Agent ID of the agent to delete
+          agent_id: ID of the agent to delete
 
           extra_headers: Send extra headers
 
@@ -335,7 +334,7 @@ class AgentsResource(SyncAPIResource):
         Get metadata and configuration of a given `Agent`.
 
         Args:
-          agent_id: Agent ID of the agent to retrieve details for
+          agent_id: ID of the agent for which to retrieve details
 
           extra_headers: Send extra headers
 
@@ -410,8 +409,8 @@ class AsyncAgentsResource(AsyncAPIResource):
         """
         Create a new `Agent` with a specific configuration.
 
-        This creates a specialized RAG `Agent` which queries over a `Datastore` to
-        retrieve relevant data on which its generations are grounded.
+        This creates a specialized RAG `Agent` which queries over one or multiple
+        `Datastores` to retrieve relevant data on which its generations are grounded.
 
         Retrieval and generation parameters are defined in the provided `Agent`
         configuration.
@@ -483,14 +482,13 @@ class AsyncAgentsResource(AsyncAPIResource):
         Fields not included in the request body will not be modified.
 
         Args:
-          agent_id: Agent ID of the agent to edit
+          agent_id: ID of the agent to edit
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
-          llm_model_id: Optional model ID of a tuned model to use for generation. Model must have been
-              tuned on this agent; tuned models cannot be used across agents. Uses default
-              model if none is specified. Set to `default` to deactivate the tuned model and
-              use the default model.
+          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
+              on which they were tuned. If no model is specified, the default model is used.
+              Set to `default` to switch from a tuned model to the default model.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
@@ -595,7 +593,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         `DELETE /datastores/{datastore_id}` API.
 
         Args:
-          agent_id: Agent ID of the agent to delete
+          agent_id: ID of the agent to delete
 
           extra_headers: Send extra headers
 
@@ -630,7 +628,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         Get metadata and configuration of a given `Agent`.
 
         Args:
-          agent_id: Agent ID of the agent to retrieve details for
+          agent_id: ID of the agent for which to retrieve details
 
           extra_headers: Send extra headers
 

@@ -98,15 +98,15 @@ class AsyncDocumentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
 
 class SyncPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
-    data: List[_T]
+    agents: List[_T]
     next_cursor: Optional[str] = None
 
     @override
     def _get_page_items(self) -> List[_T]:
-        data = self.data
-        if not data:
+        agents = self.agents
+        if not agents:
             return []
-        return data
+        return agents
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
@@ -118,15 +118,15 @@ class SyncPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 
 
 class AsyncPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
-    data: List[_T]
+    agents: List[_T]
     next_cursor: Optional[str] = None
 
     @override
     def _get_page_items(self) -> List[_T]:
-        data = self.data
-        if not data:
+        agents = self.agents
+        if not agents:
             return []
-        return data
+        return agents
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:

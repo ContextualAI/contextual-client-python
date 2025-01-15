@@ -13,7 +13,11 @@ class Job(BaseModel):
     """ID of the tune job"""
 
     job_status: str
-    """Status of the tune job"""
+    """Status of the tune job.
+
+    There are four possible statuses: 'failed', 'pending', 'processing' and
+    'completed'.
+    """
 
     evaluation_results: Optional[Dict[str, float]] = None
     """
@@ -23,7 +27,7 @@ class Job(BaseModel):
     """
 
     model_id: Optional[str] = None
-    """ID of the trained model.
+    """ID of the tuned model.
 
     Omitted if the tuning job failed or is still in progress.
     """

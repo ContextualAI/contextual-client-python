@@ -77,9 +77,11 @@ class DatastoresResource(SyncAPIResource):
         Documents can be ingested into and
         deleted from a `Datastore`.
 
-        A `Datastore` can be linked to one or more `Agents` to provide data on which the
-        `Agent` can ground its answers. This linkage of `Datastore` to `Agent` is done
-        through the `Create Agent` or `Edit Agent` APIs.
+        A `Datastore` can be linked to one or more `Agents`, and conversely, an `Agent`
+        can be associated with one or more `Datastores` to ground its responses with
+        relevant data. This flexible many-to-many relationship allows `Agents` to draw
+        from multiple sources of information. This linkage of `Datastore` to `Agent` is
+        done through the `Create Agent` or `Edit Agent` APIs.
 
         Args:
           name: Name of the datastore
@@ -115,7 +117,7 @@ class DatastoresResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> SyncDatastoresPage[Datastore]:
         """
-        List all the `Datastores`.
+        Retrieve a list of `Datastores`.
 
         Performs `cursor`-based pagination if the number of `Datastores` exceeds the
         requested `limit`. The returned `cursor` can be passed to the next
@@ -178,7 +180,7 @@ class DatastoresResource(SyncAPIResource):
         associated with the `Datastore`.
 
         Args:
-          datastore_id: Datastore ID of the datastore to delete
+          datastore_id: ID of the datastore to delete
 
           extra_headers: Send extra headers
 
@@ -214,7 +216,7 @@ class DatastoresResource(SyncAPIResource):
         list of `Agents` which are currently configured to use the `Datastore`.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          datastore_id: ID of the datastore for which to get details
 
           extra_headers: Send extra headers
 
@@ -277,9 +279,11 @@ class AsyncDatastoresResource(AsyncAPIResource):
         Documents can be ingested into and
         deleted from a `Datastore`.
 
-        A `Datastore` can be linked to one or more `Agents` to provide data on which the
-        `Agent` can ground its answers. This linkage of `Datastore` to `Agent` is done
-        through the `Create Agent` or `Edit Agent` APIs.
+        A `Datastore` can be linked to one or more `Agents`, and conversely, an `Agent`
+        can be associated with one or more `Datastores` to ground its responses with
+        relevant data. This flexible many-to-many relationship allows `Agents` to draw
+        from multiple sources of information. This linkage of `Datastore` to `Agent` is
+        done through the `Create Agent` or `Edit Agent` APIs.
 
         Args:
           name: Name of the datastore
@@ -315,7 +319,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncPaginator[Datastore, AsyncDatastoresPage[Datastore]]:
         """
-        List all the `Datastores`.
+        Retrieve a list of `Datastores`.
 
         Performs `cursor`-based pagination if the number of `Datastores` exceeds the
         requested `limit`. The returned `cursor` can be passed to the next
@@ -378,7 +382,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         associated with the `Datastore`.
 
         Args:
-          datastore_id: Datastore ID of the datastore to delete
+          datastore_id: ID of the datastore to delete
 
           extra_headers: Send extra headers
 
@@ -414,7 +418,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         list of `Agents` which are currently configured to use the `Datastore`.
 
         Args:
-          datastore_id: Datastore ID of the datastore to get details of
+          datastore_id: ID of the datastore for which to get details
 
           extra_headers: Send extra headers
 

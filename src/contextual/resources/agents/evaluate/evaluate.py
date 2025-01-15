@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Mapping, cast
+from typing import List, Mapping, Optional, cast
 from typing_extensions import Literal
 
 import httpx
@@ -68,7 +68,7 @@ class EvaluateResource(SyncAPIResource):
         metrics: List[Literal["equivalence", "groundedness"]],
         evalset_file: FileTypes | NotGiven = NOT_GIVEN,
         evalset_name: str | NotGiven = NOT_GIVEN,
-        model_name: str | NotGiven = NOT_GIVEN,
+        llm_model_id: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -77,34 +77,38 @@ class EvaluateResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> CreateEvaluationResponse:
         """
-        Launch an `Evaluation` round.
+        Launch an `Evaluation` job which evaluates an `Agent` on a set of test questions
+        and reference answers.
 
-        An `Evaluation` is an asynchronous operation which evaluates an `Agent` on a set
-        of test questions and reference answers. An `Evaluation` can select one or more
+        An `Evaluation` is an asynchronous operation. Users can select one or more
         metrics to assess the quality of generated answers. These metrics include
-        `equivalence` and `groundedness`.
+        `equivalence` and `groundedness`. `equivalence` evaluates if the Agent response
+        is equivalent to the ground truth (model-driven binary classification).
+        `groundedness` decomposes the Agent response into claims and then evaluates if
+        the claims are grounded by the retrieved documents.
 
-        `Evaluation` test set data can be provided in one of two forms: - A CSV
-        `evalset_file` containing the columns `prompt`, `reference` (i.e. gold-answers),
-        and `knowledge` (optional `list[str]` of retrieved knowledge) - A `dataset_name`
-        which refers to an `evaluation_set` `Dataset` created through the `Dataset` API.
+        `Evaluation` data can be provided in one of two forms:
+
+        - A CSV `evalset_file` containing the columns `prompt` (i.e. questions) and
+          `reference` (i.e. gold-answers).
+
+        - An `evalset_name` which refers to a `Dataset` created through the
+          `/datasets/evaluate` API.
 
         Args:
           agent_id: Agent ID of the agent to evaluate
 
           metrics: List of metrics to use. Supported metrics are `equivalence` and `groundedness`.
-              Use comma-separated list to pass multiple values or use repeated keys.
 
-          evalset_file: Evalset file (CSV) to use for evaluation, containing the columns `prompt`
-              (`question`), `reference` (`ground truth response`), and optional additional
-              columns based on the selected metrics. Either `dataset_name` or `evalset_file`
-              must be provided, but not both.
+          evalset_file: Evalset file (CSV) to use for evaluation, containing the columns `prompt` (i.e.
+              question) and `reference` (i.e. ground truth response). Either `evalset_name` or
+              `evalset_file` must be provided, but not both.
 
-          evalset_name: Name of the dataset to use for evaluation, created through the dataset API.
-              Either `dataset_name` or `evalset_file` must be provided, but not both.
+          evalset_name: Name of the Dataset to use for evaluation, created through the
+              `/datasets/evaluate` API. Either `evalset_name` or `evalset_file` must be
+              provided, but not both.
 
-          model_name: Model name of the tuned or aligned model to use. Defaults to the default model
-              if not specified.
+          llm_model_id: ID of the model to evaluate. Uses the default model if not specified.
 
           extra_headers: Send extra headers
 
@@ -121,7 +125,7 @@ class EvaluateResource(SyncAPIResource):
                 "metrics": metrics,
                 "evalset_file": evalset_file,
                 "evalset_name": evalset_name,
-                "model_name": model_name,
+                "llm_model_id": llm_model_id,
             }
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["evalset_file"]])
@@ -171,7 +175,7 @@ class AsyncEvaluateResource(AsyncAPIResource):
         metrics: List[Literal["equivalence", "groundedness"]],
         evalset_file: FileTypes | NotGiven = NOT_GIVEN,
         evalset_name: str | NotGiven = NOT_GIVEN,
-        model_name: str | NotGiven = NOT_GIVEN,
+        llm_model_id: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -180,34 +184,38 @@ class AsyncEvaluateResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> CreateEvaluationResponse:
         """
-        Launch an `Evaluation` round.
+        Launch an `Evaluation` job which evaluates an `Agent` on a set of test questions
+        and reference answers.
 
-        An `Evaluation` is an asynchronous operation which evaluates an `Agent` on a set
-        of test questions and reference answers. An `Evaluation` can select one or more
+        An `Evaluation` is an asynchronous operation. Users can select one or more
         metrics to assess the quality of generated answers. These metrics include
-        `equivalence` and `groundedness`.
+        `equivalence` and `groundedness`. `equivalence` evaluates if the Agent response
+        is equivalent to the ground truth (model-driven binary classification).
+        `groundedness` decomposes the Agent response into claims and then evaluates if
+        the claims are grounded by the retrieved documents.
 
-        `Evaluation` test set data can be provided in one of two forms: - A CSV
-        `evalset_file` containing the columns `prompt`, `reference` (i.e. gold-answers),
-        and `knowledge` (optional `list[str]` of retrieved knowledge) - A `dataset_name`
-        which refers to an `evaluation_set` `Dataset` created through the `Dataset` API.
+        `Evaluation` data can be provided in one of two forms:
+
+        - A CSV `evalset_file` containing the columns `prompt` (i.e. questions) and
+          `reference` (i.e. gold-answers).
+
+        - An `evalset_name` which refers to a `Dataset` created through the
+          `/datasets/evaluate` API.
 
         Args:
           agent_id: Agent ID of the agent to evaluate
 
           metrics: List of metrics to use. Supported metrics are `equivalence` and `groundedness`.
-              Use comma-separated list to pass multiple values or use repeated keys.
 
-          evalset_file: Evalset file (CSV) to use for evaluation, containing the columns `prompt`
-              (`question`), `reference` (`ground truth response`), and optional additional
-              columns based on the selected metrics. Either `dataset_name` or `evalset_file`
-              must be provided, but not both.
+          evalset_file: Evalset file (CSV) to use for evaluation, containing the columns `prompt` (i.e.
+              question) and `reference` (i.e. ground truth response). Either `evalset_name` or
+              `evalset_file` must be provided, but not both.
 
-          evalset_name: Name of the dataset to use for evaluation, created through the dataset API.
-              Either `dataset_name` or `evalset_file` must be provided, but not both.
+          evalset_name: Name of the Dataset to use for evaluation, created through the
+              `/datasets/evaluate` API. Either `evalset_name` or `evalset_file` must be
+              provided, but not both.
 
-          model_name: Model name of the tuned or aligned model to use. Defaults to the default model
-              if not specified.
+          llm_model_id: ID of the model to evaluate. Uses the default model if not specified.
 
           extra_headers: Send extra headers
 
@@ -224,7 +232,7 @@ class AsyncEvaluateResource(AsyncAPIResource):
                 "metrics": metrics,
                 "evalset_file": evalset_file,
                 "evalset_name": evalset_name,
-                "model_name": model_name,
+                "llm_model_id": llm_model_id,
             }
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["evalset_file"]])

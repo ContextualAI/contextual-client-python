@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List
 from datetime import datetime
 
 from ...._compat import PYDANTIC_V2, ConfigDict
@@ -25,14 +25,8 @@ class Model(BaseModel):
 
 
 class ListTuneModelsResponse(BaseModel):
-    has_more: bool
-    """Whether there are more models to retrieve"""
-
     models: List[Model]
     """List of registered models for the application"""
 
     total: int
     """Total number of models associated with the application"""
-
-    next_after: Optional[str] = None
-    """Identifier of the last model from the current request, used for pagination"""

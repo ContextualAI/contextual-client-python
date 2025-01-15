@@ -47,7 +47,7 @@ class TestQuery:
             ],
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            model_id="model_id",
+            llm_model_id="llm_model_id",
             stream=True,
         )
         assert_matches_type(QueryResponse, query, path=["response"])
@@ -289,7 +289,7 @@ class TestAsyncQuery:
             ],
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            model_id="model_id",
+            llm_model_id="llm_model_id",
             stream=True,
         )
         assert_matches_type(QueryResponse, query, path=["response"])
