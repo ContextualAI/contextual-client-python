@@ -18,11 +18,11 @@ class AgentMetadata(BaseModel):
     """Description of the agent"""
 
     llm_model_id: Optional[str] = None
-    """Optional model ID of a tuned model to use for generation.
+    """The model ID to use for generation.
 
-    Model must have been tuned on this agent; tuned models cannot be used across
-    agents. Uses default model if none is specified. Set to `default` to deactivate
-    the tuned model and use the default model.
+    Tuned models can only be used for the agents on which they were tuned. If no
+    model is specified, the default model is used. Set to `default` to switch from a
+    tuned model to the default model.
     """
 
     suggested_queries: Optional[List[str]] = None

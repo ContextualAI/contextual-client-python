@@ -10,6 +10,8 @@ __all__ = [
     "AsyncDatastoresPage",
     "SyncDocumentsPage",
     "AsyncDocumentsPage",
+    "SyncAgentsPage",
+    "AsyncAgentsPage",
     "SyncPage",
     "AsyncPage",
 ]
@@ -87,6 +89,46 @@ class AsyncDocumentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         if not documents:
             return []
         return documents
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class SyncAgentsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    agents: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        agents = self.agents
+        if not agents:
+            return []
+        return agents
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class AsyncAgentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    agents: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        agents = self.agents
+        if not agents:
+            return []
+        return agents
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:

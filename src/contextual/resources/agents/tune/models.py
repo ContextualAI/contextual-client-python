@@ -54,7 +54,7 @@ class ModelsResource(SyncAPIResource):
         Retrieves a list of tuned models associated with the specified agent.
 
         Args:
-          agent_id: Agent ID of the agent from which to retrieve tuned models
+          agent_id: ID of the agent from which to retrieve tuned models
 
           extra_headers: Send extra headers
 
@@ -110,7 +110,7 @@ class AsyncModelsResource(AsyncAPIResource):
         Retrieves a list of tuned models associated with the specified agent.
 
         Args:
-          agent_id: Agent ID of the agent from which to retrieve tuned models
+          agent_id: ID of the agent from which to retrieve tuned models
 
           extra_headers: Send extra headers
 
