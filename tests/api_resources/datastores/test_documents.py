@@ -12,8 +12,8 @@ from tests.utils import assert_matches_type
 from contextual._utils import parse_datetime
 from contextual.pagination import SyncDocumentsPage, AsyncDocumentsPage
 from contextual.types.datastores import (
+    DocumentMetadata,
     IngestionResponse,
-    DocumentDescription,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -23,101 +23,11 @@ class TestDocuments:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
-    def test_method_create(self, client: ContextualAI) -> None:
-        document = client.datastores.documents.create(
-            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
-        )
-        assert_matches_type(IngestionResponse, document, path=["response"])
-
-    @parametrize
-    def test_raw_response_create(self, client: ContextualAI) -> None:
-        response = client.datastores.documents.with_raw_response.create(
-            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = response.parse()
-        assert_matches_type(IngestionResponse, document, path=["response"])
-
-    @parametrize
-    def test_streaming_response_create(self, client: ContextualAI) -> None:
-        with client.datastores.documents.with_streaming_response.create(
-            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            document = response.parse()
-            assert_matches_type(IngestionResponse, document, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_path_params_create(self, client: ContextualAI) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
-            client.datastores.documents.with_raw_response.create(
-                datastore_id="",
-                file=b"raw file contents",
-            )
-
-    @parametrize
-    def test_method_retrieve(self, client: ContextualAI) -> None:
-        document = client.datastores.documents.retrieve(
-            document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(DocumentDescription, document, path=["response"])
-
-    @parametrize
-    def test_raw_response_retrieve(self, client: ContextualAI) -> None:
-        response = client.datastores.documents.with_raw_response.retrieve(
-            document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = response.parse()
-        assert_matches_type(DocumentDescription, document, path=["response"])
-
-    @parametrize
-    def test_streaming_response_retrieve(self, client: ContextualAI) -> None:
-        with client.datastores.documents.with_streaming_response.retrieve(
-            document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            document = response.parse()
-            assert_matches_type(DocumentDescription, document, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_path_params_retrieve(self, client: ContextualAI) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
-            client.datastores.documents.with_raw_response.retrieve(
-                document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-                datastore_id="",
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `document_id` but received ''"):
-            client.datastores.documents.with_raw_response.retrieve(
-                document_id="",
-                datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            )
-
-    @parametrize
     def test_method_list(self, client: ContextualAI) -> None:
         document = client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
+        assert_matches_type(SyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
     @parametrize
     def test_method_list_with_all_params(self, client: ContextualAI) -> None:
@@ -129,7 +39,7 @@ class TestDocuments:
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             uploaded_before=parse_datetime("2019-12-27T18:11:19.117Z"),
         )
-        assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
+        assert_matches_type(SyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: ContextualAI) -> None:
@@ -140,7 +50,7 @@ class TestDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = response.parse()
-        assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
+        assert_matches_type(SyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
     @parametrize
     def test_streaming_response_list(self, client: ContextualAI) -> None:
@@ -151,7 +61,7 @@ class TestDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = response.parse()
-            assert_matches_type(SyncDocumentsPage[DocumentDescription], document, path=["response"])
+            assert_matches_type(SyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -210,106 +120,106 @@ class TestDocuments:
                 datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )
 
-
-class TestAsyncDocuments:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
-
     @parametrize
-    async def test_method_create(self, async_client: AsyncContextualAI) -> None:
-        document = await async_client.datastores.documents.create(
+    def test_method_ingest(self, client: ContextualAI) -> None:
+        document = client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
         )
         assert_matches_type(IngestionResponse, document, path=["response"])
 
     @parametrize
-    async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
-        response = await async_client.datastores.documents.with_raw_response.create(
+    def test_raw_response_ingest(self, client: ContextualAI) -> None:
+        response = client.datastores.documents.with_raw_response.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = await response.parse()
+        document = response.parse()
         assert_matches_type(IngestionResponse, document, path=["response"])
 
     @parametrize
-    async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
-        async with async_client.datastores.documents.with_streaming_response.create(
+    def test_streaming_response_ingest(self, client: ContextualAI) -> None:
+        with client.datastores.documents.with_streaming_response.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            document = await response.parse()
+            document = response.parse()
             assert_matches_type(IngestionResponse, document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_path_params_create(self, async_client: AsyncContextualAI) -> None:
+    def test_path_params_ingest(self, client: ContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
-            await async_client.datastores.documents.with_raw_response.create(
+            client.datastores.documents.with_raw_response.ingest(
                 datastore_id="",
                 file=b"raw file contents",
             )
 
     @parametrize
-    async def test_method_retrieve(self, async_client: AsyncContextualAI) -> None:
-        document = await async_client.datastores.documents.retrieve(
+    def test_method_metadata(self, client: ContextualAI) -> None:
+        document = client.datastores.documents.metadata(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(DocumentDescription, document, path=["response"])
+        assert_matches_type(DocumentMetadata, document, path=["response"])
 
     @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncContextualAI) -> None:
-        response = await async_client.datastores.documents.with_raw_response.retrieve(
+    def test_raw_response_metadata(self, client: ContextualAI) -> None:
+        response = client.datastores.documents.with_raw_response.metadata(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = await response.parse()
-        assert_matches_type(DocumentDescription, document, path=["response"])
+        document = response.parse()
+        assert_matches_type(DocumentMetadata, document, path=["response"])
 
     @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncContextualAI) -> None:
-        async with async_client.datastores.documents.with_streaming_response.retrieve(
+    def test_streaming_response_metadata(self, client: ContextualAI) -> None:
+        with client.datastores.documents.with_streaming_response.metadata(
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            document = await response.parse()
-            assert_matches_type(DocumentDescription, document, path=["response"])
+            document = response.parse()
+            assert_matches_type(DocumentMetadata, document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncContextualAI) -> None:
+    def test_path_params_metadata(self, client: ContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
-            await async_client.datastores.documents.with_raw_response.retrieve(
+            client.datastores.documents.with_raw_response.metadata(
                 document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
                 datastore_id="",
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `document_id` but received ''"):
-            await async_client.datastores.documents.with_raw_response.retrieve(
+            client.datastores.documents.with_raw_response.metadata(
                 document_id="",
                 datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )
+
+
+class TestAsyncDocuments:
+    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
     async def test_method_list(self, async_client: AsyncContextualAI) -> None:
         document = await async_client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
+        assert_matches_type(AsyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -321,7 +231,7 @@ class TestAsyncDocuments:
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             uploaded_before=parse_datetime("2019-12-27T18:11:19.117Z"),
         )
-        assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
+        assert_matches_type(AsyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -332,7 +242,7 @@ class TestAsyncDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = await response.parse()
-        assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
+        assert_matches_type(AsyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -343,7 +253,7 @@ class TestAsyncDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = await response.parse()
-            assert_matches_type(AsyncDocumentsPage[DocumentDescription], document, path=["response"])
+            assert_matches_type(AsyncDocumentsPage[DocumentMetadata], document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -398,6 +308,96 @@ class TestAsyncDocuments:
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `document_id` but received ''"):
             await async_client.datastores.documents.with_raw_response.delete(
+                document_id="",
+                datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            )
+
+    @parametrize
+    async def test_method_ingest(self, async_client: AsyncContextualAI) -> None:
+        document = await async_client.datastores.documents.ingest(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            file=b"raw file contents",
+        )
+        assert_matches_type(IngestionResponse, document, path=["response"])
+
+    @parametrize
+    async def test_raw_response_ingest(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.datastores.documents.with_raw_response.ingest(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            file=b"raw file contents",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = await response.parse()
+        assert_matches_type(IngestionResponse, document, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_ingest(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.datastores.documents.with_streaming_response.ingest(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            file=b"raw file contents",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = await response.parse()
+            assert_matches_type(IngestionResponse, document, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_ingest(self, async_client: AsyncContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
+            await async_client.datastores.documents.with_raw_response.ingest(
+                datastore_id="",
+                file=b"raw file contents",
+            )
+
+    @parametrize
+    async def test_method_metadata(self, async_client: AsyncContextualAI) -> None:
+        document = await async_client.datastores.documents.metadata(
+            document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(DocumentMetadata, document, path=["response"])
+
+    @parametrize
+    async def test_raw_response_metadata(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.datastores.documents.with_raw_response.metadata(
+            document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = await response.parse()
+        assert_matches_type(DocumentMetadata, document, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_metadata(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.datastores.documents.with_streaming_response.metadata(
+            document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = await response.parse()
+            assert_matches_type(DocumentMetadata, document, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_metadata(self, async_client: AsyncContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
+            await async_client.datastores.documents.with_raw_response.metadata(
+                document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                datastore_id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `document_id` but received ''"):
+            await async_client.datastores.documents.with_raw_response.metadata(
                 document_id="",
                 datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )

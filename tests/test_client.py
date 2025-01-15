@@ -721,11 +721,11 @@ class TestContextualAI:
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/applications").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             self.client.post(
-                "/applications",
+                "/agents",
                 body=cast(object, dict(name="xxx")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -736,11 +736,11 @@ class TestContextualAI:
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/applications").mock(return_value=httpx.Response(500))
+        respx_mock.post("/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             self.client.post(
-                "/applications",
+                "/agents",
                 body=cast(object, dict(name="xxx")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -772,9 +772,9 @@ class TestContextualAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/applications").mock(side_effect=retry_handler)
+        respx_mock.post("/agents").mock(side_effect=retry_handler)
 
-        response = client.applications.with_raw_response.create(name="xxx")
+        response = client.agents.with_raw_response.create(name="xxx")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -796,11 +796,9 @@ class TestContextualAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/applications").mock(side_effect=retry_handler)
+        respx_mock.post("/agents").mock(side_effect=retry_handler)
 
-        response = client.applications.with_raw_response.create(
-            name="xxx", extra_headers={"x-stainless-retry-count": Omit()}
-        )
+        response = client.agents.with_raw_response.create(name="xxx", extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -821,11 +819,9 @@ class TestContextualAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/applications").mock(side_effect=retry_handler)
+        respx_mock.post("/agents").mock(side_effect=retry_handler)
 
-        response = client.applications.with_raw_response.create(
-            name="xxx", extra_headers={"x-stainless-retry-count": "42"}
-        )
+        response = client.agents.with_raw_response.create(name="xxx", extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
@@ -1501,11 +1497,11 @@ class TestAsyncContextualAI:
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/applications").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             await self.client.post(
-                "/applications",
+                "/agents",
                 body=cast(object, dict(name="xxx")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -1516,11 +1512,11 @@ class TestAsyncContextualAI:
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/applications").mock(return_value=httpx.Response(500))
+        respx_mock.post("/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             await self.client.post(
-                "/applications",
+                "/agents",
                 body=cast(object, dict(name="xxx")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -1553,9 +1549,9 @@ class TestAsyncContextualAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/applications").mock(side_effect=retry_handler)
+        respx_mock.post("/agents").mock(side_effect=retry_handler)
 
-        response = await client.applications.with_raw_response.create(name="xxx")
+        response = await client.agents.with_raw_response.create(name="xxx")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1578,9 +1574,9 @@ class TestAsyncContextualAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/applications").mock(side_effect=retry_handler)
+        respx_mock.post("/agents").mock(side_effect=retry_handler)
 
-        response = await client.applications.with_raw_response.create(
+        response = await client.agents.with_raw_response.create(
             name="xxx", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
@@ -1604,9 +1600,9 @@ class TestAsyncContextualAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/applications").mock(side_effect=retry_handler)
+        respx_mock.post("/agents").mock(side_effect=retry_handler)
 
-        response = await client.applications.with_raw_response.create(
+        response = await client.agents.with_raw_response.create(
             name="xxx", extra_headers={"x-stainless-retry-count": "42"}
         )
 

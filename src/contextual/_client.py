@@ -10,13 +10,9 @@ import httpx
 
 from . import _exceptions
 from ._qs import Querystring
-from .types import client_lmunit_params
 from ._types import (
     NOT_GIVEN,
-    Body,
     Omit,
-    Query,
-    Headers,
     Timeout,
     NotGiven,
     Transport,
@@ -25,28 +21,19 @@ from ._types import (
 )
 from ._utils import (
     is_given,
-    maybe_transform,
     get_async_library,
-    async_maybe_transform,
 )
 from ._version import __version__
-from ._response import (
-    to_raw_response_wrapper,
-    to_streamed_response_wrapper,
-    async_to_raw_response_wrapper,
-    async_to_streamed_response_wrapper,
-)
+from .resources import lmunit
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, ContextualAIError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
     AsyncAPIClient,
-    make_request_options,
 )
+from .resources.agents import agents
 from .resources.datastores import datastores
-from .types.lmunit_response import LMUnitResponse
-from .resources.applications import applications
 
 __all__ = [
     "Timeout",
@@ -62,7 +49,8 @@ __all__ = [
 
 class ContextualAI(SyncAPIClient):
     datastores: datastores.DatastoresResource
-    applications: applications.ApplicationsResource
+    agents: agents.AgentsResource
+    lmunit: lmunit.LMUnitResource
     with_raw_response: ContextualAIWithRawResponse
     with_streaming_response: ContextualAIWithStreamedResponse
 
@@ -121,14 +109,15 @@ class ContextualAI(SyncAPIClient):
         )
 
         self.datastores = datastores.DatastoresResource(self)
-        self.applications = applications.ApplicationsResource(self)
+        self.agents = agents.AgentsResource(self)
+        self.lmunit = lmunit.LMUnitResource(self)
         self.with_raw_response = ContextualAIWithRawResponse(self)
         self.with_streaming_response = ContextualAIWithStreamedResponse(self)
 
     @property
     @override
     def qs(self) -> Querystring:
-        return Querystring(array_format="comma")
+        return Querystring(array_format="repeat")
 
     @property
     @override
@@ -196,62 +185,6 @@ class ContextualAI(SyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
-    def lmunit(
-        self,
-        *,
-        query: str,
-        response: str,
-        unit_test: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LMUnitResponse:
-        """
-        Given a `query`, `response`, and a `unit_test`, return the response's `score` on
-        the unit test on a 5-point continuous scale. The total input cannot exceed 7000
-        tokens.
-
-        See a code example in [our blog post](https://contextual.ai/news/lmunit/). Email
-        [lmunit-feedback@contextual.ai](mailto:lmunit-feedback@contextual.ai) with any
-        feedback or questions.
-
-        > 🚀 Obtain an LMUnit API key by completing
-        > [this form](https://contextual.ai/request-lmunit-api/)
-
-        Args:
-          query: The prompt to which the model responds
-
-          response: The model response to evaluate
-
-          unit_test: A natural language statement or question against which to evaluate the response
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self.post(
-            "/lmunit",
-            body=maybe_transform(
-                {
-                    "query": query,
-                    "response": response,
-                    "unit_test": unit_test,
-                },
-                client_lmunit_params.ClientLMUnitParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=LMUnitResponse,
-        )
-
     @override
     def _make_status_error(
         self,
@@ -288,7 +221,8 @@ class ContextualAI(SyncAPIClient):
 
 class AsyncContextualAI(AsyncAPIClient):
     datastores: datastores.AsyncDatastoresResource
-    applications: applications.AsyncApplicationsResource
+    agents: agents.AsyncAgentsResource
+    lmunit: lmunit.AsyncLMUnitResource
     with_raw_response: AsyncContextualAIWithRawResponse
     with_streaming_response: AsyncContextualAIWithStreamedResponse
 
@@ -347,14 +281,15 @@ class AsyncContextualAI(AsyncAPIClient):
         )
 
         self.datastores = datastores.AsyncDatastoresResource(self)
-        self.applications = applications.AsyncApplicationsResource(self)
+        self.agents = agents.AsyncAgentsResource(self)
+        self.lmunit = lmunit.AsyncLMUnitResource(self)
         self.with_raw_response = AsyncContextualAIWithRawResponse(self)
         self.with_streaming_response = AsyncContextualAIWithStreamedResponse(self)
 
     @property
     @override
     def qs(self) -> Querystring:
-        return Querystring(array_format="comma")
+        return Querystring(array_format="repeat")
 
     @property
     @override
@@ -422,62 +357,6 @@ class AsyncContextualAI(AsyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
-    async def lmunit(
-        self,
-        *,
-        query: str,
-        response: str,
-        unit_test: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LMUnitResponse:
-        """
-        Given a `query`, `response`, and a `unit_test`, return the response's `score` on
-        the unit test on a 5-point continuous scale. The total input cannot exceed 7000
-        tokens.
-
-        See a code example in [our blog post](https://contextual.ai/news/lmunit/). Email
-        [lmunit-feedback@contextual.ai](mailto:lmunit-feedback@contextual.ai) with any
-        feedback or questions.
-
-        > 🚀 Obtain an LMUnit API key by completing
-        > [this form](https://contextual.ai/request-lmunit-api/)
-
-        Args:
-          query: The prompt to which the model responds
-
-          response: The model response to evaluate
-
-          unit_test: A natural language statement or question against which to evaluate the response
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self.post(
-            "/lmunit",
-            body=await async_maybe_transform(
-                {
-                    "query": query,
-                    "response": response,
-                    "unit_test": unit_test,
-                },
-                client_lmunit_params.ClientLMUnitParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=LMUnitResponse,
-        )
-
     @override
     def _make_status_error(
         self,
@@ -515,41 +394,29 @@ class AsyncContextualAI(AsyncAPIClient):
 class ContextualAIWithRawResponse:
     def __init__(self, client: ContextualAI) -> None:
         self.datastores = datastores.DatastoresResourceWithRawResponse(client.datastores)
-        self.applications = applications.ApplicationsResourceWithRawResponse(client.applications)
-
-        self.lmunit = to_raw_response_wrapper(
-            client.lmunit,
-        )
+        self.agents = agents.AgentsResourceWithRawResponse(client.agents)
+        self.lmunit = lmunit.LMUnitResourceWithRawResponse(client.lmunit)
 
 
 class AsyncContextualAIWithRawResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = datastores.AsyncDatastoresResourceWithRawResponse(client.datastores)
-        self.applications = applications.AsyncApplicationsResourceWithRawResponse(client.applications)
-
-        self.lmunit = async_to_raw_response_wrapper(
-            client.lmunit,
-        )
+        self.agents = agents.AsyncAgentsResourceWithRawResponse(client.agents)
+        self.lmunit = lmunit.AsyncLMUnitResourceWithRawResponse(client.lmunit)
 
 
 class ContextualAIWithStreamedResponse:
     def __init__(self, client: ContextualAI) -> None:
         self.datastores = datastores.DatastoresResourceWithStreamingResponse(client.datastores)
-        self.applications = applications.ApplicationsResourceWithStreamingResponse(client.applications)
-
-        self.lmunit = to_streamed_response_wrapper(
-            client.lmunit,
-        )
+        self.agents = agents.AgentsResourceWithStreamingResponse(client.agents)
+        self.lmunit = lmunit.LMUnitResourceWithStreamingResponse(client.lmunit)
 
 
 class AsyncContextualAIWithStreamedResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = datastores.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
-        self.applications = applications.AsyncApplicationsResourceWithStreamingResponse(client.applications)
-
-        self.lmunit = async_to_streamed_response_wrapper(
-            client.lmunit,
-        )
+        self.agents = agents.AsyncAgentsResourceWithStreamingResponse(client.agents)
+        self.lmunit = lmunit.AsyncLMUnitResourceWithStreamingResponse(client.lmunit)
 
 
 Client = ContextualAI

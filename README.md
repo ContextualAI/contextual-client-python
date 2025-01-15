@@ -13,12 +13,9 @@ The REST API documentation can be found on [docs.contextual.ai](https://docs.con
 ## Installation
 
 ```sh
-# install from this staging repo
-pip install git+ssh://git@github.com/stainless-sdks/sunrise-python.git
+# install from PyPI
+pip install --pre contextual-client
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre contextual-client`
 
 ## Usage
 
@@ -32,10 +29,10 @@ client = ContextualAI(
     api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
 )
 
-create_application_output = client.applications.create(
+create_agent_output = client.agents.create(
     name="xxx",
 )
-print(create_application_output.application_id)
+print(create_agent_output.id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -58,10 +55,10 @@ client = AsyncContextualAI(
 
 
 async def main() -> None:
-    create_application_output = await client.applications.create(
+    create_agent_output = await client.agents.create(
         name="xxx",
     )
-    print(create_application_output.application_id)
+    print(create_agent_output.id)
 
 
 asyncio.run(main())
@@ -89,12 +86,12 @@ from contextual import ContextualAI
 
 client = ContextualAI()
 
-all_applications = []
+all_agents = []
 # Automatically fetches more pages as needed.
-for application in client.applications.list():
-    # Do something with application here
-    all_applications.append(application)
-print(all_applications)
+for agent in client.agents.list():
+    # Do something with agent here
+    all_agents.append(agent)
+print(all_agents)
 ```
 
 Or, asynchronously:
@@ -107,11 +104,11 @@ client = AsyncContextualAI()
 
 
 async def main() -> None:
-    all_applications = []
+    all_agents = []
     # Iterate through items across all pages, issuing requests as needed.
-    async for application in client.applications.list():
-        all_applications.append(application)
-    print(all_applications)
+    async for agent in client.agents.list():
+        all_agents.append(agent)
+    print(all_agents)
 
 
 asyncio.run(main())
@@ -120,11 +117,11 @@ asyncio.run(main())
 Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
 
 ```python
-first_page = await client.applications.list()
+first_page = await client.agents.list()
 if first_page.has_next_page():
     print(f"will fetch next page using these details: {first_page.next_page_info()}")
     next_page = await first_page.get_next_page()
-    print(f"number of items we just fetched: {len(next_page.applications)}")
+    print(f"number of items we just fetched: {len(next_page.data)}")
 
 # Remove `await` for non-async usage.
 ```
@@ -132,11 +129,11 @@ if first_page.has_next_page():
 Or just work directly with the returned data:
 
 ```python
-first_page = await client.applications.list()
+first_page = await client.agents.list()
 
 print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
-for application in first_page.applications:
-    print(application.id)
+for agent in first_page.data:
+    print(agent.id)
 
 # Remove `await` for non-async usage.
 ```
@@ -157,7 +154,7 @@ from contextual import ContextualAI
 client = ContextualAI()
 
 try:
-    client.applications.create(
+    client.agents.create(
         name="xxx",
     )
 except contextual.APIConnectionError as e:
@@ -202,7 +199,7 @@ client = ContextualAI(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).applications.create(
+client.with_options(max_retries=5).agents.create(
     name="xxx",
 )
 ```
@@ -227,7 +224,7 @@ client = ContextualAI(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).applications.create(
+client.with_options(timeout=5.0).agents.create(
     name="xxx",
 )
 ```
@@ -270,18 +267,18 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from contextual import ContextualAI
 
 client = ContextualAI()
-response = client.applications.with_raw_response.create(
+response = client.agents.with_raw_response.create(
     name="xxx",
 )
 print(response.headers.get('X-My-Header'))
 
-application = response.parse()  # get the object that `applications.create()` would have returned
-print(application.application_id)
+agent = response.parse()  # get the object that `agents.create()` would have returned
+print(agent.id)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/ContextualAI/contextual-client-python/tree/main/src/contextual/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/sunrise-python/tree/main/src/contextual/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/ContextualAI/contextual-client-python/tree/main/src/contextual/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -290,7 +287,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.applications.with_streaming_response.create(
+with client.agents.with_streaming_response.create(
     name="xxx",
 ) as response:
     print(response.headers.get("X-My-Header"))
@@ -387,7 +384,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/sunrise-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/ContextualAI/contextual-client-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 
