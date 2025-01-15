@@ -10,8 +10,8 @@ __all__ = [
     "AsyncDatastoresPage",
     "SyncDocumentsPage",
     "AsyncDocumentsPage",
-    "SyncAgentsPage",
-    "AsyncAgentsPage",
+    "SyncPage",
+    "AsyncPage",
 ]
 
 _T = TypeVar("_T")
@@ -97,7 +97,7 @@ class AsyncDocumentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class SyncAgentsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     agents: List[_T]
     next_cursor: Optional[str] = None
 
@@ -117,7 +117,7 @@ class SyncAgentsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncAgentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     agents: List[_T]
     next_cursor: Optional[str] = None
 
