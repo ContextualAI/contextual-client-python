@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-alpha.2 (2025-01-15)
+
+Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/ContextualAI/contextual-client-python/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
+
+### Features
+
+* **api:** update via SDK Studio ([#16](https://github.com/ContextualAI/contextual-client-python/issues/16)) ([eef8a87](https://github.com/ContextualAI/contextual-client-python/commit/eef8a87c1f4d1c57fce697103d07c8510fcc4520))
+* **api:** update via SDK Studio ([#18](https://github.com/ContextualAI/contextual-client-python/issues/18)) ([990c359](https://github.com/ContextualAI/contextual-client-python/commit/990c359ab3f2e6c3f29fc07e158c895159e8cc94))
+* **api:** update via SDK Studio ([#19](https://github.com/ContextualAI/contextual-client-python/issues/19)) ([4eeaea9](https://github.com/ContextualAI/contextual-client-python/commit/4eeaea95542c416d4dfa0d00e0304c3f88c2be79))
+
 ## 0.1.0-alpha.1 (2025-01-15)
 
 Full Changelog: [v0.0.1-alpha.0...v0.1.0-alpha.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.0.1-alpha.0...v0.1.0-alpha.1)
