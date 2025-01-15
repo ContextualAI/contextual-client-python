@@ -52,11 +52,11 @@ class JobsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListEvaluationJobsResponse:
         """
-        Retrieve a list of `Evaluation` rounds run on a given `Agent`, including the
+        Retrieve a list of `Evaluation` jobs run for a given `Agent`, including the
         `Evaluation`'s status and other metadata.
 
         Args:
-          agent_id: Agent ID for which to retrieve evaluations
+          agent_id: ID of agent for which to retrieve evaluation jobs
 
           extra_headers: Send extra headers
 
@@ -89,12 +89,12 @@ class JobsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Cancels an `Evaluation` round.
+        Cancels an `Evaluation` job if it is still in progress.
 
         Args:
           agent_id: Agent ID for which to cancel the evaluation
 
-          job_id: Evaluation round ID to cancel
+          job_id: Evaluation job ID to cancel
 
           extra_headers: Send extra headers
 
@@ -128,13 +128,20 @@ class JobsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvaluationJobMetadata:
-        """
-        Get an `Evaluation` round's status and results.
+        """Get an `Evaluation` job's status and results.
+
+        There are six possible statuses:
+        'pending', 'processing', 'retrying', 'completed', 'failed', 'cancelled'.
+
+        If the evaluation job has completed, you will see your evaluation `metrics` ,
+        `job_metadata`, and the `dataset_name` where your eval metrics and row-by-row
+        results are stored. You can use the `/datasets/evaluate` API to view the
+        specified `dataset`.
 
         Args:
-          agent_id: Agent ID for which to retrieve the evaluation
+          agent_id: ID of agent for which to retrieve evaluations
 
-          job_id: Evaluation round ID to retrieve status and results for
+          job_id: Evaluation job ID to retrieve status and results for
 
           extra_headers: Send extra headers
 
@@ -189,11 +196,11 @@ class AsyncJobsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListEvaluationJobsResponse:
         """
-        Retrieve a list of `Evaluation` rounds run on a given `Agent`, including the
+        Retrieve a list of `Evaluation` jobs run for a given `Agent`, including the
         `Evaluation`'s status and other metadata.
 
         Args:
-          agent_id: Agent ID for which to retrieve evaluations
+          agent_id: ID of agent for which to retrieve evaluation jobs
 
           extra_headers: Send extra headers
 
@@ -226,12 +233,12 @@ class AsyncJobsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Cancels an `Evaluation` round.
+        Cancels an `Evaluation` job if it is still in progress.
 
         Args:
           agent_id: Agent ID for which to cancel the evaluation
 
-          job_id: Evaluation round ID to cancel
+          job_id: Evaluation job ID to cancel
 
           extra_headers: Send extra headers
 
@@ -265,13 +272,20 @@ class AsyncJobsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvaluationJobMetadata:
-        """
-        Get an `Evaluation` round's status and results.
+        """Get an `Evaluation` job's status and results.
+
+        There are six possible statuses:
+        'pending', 'processing', 'retrying', 'completed', 'failed', 'cancelled'.
+
+        If the evaluation job has completed, you will see your evaluation `metrics` ,
+        `job_metadata`, and the `dataset_name` where your eval metrics and row-by-row
+        results are stored. You can use the `/datasets/evaluate` API to view the
+        specified `dataset`.
 
         Args:
-          agent_id: Agent ID for which to retrieve the evaluation
+          agent_id: ID of agent for which to retrieve evaluations
 
-          job_id: Evaluation round ID to retrieve status and results for
+          job_id: Evaluation job ID to retrieve status and results for
 
           extra_headers: Send extra headers
 

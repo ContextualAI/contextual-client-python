@@ -32,7 +32,7 @@ class TestEvaluate:
             metrics=["equivalence"],
             evalset_file=b"raw file contents",
             evalset_name="evalset_name",
-            model_name="model_name",
+            llm_model_id="llm_model_id",
         )
         assert_matches_type(CreateEvaluationResponse, evaluate, path=["response"])
 
@@ -89,7 +89,7 @@ class TestAsyncEvaluate:
             metrics=["equivalence"],
             evalset_file=b"raw file contents",
             evalset_name="evalset_name",
-            model_name="model_name",
+            llm_model_id="llm_model_id",
         )
         assert_matches_type(CreateEvaluationResponse, evaluate, path=["response"])
 

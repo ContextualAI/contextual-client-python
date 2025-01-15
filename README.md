@@ -123,7 +123,7 @@ first_page = await client.agents.list()
 if first_page.has_next_page():
     print(f"will fetch next page using these details: {first_page.next_page_info()}")
     next_page = await first_page.get_next_page()
-    print(f"number of items we just fetched: {len(next_page.data)}")
+    print(f"number of items we just fetched: {len(next_page.agents)}")
 
 # Remove `await` for non-async usage.
 ```
@@ -134,7 +134,7 @@ Or just work directly with the returned data:
 first_page = await client.agents.list()
 
 print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
-for agent in first_page.data:
+for agent in first_page.agents:
     print(agent.id)
 
 # Remove `await` for non-async usage.

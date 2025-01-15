@@ -62,7 +62,7 @@ class QueryResource(SyncAPIResource):
         messages: Iterable[query_create_params.Message],
         retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
-        model_id: str | NotGiven = NOT_GIVEN,
+        llm_model_id: str | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -78,15 +78,18 @@ class QueryResource(SyncAPIResource):
         Args:
           agent_id: Agent ID of the agent to query
 
-          messages: Message objects in the conversation
+          messages: Messages sent so far in the conversation, ending in the latest user message. Add
+              multiple objects to provide conversation history. Last message in the list must
+              be a `user`-sent message (i.e. `role` equals `"user"`).
 
           retrievals_only: Set to `true` to skip generation of the response.
 
-          conversation_id: Conversation ID. An optional alternative to providing message history in the
-              `messages` field. If provided, history in the `messages` field will be ignored.
+          conversation_id: An optional alternative to providing message history in the `messages` field. If
+              provided, all messages in the `messages` list prior to the latest user-sent
+              query will be ignored.
 
-          model_id: Model ID of the specific fine-tuned or aligned model to use. Defaults to base
-              model if not specified.
+          llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
+              base model if not specified.
 
           stream: Set to `true` to receive a streamed response
 
@@ -106,7 +109,7 @@ class QueryResource(SyncAPIResource):
                 {
                     "messages": messages,
                     "conversation_id": conversation_id,
-                    "model_id": model_id,
+                    "llm_model_id": llm_model_id,
                     "stream": stream,
                 },
                 query_create_params.QueryCreateParams,
@@ -149,15 +152,15 @@ class QueryResource(SyncAPIResource):
         `content_id`.
 
         Args:
-          agent_id: Agent ID of the agent to provide feedback for
+          agent_id: ID of the agent for which to provide feedback
 
           feedback: Feedback to provide on the message. Set to "removed" to undo previously provided
               feedback.
 
-          message_id: ID of the message to provide feedback on.
+          message_id: ID of the message on which to provide feedback.
 
-          content_id: Content ID to provide feedback on, if feedback is on retrieval. Set to None for
-              generation feedback.
+          content_id: ID of the content on which to provide feedback, if feedback is on retrieval. Do
+              not set (or set to null) while providing generation feedback.
 
           explanation: Optional explanation for the feedback.
 
@@ -203,15 +206,17 @@ class QueryResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> QueryMetricsResponse:
-        """
-        Get feedbacks a given agent.
+        """Returns usage and user-provided feedback data.
+
+        This information can be used for
+        data-driven improvements and optimization.
 
         Args:
           agent_id: Agent ID of the agent to get metrics for
 
-          created_after: Filters messages that are created before specified timestamp.
+          created_after: Filters messages that are created after the specified timestamp.
 
-          created_before: Filters messages that are created after specified timestamp.
+          created_before: Filters messages that are created before specified timestamp.
 
           limit: Limits the number of messages to return.
 
@@ -261,13 +266,13 @@ class QueryResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> RetrievalInfoResponse:
         """
-        Return content metadata of the contents used to generate response for a given
+        Return metadata of the contents used to generate the response for a given
         message.
 
         Args:
-          agent_id: Agent ID of the agent which sent the provided message.
+          agent_id: ID of the agent which sent the provided message.
 
-          message_id: Message ID for which the content metadata needs to be retrieved.
+          message_id: ID of the message for which the content metadata needs to be retrieved.
 
           content_ids: List of content ids for which to get the metadata.
 
@@ -325,7 +330,7 @@ class AsyncQueryResource(AsyncAPIResource):
         messages: Iterable[query_create_params.Message],
         retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
-        model_id: str | NotGiven = NOT_GIVEN,
+        llm_model_id: str | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -341,15 +346,18 @@ class AsyncQueryResource(AsyncAPIResource):
         Args:
           agent_id: Agent ID of the agent to query
 
-          messages: Message objects in the conversation
+          messages: Messages sent so far in the conversation, ending in the latest user message. Add
+              multiple objects to provide conversation history. Last message in the list must
+              be a `user`-sent message (i.e. `role` equals `"user"`).
 
           retrievals_only: Set to `true` to skip generation of the response.
 
-          conversation_id: Conversation ID. An optional alternative to providing message history in the
-              `messages` field. If provided, history in the `messages` field will be ignored.
+          conversation_id: An optional alternative to providing message history in the `messages` field. If
+              provided, all messages in the `messages` list prior to the latest user-sent
+              query will be ignored.
 
-          model_id: Model ID of the specific fine-tuned or aligned model to use. Defaults to base
-              model if not specified.
+          llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
+              base model if not specified.
 
           stream: Set to `true` to receive a streamed response
 
@@ -369,7 +377,7 @@ class AsyncQueryResource(AsyncAPIResource):
                 {
                     "messages": messages,
                     "conversation_id": conversation_id,
-                    "model_id": model_id,
+                    "llm_model_id": llm_model_id,
                     "stream": stream,
                 },
                 query_create_params.QueryCreateParams,
@@ -414,15 +422,15 @@ class AsyncQueryResource(AsyncAPIResource):
         `content_id`.
 
         Args:
-          agent_id: Agent ID of the agent to provide feedback for
+          agent_id: ID of the agent for which to provide feedback
 
           feedback: Feedback to provide on the message. Set to "removed" to undo previously provided
               feedback.
 
-          message_id: ID of the message to provide feedback on.
+          message_id: ID of the message on which to provide feedback.
 
-          content_id: Content ID to provide feedback on, if feedback is on retrieval. Set to None for
-              generation feedback.
+          content_id: ID of the content on which to provide feedback, if feedback is on retrieval. Do
+              not set (or set to null) while providing generation feedback.
 
           explanation: Optional explanation for the feedback.
 
@@ -468,15 +476,17 @@ class AsyncQueryResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> QueryMetricsResponse:
-        """
-        Get feedbacks a given agent.
+        """Returns usage and user-provided feedback data.
+
+        This information can be used for
+        data-driven improvements and optimization.
 
         Args:
           agent_id: Agent ID of the agent to get metrics for
 
-          created_after: Filters messages that are created before specified timestamp.
+          created_after: Filters messages that are created after the specified timestamp.
 
-          created_before: Filters messages that are created after specified timestamp.
+          created_before: Filters messages that are created before specified timestamp.
 
           limit: Limits the number of messages to return.
 
@@ -526,13 +536,13 @@ class AsyncQueryResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> RetrievalInfoResponse:
         """
-        Return content metadata of the contents used to generate response for a given
+        Return metadata of the contents used to generate the response for a given
         message.
 
         Args:
-          agent_id: Agent ID of the agent which sent the provided message.
+          agent_id: ID of the agent which sent the provided message.
 
-          message_id: Message ID for which the content metadata needs to be retrieved.
+          message_id: ID of the message for which the content metadata needs to be retrieved.
 
           content_ids: List of content ids for which to get the metadata.
 
