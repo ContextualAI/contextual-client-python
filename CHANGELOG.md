@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0 (2025-01-15)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.1.0-alpha.2...v0.1.0)
+
+### Features
+
+* stable release. ([0a95ded](https://github.com/ContextualAI/contextual-client-python/commit/0a95dedf99d1252be7fd94a6ceafc751e1b04eee))
+
 ## 0.1.0-alpha.2 (2025-01-15)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/ContextualAI/contextual-client-python/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
