@@ -52,11 +52,11 @@ class JobsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListTuneJobsResponse:
         """
-        Retrieve a list of all tune jobs run on a specified `Agent`, including their
+        Retrieve a list of all tune jobs run for a specified `Agent`, including their
         `status`, `evaluation_results`, and resultant `model_id`.
 
         Args:
-          agent_id: Agent ID of the agent to list tuning jobs for
+          agent_id: ID of the agent to list tuning jobs for
 
           extra_headers: Send extra headers
 
@@ -88,14 +88,13 @@ class JobsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """Cancel a specific tuning job.
+        """Cancel a tuning job if it is still in progress.
 
-        Terminates the tuning job if it is still in
-        progress. If the tuning job has already completed, the tuned model will not be
-        deleted.
+        If the tuning job has already
+        completed, the tuned model will not be deleted.
 
         Args:
-          agent_id: Agent ID of the agent associated with the tuning job
+          agent_id: ID of the agent associated with the tuning job
 
           job_id: ID of the tuning job to cancel
 
@@ -131,13 +130,16 @@ class JobsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> TuneJobMetadata:
-        """Retrieve the status of a specific tuning job.
+        """
+        Retrieve the status of a specific tuning job.
 
-        Fetches the current status and
-        evaluation results, if available, for the specified tuning job.
+        After the tuning job is complete, the metadata associated with the tune job will
+        include evaluation results and a model ID. You can then deploy the tuned model
+        to the agent by editing its config with the tuned model ID and the "Edit Agent"
+        API (i.e. the `PUT /agents/{agent_id}` API).
 
         Args:
-          agent_id: Agent ID of the agent associated with the tuning job
+          agent_id: ID of the agent associated with the tuning job
 
           job_id: ID of the tuning job to retrieve the status for
 
@@ -194,11 +196,11 @@ class AsyncJobsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListTuneJobsResponse:
         """
-        Retrieve a list of all tune jobs run on a specified `Agent`, including their
+        Retrieve a list of all tune jobs run for a specified `Agent`, including their
         `status`, `evaluation_results`, and resultant `model_id`.
 
         Args:
-          agent_id: Agent ID of the agent to list tuning jobs for
+          agent_id: ID of the agent to list tuning jobs for
 
           extra_headers: Send extra headers
 
@@ -230,14 +232,13 @@ class AsyncJobsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
-        """Cancel a specific tuning job.
+        """Cancel a tuning job if it is still in progress.
 
-        Terminates the tuning job if it is still in
-        progress. If the tuning job has already completed, the tuned model will not be
-        deleted.
+        If the tuning job has already
+        completed, the tuned model will not be deleted.
 
         Args:
-          agent_id: Agent ID of the agent associated with the tuning job
+          agent_id: ID of the agent associated with the tuning job
 
           job_id: ID of the tuning job to cancel
 
@@ -273,13 +274,16 @@ class AsyncJobsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> TuneJobMetadata:
-        """Retrieve the status of a specific tuning job.
+        """
+        Retrieve the status of a specific tuning job.
 
-        Fetches the current status and
-        evaluation results, if available, for the specified tuning job.
+        After the tuning job is complete, the metadata associated with the tune job will
+        include evaluation results and a model ID. You can then deploy the tuned model
+        to the agent by editing its config with the tuned model ID and the "Edit Agent"
+        API (i.e. the `PUT /agents/{agent_id}` API).
 
         Args:
-          agent_id: Agent ID of the agent associated with the tuning job
+          agent_id: ID of the agent associated with the tuning job
 
           job_id: ID of the tuning job to retrieve the status for
 

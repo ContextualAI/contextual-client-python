@@ -13,10 +13,10 @@ __all__ = ["QueryMetricsParams"]
 
 class QueryMetricsParams(TypedDict, total=False):
     created_after: Annotated[Union[str, datetime], PropertyInfo(format="iso8601")]
-    """Filters messages that are created before specified timestamp."""
+    """Filters messages that are created after the specified timestamp."""
 
     created_before: Annotated[Union[str, datetime], PropertyInfo(format="iso8601")]
-    """Filters messages that are created after specified timestamp."""
+    """Filters messages that are created before specified timestamp."""
 
     limit: int
     """Limits the number of messages to return."""

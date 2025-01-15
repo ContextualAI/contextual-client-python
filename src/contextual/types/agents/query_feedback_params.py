@@ -15,12 +15,12 @@ class QueryFeedbackParams(TypedDict, total=False):
     """
 
     message_id: Required[str]
-    """ID of the message to provide feedback on."""
+    """ID of the message on which to provide feedback."""
 
     content_id: str
-    """Content ID to provide feedback on, if feedback is on retrieval.
+    """ID of the content on which to provide feedback, if feedback is on retrieval.
 
-    Set to None for generation feedback.
+    Do not set (or set to null) while providing generation feedback.
     """
 
     explanation: str

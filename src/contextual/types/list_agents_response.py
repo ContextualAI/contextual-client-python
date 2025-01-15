@@ -12,7 +12,7 @@ class ListAgentsResponse(BaseModel):
     total_count: int
     """Total number of available agents"""
 
-    data: Optional[List[Agent]] = None
+    agents: Optional[List[Agent]] = None
     """List of active agents"""
 
     next_cursor: Optional[str] = None
