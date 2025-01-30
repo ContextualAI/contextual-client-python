@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import lmunit
+from .resources import lmunit, rerank, generate
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, ContextualAIError
 from ._base_client import (
@@ -51,6 +51,8 @@ class ContextualAI(SyncAPIClient):
     datastores: datastores.DatastoresResource
     agents: agents.AgentsResource
     lmunit: lmunit.LMUnitResource
+    rerank: rerank.RerankResource
+    generate: generate.GenerateResource
     with_raw_response: ContextualAIWithRawResponse
     with_streaming_response: ContextualAIWithStreamedResponse
 
@@ -117,6 +119,8 @@ class ContextualAI(SyncAPIClient):
         self.datastores = datastores.DatastoresResource(self)
         self.agents = agents.AgentsResource(self)
         self.lmunit = lmunit.LMUnitResource(self)
+        self.rerank = rerank.RerankResource(self)
+        self.generate = generate.GenerateResource(self)
         self.with_raw_response = ContextualAIWithRawResponse(self)
         self.with_streaming_response = ContextualAIWithStreamedResponse(self)
 
@@ -232,6 +236,8 @@ class AsyncContextualAI(AsyncAPIClient):
     datastores: datastores.AsyncDatastoresResource
     agents: agents.AsyncAgentsResource
     lmunit: lmunit.AsyncLMUnitResource
+    rerank: rerank.AsyncRerankResource
+    generate: generate.AsyncGenerateResource
     with_raw_response: AsyncContextualAIWithRawResponse
     with_streaming_response: AsyncContextualAIWithStreamedResponse
 
@@ -298,6 +304,8 @@ class AsyncContextualAI(AsyncAPIClient):
         self.datastores = datastores.AsyncDatastoresResource(self)
         self.agents = agents.AsyncAgentsResource(self)
         self.lmunit = lmunit.AsyncLMUnitResource(self)
+        self.rerank = rerank.AsyncRerankResource(self)
+        self.generate = generate.AsyncGenerateResource(self)
         self.with_raw_response = AsyncContextualAIWithRawResponse(self)
         self.with_streaming_response = AsyncContextualAIWithStreamedResponse(self)
 
@@ -414,6 +422,8 @@ class ContextualAIWithRawResponse:
         self.datastores = datastores.DatastoresResourceWithRawResponse(client.datastores)
         self.agents = agents.AgentsResourceWithRawResponse(client.agents)
         self.lmunit = lmunit.LMUnitResourceWithRawResponse(client.lmunit)
+        self.rerank = rerank.RerankResourceWithRawResponse(client.rerank)
+        self.generate = generate.GenerateResourceWithRawResponse(client.generate)
 
 
 class AsyncContextualAIWithRawResponse:
@@ -421,6 +431,8 @@ class AsyncContextualAIWithRawResponse:
         self.datastores = datastores.AsyncDatastoresResourceWithRawResponse(client.datastores)
         self.agents = agents.AsyncAgentsResourceWithRawResponse(client.agents)
         self.lmunit = lmunit.AsyncLMUnitResourceWithRawResponse(client.lmunit)
+        self.rerank = rerank.AsyncRerankResourceWithRawResponse(client.rerank)
+        self.generate = generate.AsyncGenerateResourceWithRawResponse(client.generate)
 
 
 class ContextualAIWithStreamedResponse:
@@ -428,6 +440,8 @@ class ContextualAIWithStreamedResponse:
         self.datastores = datastores.DatastoresResourceWithStreamingResponse(client.datastores)
         self.agents = agents.AgentsResourceWithStreamingResponse(client.agents)
         self.lmunit = lmunit.LMUnitResourceWithStreamingResponse(client.lmunit)
+        self.rerank = rerank.RerankResourceWithStreamingResponse(client.rerank)
+        self.generate = generate.GenerateResourceWithStreamingResponse(client.generate)
 
 
 class AsyncContextualAIWithStreamedResponse:
@@ -435,6 +449,8 @@ class AsyncContextualAIWithStreamedResponse:
         self.datastores = datastores.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
         self.agents = agents.AsyncAgentsResourceWithStreamingResponse(client.agents)
         self.lmunit = lmunit.AsyncLMUnitResourceWithStreamingResponse(client.lmunit)
+        self.rerank = rerank.AsyncRerankResourceWithStreamingResponse(client.rerank)
+        self.generate = generate.AsyncGenerateResourceWithStreamingResponse(client.generate)
 
 
 Client = ContextualAI

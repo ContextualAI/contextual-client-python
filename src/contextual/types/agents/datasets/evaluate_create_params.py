@@ -17,4 +17,4 @@ class EvaluateCreateParams(TypedDict, total=False):
     """Type of evaluation dataset which determines its schema and validation rules."""
 
     file: Required[FileTypes]
-    """JSONL file containing the evaluation dataset"""
+    """JSONL or CSV file containing the evaluation dataset"""
