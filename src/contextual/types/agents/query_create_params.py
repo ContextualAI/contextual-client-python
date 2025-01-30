@@ -41,4 +41,4 @@ class Message(TypedDict, total=False):
     """Content of the message"""
 
     role: Required[Literal["user", "system", "assistant"]]
-    """Role of sender"""
+    """Role of the sender"""

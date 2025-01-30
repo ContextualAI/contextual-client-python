@@ -81,20 +81,20 @@ class EvaluateResource(SyncAPIResource):
     ) -> CreateDatasetResponse:
         """
         Create a new evaluation `Dataset` for the specified `Agent` using the provided
-        JSONL file. A `Dataset` is a versioned collection of samples conforming to a
-        particular schema, and can be used to store `Evaluation` test-sets and retrieve
-        `Evaluation` results.
+        JSONL or CSV file. A `Dataset` is a versioned collection of samples conforming
+        to a particular schema, and can be used to store `Evaluation` test-sets and
+        retrieve `Evaluation` results.
 
         Each `Dataset` is versioned and validated against its schema during creation and
         subsequent updates. The provided `Dataset` file must conform to the schema
         defined for the `dataset_type`.
 
-        File schema for `dataset_type` `evaluation_set` is a JSONL or CSV file where
-        each line is one JSON object with the following required keys:
+        File schema for `dataset_type` `evaluation_set` is a CSV file or a JSONL file
+        where each line is one JSON object. The following keys are required:
 
-        - `prompt` (required, `string`): Prompt or question
+        - `prompt` (`string`): Prompt or question
 
-        - `reference` (required, `string`): Required reference or ground truth response
+        - `reference` (`string`): Reference or ground truth response
 
         Args:
           agent_id: Agent ID to associate with the evaluation dataset
@@ -103,7 +103,7 @@ class EvaluateResource(SyncAPIResource):
 
           dataset_type: Type of evaluation dataset which determines its schema and validation rules.
 
-          file: JSONL file containing the evaluation dataset
+          file: JSONL or CSV file containing the evaluation dataset
 
           extra_headers: Send extra headers
 
@@ -228,12 +228,12 @@ class EvaluateResource(SyncAPIResource):
         Create a new version of the dataset by appending content to the `Dataset` and
         validating against its schema.
 
-        File schema for `dataset_type` `evaluation_set` is a JSONL file where each line
-        is one JSON object with the following required keys:
+        File schema for `dataset_type` `evaluation_set` is a CSV file or a JSONL file
+        where each line is one JSON object. The following keys are required:
 
         - `prompt` (`string`): Prompt or question
 
-        - `reference` (`string`): Required reference or ground truth response
+        - `reference` (`string`): Reference or ground truth response
 
         Args:
           agent_id: Agent ID associated with the evaluation dataset
@@ -243,7 +243,7 @@ class EvaluateResource(SyncAPIResource):
           dataset_type: Type of evaluation dataset which determines its schema and validation rules.
               Must match the `dataset_type` used at dataset creation time.
 
-          file: JSONL file containing the entries to append to the evaluation dataset
+          file: JSONL or CSV file containing the entries to append to the evaluation dataset
 
           extra_headers: Send extra headers
 
@@ -459,20 +459,20 @@ class AsyncEvaluateResource(AsyncAPIResource):
     ) -> CreateDatasetResponse:
         """
         Create a new evaluation `Dataset` for the specified `Agent` using the provided
-        JSONL file. A `Dataset` is a versioned collection of samples conforming to a
-        particular schema, and can be used to store `Evaluation` test-sets and retrieve
-        `Evaluation` results.
+        JSONL or CSV file. A `Dataset` is a versioned collection of samples conforming
+        to a particular schema, and can be used to store `Evaluation` test-sets and
+        retrieve `Evaluation` results.
 
         Each `Dataset` is versioned and validated against its schema during creation and
         subsequent updates. The provided `Dataset` file must conform to the schema
         defined for the `dataset_type`.
 
-        File schema for `dataset_type` `evaluation_set` is a JSONL or CSV file where
-        each line is one JSON object with the following required keys:
+        File schema for `dataset_type` `evaluation_set` is a CSV file or a JSONL file
+        where each line is one JSON object. The following keys are required:
 
-        - `prompt` (required, `string`): Prompt or question
+        - `prompt` (`string`): Prompt or question
 
-        - `reference` (required, `string`): Required reference or ground truth response
+        - `reference` (`string`): Reference or ground truth response
 
         Args:
           agent_id: Agent ID to associate with the evaluation dataset
@@ -481,7 +481,7 @@ class AsyncEvaluateResource(AsyncAPIResource):
 
           dataset_type: Type of evaluation dataset which determines its schema and validation rules.
 
-          file: JSONL file containing the evaluation dataset
+          file: JSONL or CSV file containing the evaluation dataset
 
           extra_headers: Send extra headers
 
@@ -606,12 +606,12 @@ class AsyncEvaluateResource(AsyncAPIResource):
         Create a new version of the dataset by appending content to the `Dataset` and
         validating against its schema.
 
-        File schema for `dataset_type` `evaluation_set` is a JSONL file where each line
-        is one JSON object with the following required keys:
+        File schema for `dataset_type` `evaluation_set` is a CSV file or a JSONL file
+        where each line is one JSON object. The following keys are required:
 
         - `prompt` (`string`): Prompt or question
 
-        - `reference` (`string`): Required reference or ground truth response
+        - `reference` (`string`): Reference or ground truth response
 
         Args:
           agent_id: Agent ID associated with the evaluation dataset
@@ -621,7 +621,7 @@ class AsyncEvaluateResource(AsyncAPIResource):
           dataset_type: Type of evaluation dataset which determines its schema and validation rules.
               Must match the `dataset_type` used at dataset creation time.
 
-          file: JSONL file containing the entries to append to the evaluation dataset
+          file: JSONL or CSV file containing the entries to append to the evaluation dataset
 
           extra_headers: Send extra headers
 

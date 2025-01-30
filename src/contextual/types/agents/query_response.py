@@ -59,7 +59,7 @@ class Message(BaseModel):
     """Content of the message"""
 
     role: Literal["user", "system", "assistant"]
-    """Role of sender"""
+    """Role of the sender"""
 
 
 class QueryResponse(BaseModel):
