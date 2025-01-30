@@ -20,4 +20,4 @@ class EvaluateUpdateParams(TypedDict, total=False):
     """
 
     file: Required[FileTypes]
-    """JSONL file containing the entries to append to the evaluation dataset"""
+    """JSONL or CSV file containing the entries to append to the evaluation dataset"""
