@@ -3,16 +3,14 @@
 from __future__ import annotations
 
 from typing import List, Iterable
-from typing_extensions import Literal, Required, Annotated, TypedDict
+from typing_extensions import Literal, Required, TypedDict
 
-from .._utils import PropertyInfo
-
-__all__ = ["GenerateCreateParams", "ExtraBody", "Message"]
+__all__ = ["GenerateCreateParams", "Message"]
 
 
 class GenerateCreateParams(TypedDict, total=False):
-    api_extra_body: Required[Annotated[ExtraBody, PropertyInfo(alias="extra_body")]]
-    """Extra parameters to be passed to Contextual's GLM"""
+    knowledge: Required[List[str]]
+    """The knowledge sources the model can use when generating a response."""
 
     messages: Required[Iterable[Message]]
     """List of messages in the conversation so far.
@@ -22,11 +20,6 @@ class GenerateCreateParams(TypedDict, total=False):
 
     model: Required[str]
     """The version of the Contextual's GLM to use. Currently, we just have "v1"."""
-
-
-class ExtraBody(TypedDict, total=False):
-    knowledge: Required[List[str]]
-    """The knowledge sources the model can use when generating a response."""
 
     system_prompt: str
     """Instructions that the model follows when generating responses.

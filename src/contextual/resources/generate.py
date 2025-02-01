@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Iterable
+from typing import List, Iterable
 
 import httpx
 
@@ -49,9 +49,10 @@ class GenerateResource(SyncAPIResource):
     def create(
         self,
         *,
-        api_extra_body: generate_create_params.ExtraBody,
+        knowledge: List[str],
         messages: Iterable[generate_create_params.Message],
         model: str,
+        system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -67,12 +68,15 @@ class GenerateResource(SyncAPIResource):
         The total request cannot exceed 6,100 tokens.
 
         Args:
-          api_extra_body: Extra parameters to be passed to Contextual's GLM
+          knowledge: The knowledge sources the model can use when generating a response.
 
           messages: List of messages in the conversation so far. The last message must be from the
               user.
 
           model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+
+          system_prompt: Instructions that the model follows when generating responses. Note that we do
+              not guarantee that the model follows these instructions exactly.
 
           extra_headers: Send extra headers
 
@@ -86,9 +90,10 @@ class GenerateResource(SyncAPIResource):
             "/generate",
             body=maybe_transform(
                 {
-                    "api_extra_body": api_extra_body,
+                    "knowledge": knowledge,
                     "messages": messages,
                     "model": model,
+                    "system_prompt": system_prompt,
                 },
                 generate_create_params.GenerateCreateParams,
             ),
@@ -122,9 +127,10 @@ class AsyncGenerateResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        api_extra_body: generate_create_params.ExtraBody,
+        knowledge: List[str],
         messages: Iterable[generate_create_params.Message],
         model: str,
+        system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -140,12 +146,15 @@ class AsyncGenerateResource(AsyncAPIResource):
         The total request cannot exceed 6,100 tokens.
 
         Args:
-          api_extra_body: Extra parameters to be passed to Contextual's GLM
+          knowledge: The knowledge sources the model can use when generating a response.
 
           messages: List of messages in the conversation so far. The last message must be from the
               user.
 
           model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+
+          system_prompt: Instructions that the model follows when generating responses. Note that we do
+              not guarantee that the model follows these instructions exactly.
 
           extra_headers: Send extra headers
 
@@ -159,9 +168,10 @@ class AsyncGenerateResource(AsyncAPIResource):
             "/generate",
             body=await async_maybe_transform(
                 {
-                    "api_extra_body": api_extra_body,
+                    "knowledge": knowledge,
                     "messages": messages,
                     "model": model,
+                    "system_prompt": system_prompt,
                 },
                 generate_create_params.GenerateCreateParams,
             ),

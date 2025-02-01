@@ -20,7 +20,7 @@ class TestGenerate:
     @parametrize
     def test_method_create(self, client: ContextualAI) -> None:
         generate = client.generate.create(
-            api_extra_body={"knowledge": ["string"]},
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
@@ -34,10 +34,7 @@ class TestGenerate:
     @parametrize
     def test_method_create_with_all_params(self, client: ContextualAI) -> None:
         generate = client.generate.create(
-            api_extra_body={
-                "knowledge": ["string"],
-                "system_prompt": "system_prompt",
-            },
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
@@ -45,13 +42,14 @@ class TestGenerate:
                 }
             ],
             model="model",
+            system_prompt="system_prompt",
         )
         assert_matches_type(GenerateCreateResponse, generate, path=["response"])
 
     @parametrize
     def test_raw_response_create(self, client: ContextualAI) -> None:
         response = client.generate.with_raw_response.create(
-            api_extra_body={"knowledge": ["string"]},
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
@@ -69,7 +67,7 @@ class TestGenerate:
     @parametrize
     def test_streaming_response_create(self, client: ContextualAI) -> None:
         with client.generate.with_streaming_response.create(
-            api_extra_body={"knowledge": ["string"]},
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
@@ -93,7 +91,7 @@ class TestAsyncGenerate:
     @parametrize
     async def test_method_create(self, async_client: AsyncContextualAI) -> None:
         generate = await async_client.generate.create(
-            api_extra_body={"knowledge": ["string"]},
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
@@ -107,10 +105,7 @@ class TestAsyncGenerate:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
         generate = await async_client.generate.create(
-            api_extra_body={
-                "knowledge": ["string"],
-                "system_prompt": "system_prompt",
-            },
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
@@ -118,13 +113,14 @@ class TestAsyncGenerate:
                 }
             ],
             model="model",
+            system_prompt="system_prompt",
         )
         assert_matches_type(GenerateCreateResponse, generate, path=["response"])
 
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
         response = await async_client.generate.with_raw_response.create(
-            api_extra_body={"knowledge": ["string"]},
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
@@ -142,7 +138,7 @@ class TestAsyncGenerate:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
         async with async_client.generate.with_streaming_response.create(
-            api_extra_body={"knowledge": ["string"]},
+            knowledge=["string"],
             messages=[
                 {
                     "content": "content",
