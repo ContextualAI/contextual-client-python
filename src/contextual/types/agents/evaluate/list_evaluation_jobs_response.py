@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -21,6 +21,24 @@ class EvaluationRound(BaseModel):
 
     user_email: str
     """Email of the user who launched the evaluation round"""
+
+    finished_at: Optional[datetime] = None
+    """Timestamp indicating when the evaluation round finished processing"""
+
+    num_failed_predictions: Optional[int] = None
+    """Number of predictions that failed during the evaluation round"""
+
+    num_predictions: Optional[int] = None
+    """Total number of predictions made during the evaluation round"""
+
+    num_successful_predictions: Optional[int] = None
+    """Number of predictions that were successful during the evaluation round"""
+
+    processing_started_at: Optional[datetime] = None
+    """Timestamp indicating when the evaluation round started processing"""
+
+    summary_results: Optional[object] = None
+    """Score of the evaluation round"""
 
 
 class ListEvaluationJobsResponse(BaseModel):

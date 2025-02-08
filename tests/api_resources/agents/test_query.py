@@ -45,6 +45,7 @@ class TestQuery:
                     "role": "user",
                 }
             ],
+            include_retrieval_content_text=True,
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             llm_model_id="llm_model_id",
@@ -287,6 +288,7 @@ class TestAsyncQuery:
                     "role": "user",
                 }
             ],
+            include_retrieval_content_text=True,
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             llm_model_id="llm_model_id",

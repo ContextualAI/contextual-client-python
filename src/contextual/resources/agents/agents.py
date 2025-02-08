@@ -136,7 +136,7 @@ class AgentsResource(SyncAPIResource):
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
@@ -199,7 +199,7 @@ class AgentsResource(SyncAPIResource):
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
@@ -430,7 +430,7 @@ class AsyncAgentsResource(AsyncAPIResource):
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
@@ -493,7 +493,7 @@ class AsyncAgentsResource(AsyncAPIResource):
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
