@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from typing import List, Iterable
+
 import httpx
 
-from ..types import lmunit_create_params
+from ..types import generate_create_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
     maybe_transform,
@@ -19,62 +21,62 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.lmunit_create_response import LMUnitCreateResponse
+from ..types.generate_create_response import GenerateCreateResponse
 
-__all__ = ["LMUnitResource", "AsyncLMUnitResource"]
+__all__ = ["GenerateResource", "AsyncGenerateResource"]
 
 
-class LMUnitResource(SyncAPIResource):
+class GenerateResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> LMUnitResourceWithRawResponse:
+    def with_raw_response(self) -> GenerateResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
         """
-        return LMUnitResourceWithRawResponse(self)
+        return GenerateResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> LMUnitResourceWithStreamingResponse:
+    def with_streaming_response(self) -> GenerateResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#with_streaming_response
         """
-        return LMUnitResourceWithStreamingResponse(self)
+        return GenerateResourceWithStreamingResponse(self)
 
     def create(
         self,
         *,
-        query: str,
-        response: str,
-        unit_test: str,
+        knowledge: List[str],
+        messages: Iterable[generate_create_params.Message],
+        model: str,
+        system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LMUnitCreateResponse:
+    ) -> GenerateCreateResponse:
         """
-        Given a `query`, `response`, and a `unit_test`, return the response's `score` on
-        the unit test on a 5-point continuous scale. The total input cannot exceed 7000
-        tokens.
+        Generate a response using Contextual's Grounded Language Model (GLM), an LLM
+        engineered specifically to prioritize faithfulness to in-context retrievals over
+        parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation.
 
-        See a code example in [our blog post](https://contextual.ai/news/lmunit/). Email
-        [lmunit-feedback@contextual.ai](mailto:lmunit-feedback@contextual.ai) with any
-        feedback or questions.
-
-        > 🚀 Obtain an LMUnit API key by completing
-        > [this form](https://contextual.ai/request-lmunit-api/)
+        The total request cannot exceed 6,100 tokens.
 
         Args:
-          query: The prompt to which the model responds
+          knowledge: The knowledge sources the model can use when generating a response.
 
-          response: The model response to evaluate
+          messages: List of messages in the conversation so far. The last message must be from the
+              user.
 
-          unit_test: A natural language statement or question against which to evaluate the response
+          model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+
+          system_prompt: Instructions that the model follows when generating responses. Note that we do
+              not guarantee that the model follows these instructions exactly.
 
           extra_headers: Send extra headers
 
@@ -85,73 +87,74 @@ class LMUnitResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._post(
-            "/lmunit",
+            "/generate",
             body=maybe_transform(
                 {
-                    "query": query,
-                    "response": response,
-                    "unit_test": unit_test,
+                    "knowledge": knowledge,
+                    "messages": messages,
+                    "model": model,
+                    "system_prompt": system_prompt,
                 },
-                lmunit_create_params.LMUnitCreateParams,
+                generate_create_params.GenerateCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=LMUnitCreateResponse,
+            cast_to=GenerateCreateResponse,
         )
 
 
-class AsyncLMUnitResource(AsyncAPIResource):
+class AsyncGenerateResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncLMUnitResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncGenerateResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncLMUnitResourceWithRawResponse(self)
+        return AsyncGenerateResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncLMUnitResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncGenerateResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#with_streaming_response
         """
-        return AsyncLMUnitResourceWithStreamingResponse(self)
+        return AsyncGenerateResourceWithStreamingResponse(self)
 
     async def create(
         self,
         *,
-        query: str,
-        response: str,
-        unit_test: str,
+        knowledge: List[str],
+        messages: Iterable[generate_create_params.Message],
+        model: str,
+        system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LMUnitCreateResponse:
+    ) -> GenerateCreateResponse:
         """
-        Given a `query`, `response`, and a `unit_test`, return the response's `score` on
-        the unit test on a 5-point continuous scale. The total input cannot exceed 7000
-        tokens.
+        Generate a response using Contextual's Grounded Language Model (GLM), an LLM
+        engineered specifically to prioritize faithfulness to in-context retrievals over
+        parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation.
 
-        See a code example in [our blog post](https://contextual.ai/news/lmunit/). Email
-        [lmunit-feedback@contextual.ai](mailto:lmunit-feedback@contextual.ai) with any
-        feedback or questions.
-
-        > 🚀 Obtain an LMUnit API key by completing
-        > [this form](https://contextual.ai/request-lmunit-api/)
+        The total request cannot exceed 6,100 tokens.
 
         Args:
-          query: The prompt to which the model responds
+          knowledge: The knowledge sources the model can use when generating a response.
 
-          response: The model response to evaluate
+          messages: List of messages in the conversation so far. The last message must be from the
+              user.
 
-          unit_test: A natural language statement or question against which to evaluate the response
+          model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+
+          system_prompt: Instructions that the model follows when generating responses. Note that we do
+              not guarantee that the model follows these instructions exactly.
 
           extra_headers: Send extra headers
 
@@ -162,53 +165,54 @@ class AsyncLMUnitResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._post(
-            "/lmunit",
+            "/generate",
             body=await async_maybe_transform(
                 {
-                    "query": query,
-                    "response": response,
-                    "unit_test": unit_test,
+                    "knowledge": knowledge,
+                    "messages": messages,
+                    "model": model,
+                    "system_prompt": system_prompt,
                 },
-                lmunit_create_params.LMUnitCreateParams,
+                generate_create_params.GenerateCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=LMUnitCreateResponse,
+            cast_to=GenerateCreateResponse,
         )
 
 
-class LMUnitResourceWithRawResponse:
-    def __init__(self, lmunit: LMUnitResource) -> None:
-        self._lmunit = lmunit
+class GenerateResourceWithRawResponse:
+    def __init__(self, generate: GenerateResource) -> None:
+        self._generate = generate
 
         self.create = to_raw_response_wrapper(
-            lmunit.create,
+            generate.create,
         )
 
 
-class AsyncLMUnitResourceWithRawResponse:
-    def __init__(self, lmunit: AsyncLMUnitResource) -> None:
-        self._lmunit = lmunit
+class AsyncGenerateResourceWithRawResponse:
+    def __init__(self, generate: AsyncGenerateResource) -> None:
+        self._generate = generate
 
         self.create = async_to_raw_response_wrapper(
-            lmunit.create,
+            generate.create,
         )
 
 
-class LMUnitResourceWithStreamingResponse:
-    def __init__(self, lmunit: LMUnitResource) -> None:
-        self._lmunit = lmunit
+class GenerateResourceWithStreamingResponse:
+    def __init__(self, generate: GenerateResource) -> None:
+        self._generate = generate
 
         self.create = to_streamed_response_wrapper(
-            lmunit.create,
+            generate.create,
         )
 
 
-class AsyncLMUnitResourceWithStreamingResponse:
-    def __init__(self, lmunit: AsyncLMUnitResource) -> None:
-        self._lmunit = lmunit
+class AsyncGenerateResourceWithStreamingResponse:
+    def __init__(self, generate: AsyncGenerateResource) -> None:
+        self._generate = generate
 
         self.create = async_to_streamed_response_wrapper(
-            lmunit.create,
+            generate.create,
         )

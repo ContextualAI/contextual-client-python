@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Mapping, Optional, cast
+from typing import List, Mapping, cast
 from typing_extensions import Literal
 
 import httpx
@@ -45,7 +45,7 @@ class EvaluateResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> EvaluateResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
@@ -68,7 +68,7 @@ class EvaluateResource(SyncAPIResource):
         metrics: List[Literal["equivalence", "groundedness"]],
         evalset_file: FileTypes | NotGiven = NOT_GIVEN,
         evalset_name: str | NotGiven = NOT_GIVEN,
-        llm_model_id: Optional[str] | NotGiven = NOT_GIVEN,
+        llm_model_id: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -152,7 +152,7 @@ class AsyncEvaluateResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncEvaluateResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
@@ -175,7 +175,7 @@ class AsyncEvaluateResource(AsyncAPIResource):
         metrics: List[Literal["equivalence", "groundedness"]],
         evalset_file: FileTypes | NotGiven = NOT_GIVEN,
         evalset_name: str | NotGiven = NOT_GIVEN,
-        llm_model_id: Optional[str] | NotGiven = NOT_GIVEN,
+        llm_model_id: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,

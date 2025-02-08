@@ -186,3 +186,27 @@ from contextual.types import LMUnitCreateResponse
 Methods:
 
 - <code title="post /lmunit">client.lmunit.<a href="./src/contextual/resources/lmunit.py">create</a>(\*\*<a href="src/contextual/types/lmunit_create_params.py">params</a>) -> <a href="./src/contextual/types/lmunit_create_response.py">LMUnitCreateResponse</a></code>
+
+# Rerank
+
+Types:
+
+```python
+from contextual.types import RerankCreateResponse
+```
+
+Methods:
+
+- <code title="post /rerank">client.rerank.<a href="./src/contextual/resources/rerank.py">create</a>(\*\*<a href="src/contextual/types/rerank_create_params.py">params</a>) -> <a href="./src/contextual/types/rerank_create_response.py">RerankCreateResponse</a></code>
+
+# Generate
+
+Types:
+
+```python
+from contextual.types import GenerateCreateResponse
+```
+
+Methods:
+
+- <code title="post /generate">client.generate.<a href="./src/contextual/resources/generate.py">create</a>(\*\*<a href="src/contextual/types/generate_create_params.py">params</a>) -> <a href="./src/contextual/types/generate_create_response.py">GenerateCreateResponse</a></code>

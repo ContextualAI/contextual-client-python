@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List
 from typing_extensions import Literal, Required, TypedDict
 
 from ..._types import FileTypes
@@ -28,5 +28,5 @@ class EvaluateCreateParams(TypedDict, total=False):
     provided, but not both.
     """
 
-    llm_model_id: Optional[str]
+    llm_model_id: str
     """ID of the model to evaluate. Uses the default model if not specified."""

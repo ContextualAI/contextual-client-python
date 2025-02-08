@@ -56,7 +56,7 @@ class TuneResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> TuneResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
@@ -111,21 +111,21 @@ class TuneResource(SyncAPIResource):
               JSON object represents a single training example. The four required fields are
               `guideline`, `prompt`, `reference`, and `knowledge`.
 
-              - `knowledge` (`list[str]`): Knowledge or retrievals used to generate the
-                reference response, as a list of string text chunks
+              - `knowledge` (`list[str]`): Retrieved knowledge used to generate the reference
+                answer. `knowledge` is a list of retrieved text chunks.
 
-              - `reference` field should be the model's response to the prompt.
+              - `reference` (`str`): The gold-standard answer to the prompt.
 
-              - `guideline` (`str): Guidelines or criteria for model output
+              - `guideline` (`str`): Guidelines for model output.
 
-              - `prompt` (required, `string`): Prompt or question model should respond to.
+              - `prompt` (`str`): Question for the model to respond to.
 
               Example:
 
               ```json
               [
                 {
-                  "guideline": "The response should be accurate.",
+                  "guideline": "The answer should be accurate.",
                   "prompt": "What was last quarter's revenue?",
                   "reference": "According to recent reports, the Q3 revenue was $1.2 million, a 0.1 million increase from Q2.",
                   "knowledge": [
@@ -189,7 +189,7 @@ class AsyncTuneResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncTuneResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
@@ -244,21 +244,21 @@ class AsyncTuneResource(AsyncAPIResource):
               JSON object represents a single training example. The four required fields are
               `guideline`, `prompt`, `reference`, and `knowledge`.
 
-              - `knowledge` (`list[str]`): Knowledge or retrievals used to generate the
-                reference response, as a list of string text chunks
+              - `knowledge` (`list[str]`): Retrieved knowledge used to generate the reference
+                answer. `knowledge` is a list of retrieved text chunks.
 
-              - `reference` field should be the model's response to the prompt.
+              - `reference` (`str`): The gold-standard answer to the prompt.
 
-              - `guideline` (`str): Guidelines or criteria for model output
+              - `guideline` (`str`): Guidelines for model output.
 
-              - `prompt` (required, `string`): Prompt or question model should respond to.
+              - `prompt` (`str`): Question for the model to respond to.
 
               Example:
 
               ```json
               [
                 {
-                  "guideline": "The response should be accurate.",
+                  "guideline": "The answer should be accurate.",
                   "prompt": "What was last quarter's revenue?",
                   "reference": "According to recent reports, the Q3 revenue was $1.2 million, a 0.1 million increase from Q2.",
                   "knowledge": [

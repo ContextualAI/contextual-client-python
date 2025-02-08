@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from typing import List
+
 import httpx
 
-from ..types import lmunit_create_params
+from ..types import rerank_create_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
     maybe_transform,
@@ -19,62 +21,59 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.lmunit_create_response import LMUnitCreateResponse
+from ..types.rerank_create_response import RerankCreateResponse
 
-__all__ = ["LMUnitResource", "AsyncLMUnitResource"]
+__all__ = ["RerankResource", "AsyncRerankResource"]
 
 
-class LMUnitResource(SyncAPIResource):
+class RerankResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> LMUnitResourceWithRawResponse:
+    def with_raw_response(self) -> RerankResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
         """
-        return LMUnitResourceWithRawResponse(self)
+        return RerankResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> LMUnitResourceWithStreamingResponse:
+    def with_streaming_response(self) -> RerankResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#with_streaming_response
         """
-        return LMUnitResourceWithStreamingResponse(self)
+        return RerankResourceWithStreamingResponse(self)
 
     def create(
         self,
         *,
+        documents: List[str],
+        model: str,
         query: str,
-        response: str,
-        unit_test: str,
+        top_n: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LMUnitCreateResponse:
+    ) -> RerankCreateResponse:
         """
-        Given a `query`, `response`, and a `unit_test`, return the response's `score` on
-        the unit test on a 5-point continuous scale. The total input cannot exceed 7000
-        tokens.
+        Rank a list of documents according to their relevance to a query.
 
-        See a code example in [our blog post](https://contextual.ai/news/lmunit/). Email
-        [lmunit-feedback@contextual.ai](mailto:lmunit-feedback@contextual.ai) with any
-        feedback or questions.
-
-        > 🚀 Obtain an LMUnit API key by completing
-        > [this form](https://contextual.ai/request-lmunit-api/)
+        The total request cannot exceed 400,000 tokens. The combined length of any
+        document and the query must not exceed 4,000 tokens.
 
         Args:
-          query: The prompt to which the model responds
+          documents: The texts to be reranked according to their relevance to the query
 
-          response: The model response to evaluate
+          model: The version of the reranker to use. Currently, we just have "v1".
 
-          unit_test: A natural language statement or question against which to evaluate the response
+          query: The string against which documents will be ranked for relevance
+
+          top_n: The number of top-ranked results to return
 
           extra_headers: Send extra headers
 
@@ -85,73 +84,71 @@ class LMUnitResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._post(
-            "/lmunit",
+            "/rerank",
             body=maybe_transform(
                 {
+                    "documents": documents,
+                    "model": model,
                     "query": query,
-                    "response": response,
-                    "unit_test": unit_test,
+                    "top_n": top_n,
                 },
-                lmunit_create_params.LMUnitCreateParams,
+                rerank_create_params.RerankCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=LMUnitCreateResponse,
+            cast_to=RerankCreateResponse,
         )
 
 
-class AsyncLMUnitResource(AsyncAPIResource):
+class AsyncRerankResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncLMUnitResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncRerankResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncLMUnitResourceWithRawResponse(self)
+        return AsyncRerankResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncLMUnitResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncRerankResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#with_streaming_response
         """
-        return AsyncLMUnitResourceWithStreamingResponse(self)
+        return AsyncRerankResourceWithStreamingResponse(self)
 
     async def create(
         self,
         *,
+        documents: List[str],
+        model: str,
         query: str,
-        response: str,
-        unit_test: str,
+        top_n: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> LMUnitCreateResponse:
+    ) -> RerankCreateResponse:
         """
-        Given a `query`, `response`, and a `unit_test`, return the response's `score` on
-        the unit test on a 5-point continuous scale. The total input cannot exceed 7000
-        tokens.
+        Rank a list of documents according to their relevance to a query.
 
-        See a code example in [our blog post](https://contextual.ai/news/lmunit/). Email
-        [lmunit-feedback@contextual.ai](mailto:lmunit-feedback@contextual.ai) with any
-        feedback or questions.
-
-        > 🚀 Obtain an LMUnit API key by completing
-        > [this form](https://contextual.ai/request-lmunit-api/)
+        The total request cannot exceed 400,000 tokens. The combined length of any
+        document and the query must not exceed 4,000 tokens.
 
         Args:
-          query: The prompt to which the model responds
+          documents: The texts to be reranked according to their relevance to the query
 
-          response: The model response to evaluate
+          model: The version of the reranker to use. Currently, we just have "v1".
 
-          unit_test: A natural language statement or question against which to evaluate the response
+          query: The string against which documents will be ranked for relevance
+
+          top_n: The number of top-ranked results to return
 
           extra_headers: Send extra headers
 
@@ -162,53 +159,54 @@ class AsyncLMUnitResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._post(
-            "/lmunit",
+            "/rerank",
             body=await async_maybe_transform(
                 {
+                    "documents": documents,
+                    "model": model,
                     "query": query,
-                    "response": response,
-                    "unit_test": unit_test,
+                    "top_n": top_n,
                 },
-                lmunit_create_params.LMUnitCreateParams,
+                rerank_create_params.RerankCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=LMUnitCreateResponse,
+            cast_to=RerankCreateResponse,
         )
 
 
-class LMUnitResourceWithRawResponse:
-    def __init__(self, lmunit: LMUnitResource) -> None:
-        self._lmunit = lmunit
+class RerankResourceWithRawResponse:
+    def __init__(self, rerank: RerankResource) -> None:
+        self._rerank = rerank
 
         self.create = to_raw_response_wrapper(
-            lmunit.create,
+            rerank.create,
         )
 
 
-class AsyncLMUnitResourceWithRawResponse:
-    def __init__(self, lmunit: AsyncLMUnitResource) -> None:
-        self._lmunit = lmunit
+class AsyncRerankResourceWithRawResponse:
+    def __init__(self, rerank: AsyncRerankResource) -> None:
+        self._rerank = rerank
 
         self.create = async_to_raw_response_wrapper(
-            lmunit.create,
+            rerank.create,
         )
 
 
-class LMUnitResourceWithStreamingResponse:
-    def __init__(self, lmunit: LMUnitResource) -> None:
-        self._lmunit = lmunit
+class RerankResourceWithStreamingResponse:
+    def __init__(self, rerank: RerankResource) -> None:
+        self._rerank = rerank
 
         self.create = to_streamed_response_wrapper(
-            lmunit.create,
+            rerank.create,
         )
 
 
-class AsyncLMUnitResourceWithStreamingResponse:
-    def __init__(self, lmunit: AsyncLMUnitResource) -> None:
-        self._lmunit = lmunit
+class AsyncRerankResourceWithStreamingResponse:
+    def __init__(self, rerank: AsyncRerankResource) -> None:
+        self._rerank = rerank
 
         self.create = async_to_streamed_response_wrapper(
-            lmunit.create,
+            rerank.create,
         )

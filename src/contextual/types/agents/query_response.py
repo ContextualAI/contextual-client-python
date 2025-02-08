@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from typing_extensions import Literal
 
 from ..._models import BaseModel
@@ -27,11 +27,11 @@ class RetrievalContent(BaseModel):
     Will be `file` for any docs ingested through ingestion API.
     """
 
-    content: Optional[str] = None
-    """Retrieved content"""
+    content_text: Optional[str] = None
+    """Text of the retrieved content.
 
-    extras: Optional[Dict[str, str]] = None
-    """Reserved for extra metadata"""
+    Included in response to a query if `include_retrieval_content_text` is True
+    """
 
     number: Optional[int] = None
     """Index of the retrieved item in the retrieval_contents list (starting from 1)"""
@@ -59,7 +59,7 @@ class Message(BaseModel):
     """Content of the message"""
 
     role: Literal["user", "system", "assistant"]
-    """Role of sender"""
+    """Role of the sender"""
 
 
 class QueryResponse(BaseModel):

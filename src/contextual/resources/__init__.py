@@ -16,6 +16,22 @@ from .lmunit import (
     LMUnitResourceWithStreamingResponse,
     AsyncLMUnitResourceWithStreamingResponse,
 )
+from .rerank import (
+    RerankResource,
+    AsyncRerankResource,
+    RerankResourceWithRawResponse,
+    AsyncRerankResourceWithRawResponse,
+    RerankResourceWithStreamingResponse,
+    AsyncRerankResourceWithStreamingResponse,
+)
+from .generate import (
+    GenerateResource,
+    AsyncGenerateResource,
+    GenerateResourceWithRawResponse,
+    AsyncGenerateResourceWithRawResponse,
+    GenerateResourceWithStreamingResponse,
+    AsyncGenerateResourceWithStreamingResponse,
+)
 from .datastores import (
     DatastoresResource,
     AsyncDatastoresResource,
@@ -44,4 +60,16 @@ __all__ = [
     "AsyncLMUnitResourceWithRawResponse",
     "LMUnitResourceWithStreamingResponse",
     "AsyncLMUnitResourceWithStreamingResponse",
+    "RerankResource",
+    "AsyncRerankResource",
+    "RerankResourceWithRawResponse",
+    "AsyncRerankResourceWithRawResponse",
+    "RerankResourceWithStreamingResponse",
+    "AsyncRerankResourceWithStreamingResponse",
+    "GenerateResource",
+    "AsyncGenerateResource",
+    "GenerateResourceWithRawResponse",
+    "AsyncGenerateResourceWithRawResponse",
+    "GenerateResourceWithStreamingResponse",
+    "AsyncGenerateResourceWithStreamingResponse",
 ]

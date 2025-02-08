@@ -39,7 +39,7 @@ class QueryResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> QueryResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
@@ -60,6 +60,7 @@ class QueryResource(SyncAPIResource):
         agent_id: str,
         *,
         messages: Iterable[query_create_params.Message],
+        include_retrieval_content_text: bool | NotGiven = NOT_GIVEN,
         retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
@@ -82,7 +83,14 @@ class QueryResource(SyncAPIResource):
               multiple objects to provide conversation history. Last message in the list must
               be a `user`-sent message (i.e. `role` equals `"user"`).
 
-          retrievals_only: Set to `true` to skip generation of the response.
+          include_retrieval_content_text: Ignored if `retrievals_only` is True. Set to `true` to include the text of the
+              retrieved contents in the response. If `false`, only metadata about the
+              retrieved contents will be included, not content text. Content text and other
+              metadata can also be fetched separately using the
+              `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
+
+          retrievals_only: Set to `true` to fetch retrieval content and metadata, and then skip generation
+              of the response.
 
           conversation_id: An optional alternative to providing message history in the `messages` field. If
               provided, all messages in the `messages` list prior to the latest user-sent
@@ -119,7 +127,13 @@ class QueryResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"retrievals_only": retrievals_only}, query_create_params.QueryCreateParams),
+                query=maybe_transform(
+                    {
+                        "include_retrieval_content_text": include_retrieval_content_text,
+                        "retrievals_only": retrievals_only,
+                    },
+                    query_create_params.QueryCreateParams,
+                ),
             ),
             cast_to=QueryResponse,
         )
@@ -307,7 +321,7 @@ class AsyncQueryResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncQueryResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/ContextualAI/contextual-client-python#accessing-raw-response-data-eg-headers
@@ -328,6 +342,7 @@ class AsyncQueryResource(AsyncAPIResource):
         agent_id: str,
         *,
         messages: Iterable[query_create_params.Message],
+        include_retrieval_content_text: bool | NotGiven = NOT_GIVEN,
         retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
@@ -350,7 +365,14 @@ class AsyncQueryResource(AsyncAPIResource):
               multiple objects to provide conversation history. Last message in the list must
               be a `user`-sent message (i.e. `role` equals `"user"`).
 
-          retrievals_only: Set to `true` to skip generation of the response.
+          include_retrieval_content_text: Ignored if `retrievals_only` is True. Set to `true` to include the text of the
+              retrieved contents in the response. If `false`, only metadata about the
+              retrieved contents will be included, not content text. Content text and other
+              metadata can also be fetched separately using the
+              `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
+
+          retrievals_only: Set to `true` to fetch retrieval content and metadata, and then skip generation
+              of the response.
 
           conversation_id: An optional alternative to providing message history in the `messages` field. If
               provided, all messages in the `messages` list prior to the latest user-sent
@@ -388,7 +410,11 @@ class AsyncQueryResource(AsyncAPIResource):
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {"retrievals_only": retrievals_only}, query_create_params.QueryCreateParams
+                    {
+                        "include_retrieval_content_text": include_retrieval_content_text,
+                        "retrievals_only": retrievals_only,
+                    },
+                    query_create_params.QueryCreateParams,
                 ),
             ),
             cast_to=QueryResponse,

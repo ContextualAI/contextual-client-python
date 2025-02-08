@@ -16,8 +16,20 @@ class QueryCreateParams(TypedDict, total=False):
     must be a `user`-sent message (i.e. `role` equals `"user"`).
     """
 
+    include_retrieval_content_text: bool
+    """Ignored if `retrievals_only` is True.
+
+    Set to `true` to include the text of the retrieved contents in the response. If
+    `false`, only metadata about the retrieved contents will be included, not
+    content text. Content text and other metadata can also be fetched separately
+    using the `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
+    """
+
     retrievals_only: bool
-    """Set to `true` to skip generation of the response."""
+    """
+    Set to `true` to fetch retrieval content and metadata, and then skip generation
+    of the response.
+    """
 
     conversation_id: str
     """An optional alternative to providing message history in the `messages` field.
@@ -41,4 +53,4 @@ class Message(TypedDict, total=False):
     """Content of the message"""
 
     role: Required[Literal["user", "system", "assistant"]]
-    """Role of sender"""
+    """Role of the sender"""
