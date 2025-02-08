@@ -56,6 +56,7 @@ class ContextualAI(SyncAPIClient):
 
     # client options
     api_key: str
+    is_snowflake: bool
 
     def __init__(
         self,
@@ -97,6 +98,11 @@ class ContextualAI(SyncAPIClient):
         if base_url is None:
             base_url = f"https://api.contextual.ai/v1"
 
+        if 'snowflakecomputing.app' in str(base_url):
+            self.is_snowflake = True
+        else:
+            self.is_snowflake = False
+
         super().__init__(
             version=__version__,
             base_url=base_url,
@@ -123,7 +129,10 @@ class ContextualAI(SyncAPIClient):
     @override
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"Authorization": f"Bearer {api_key}"}
+        if self.is_snowflake:
+            return {"Authorization": f"Snowflake Token={api_key}"}
+        else:
+            return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -228,6 +237,7 @@ class AsyncContextualAI(AsyncAPIClient):
 
     # client options
     api_key: str
+    is_snowflake: bool
 
     def __init__(
         self,
@@ -269,6 +279,11 @@ class AsyncContextualAI(AsyncAPIClient):
         if base_url is None:
             base_url = f"https://api.contextual.ai/v1"
 
+        if 'snowflakecomputing.app' in str(base_url):
+            self.is_snowflake = True
+        else:
+            self.is_snowflake = False
+
         super().__init__(
             version=__version__,
             base_url=base_url,
@@ -295,7 +310,10 @@ class AsyncContextualAI(AsyncAPIClient):
     @override
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"Authorization": f"Bearer {api_key}"}
+        if self.is_snowflake:
+            return {"Authorization": f"Snowflake Token={api_key}"}
+        else:
+            return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
