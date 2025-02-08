@@ -11,6 +11,9 @@ class ContentMetadata(BaseModel):
     content_id: str
     """Id of the content."""
 
+    content_text: str
+    """Text of the content."""
+
     height: float
     """Height of the image."""
 
