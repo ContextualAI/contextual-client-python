@@ -30,7 +30,7 @@ client = ContextualAI(
 )
 
 create_agent_output = client.agents.create(
-    name="xxx",
+    name="Example",
 )
 print(create_agent_output.id)
 ```
@@ -56,7 +56,7 @@ client = AsyncContextualAI(
 
 async def main() -> None:
     create_agent_output = await client.agents.create(
-        name="xxx",
+        name="Example",
     )
     print(create_agent_output.id)
 
@@ -155,7 +155,7 @@ client = ContextualAI()
 
 try:
     client.agents.create(
-        name="xxx",
+        name="Example",
     )
 except contextual.APIConnectionError as e:
     print("The server could not be reached")
@@ -200,7 +200,7 @@ client = ContextualAI(
 
 # Or, configure per-request:
 client.with_options(max_retries=5).agents.create(
-    name="xxx",
+    name="Example",
 )
 ```
 
@@ -225,7 +225,7 @@ client = ContextualAI(
 
 # Override per-request:
 client.with_options(timeout=5.0).agents.create(
-    name="xxx",
+    name="Example",
 )
 ```
 
@@ -268,7 +268,7 @@ from contextual import ContextualAI
 
 client = ContextualAI()
 response = client.agents.with_raw_response.create(
-    name="xxx",
+    name="Example",
 )
 print(response.headers.get('X-My-Header'))
 
@@ -288,7 +288,7 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 
 ```python
 with client.agents.with_streaming_response.create(
-    name="xxx",
+    name="Example",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
