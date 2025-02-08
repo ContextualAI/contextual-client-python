@@ -727,7 +727,7 @@ class TestContextualAI:
         with pytest.raises(APITimeoutError):
             self.client.post(
                 "/agents",
-                body=cast(object, dict(name="xxx")),
+                body=cast(object, dict(name="Example")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -742,7 +742,7 @@ class TestContextualAI:
         with pytest.raises(APIStatusError):
             self.client.post(
                 "/agents",
-                body=cast(object, dict(name="xxx")),
+                body=cast(object, dict(name="Example")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1503,7 +1503,7 @@ class TestAsyncContextualAI:
         with pytest.raises(APITimeoutError):
             await self.client.post(
                 "/agents",
-                body=cast(object, dict(name="xxx")),
+                body=cast(object, dict(name="Example")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1518,7 +1518,7 @@ class TestAsyncContextualAI:
         with pytest.raises(APIStatusError):
             await self.client.post(
                 "/agents",
-                body=cast(object, dict(name="xxx")),
+                body=cast(object, dict(name="Example")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
