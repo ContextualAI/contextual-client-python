@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.2.0 (2025-02-08)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** update via SDK Studio ([#31](https://github.com/ContextualAI/contextual-client-python/issues/31)) ([c9de385](https://github.com/ContextualAI/contextual-client-python/commit/c9de38561c8663d1e00daa381fcb3183501993cf))
+* **api:** update via SDK Studio ([#32](https://github.com/ContextualAI/contextual-client-python/issues/32)) ([c166d77](https://github.com/ContextualAI/contextual-client-python/commit/c166d77d241e104a80ce0cddeaf2b5cfe7c59669))
+* **api:** update via SDK Studio ([#39](https://github.com/ContextualAI/contextual-client-python/issues/39)) ([9f8c0a6](https://github.com/ContextualAI/contextual-client-python/commit/9f8c0a6d4203953f195cfe5d38a69f8870bc0a9e))
+* **client:** send `X-Stainless-Read-Timeout` header ([#35](https://github.com/ContextualAI/contextual-client-python/issues/35)) ([2ddba9d](https://github.com/ContextualAI/contextual-client-python/commit/2ddba9dc9d8cb0b562c6dd7f8a3a21e2c82295bc))
+
+
+### Bug Fixes
+
+* **tests:** make test_get_platform less flaky ([#26](https://github.com/ContextualAI/contextual-client-python/issues/26)) ([3bc8a69](https://github.com/ContextualAI/contextual-client-python/commit/3bc8a69c6e9255dc1e3247fd1954e5deb5e1c155))
+
+
+### Chores
+
+* **internal:** avoid pytest-asyncio deprecation warning ([#27](https://github.com/ContextualAI/contextual-client-python/issues/27)) ([e6f70cd](https://github.com/ContextualAI/contextual-client-python/commit/e6f70cdff84defcb3b9d77e3aa0c66e9d17774d5))
+* **internal:** bummp ruff dependency ([#34](https://github.com/ContextualAI/contextual-client-python/issues/34)) ([f3a23c2](https://github.com/ContextualAI/contextual-client-python/commit/f3a23c21168a5ef99626e50782ae902c780b4059))
+* **internal:** change default timeout to an int ([#33](https://github.com/ContextualAI/contextual-client-python/issues/33)) ([280fc1f](https://github.com/ContextualAI/contextual-client-python/commit/280fc1fcce2a011bda2b895b39b85db682cc0c8c))
+* **internal:** codegen related update ([#23](https://github.com/ContextualAI/contextual-client-python/issues/23)) ([d1f86c3](https://github.com/ContextualAI/contextual-client-python/commit/d1f86c3bc54440925725dd9c535082fa7d29d100))
+* **internal:** codegen related update ([#30](https://github.com/ContextualAI/contextual-client-python/issues/30)) ([0cbc82e](https://github.com/ContextualAI/contextual-client-python/commit/0cbc82e361567e9f0c44f9b5519d404fcba91fef))
+* **internal:** fix type traversing dictionary params ([#36](https://github.com/ContextualAI/contextual-client-python/issues/36)) ([04a1eab](https://github.com/ContextualAI/contextual-client-python/commit/04a1eaba9f246089baa2c26dac29b22e9f63f9dc))
+* **internal:** minor formatting changes ([#29](https://github.com/ContextualAI/contextual-client-python/issues/29)) ([9d063fb](https://github.com/ContextualAI/contextual-client-python/commit/9d063fbf86e64803fcc684305a67dae3a31775a0))
+* **internal:** minor style changes ([#28](https://github.com/ContextualAI/contextual-client-python/issues/28)) ([1cbda0a](https://github.com/ContextualAI/contextual-client-python/commit/1cbda0a834e06cbb4afdbc922e4e9f894cb21d40))
+* **internal:** minor type handling changes ([#37](https://github.com/ContextualAI/contextual-client-python/issues/37)) ([dd9a8e8](https://github.com/ContextualAI/contextual-client-python/commit/dd9a8e898c56fc55b9e61de09419a66ad398b7b3))
+
+
+### Documentation
+
+* **raw responses:** fix duplicate `the` ([#25](https://github.com/ContextualAI/contextual-client-python/issues/25)) ([5342fdf](https://github.com/ContextualAI/contextual-client-python/commit/5342fdfbecdd99f14d0033736ebf91700bc74f0e))
+
 ## 0.1.0 (2025-01-15)
 
 Full Changelog: [v0.1.0-alpha.2...v0.1.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.1.0-alpha.2...v0.1.0)
