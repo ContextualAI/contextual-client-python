@@ -23,6 +23,7 @@ from pydantic import ValidationError
 
 from contextual import ContextualAI, AsyncContextualAI, APIResponseValidationError
 from contextual._types import Omit
+from contextual._utils import maybe_transform
 from contextual._models import BaseModel, FinalRequestOptions
 from contextual._constants import RAW_RESPONSE_HEADER
 from contextual._exceptions import APIStatusError, APITimeoutError, ContextualAIError, APIResponseValidationError
@@ -32,6 +33,7 @@ from contextual._base_client import (
     BaseClient,
     make_request_options,
 )
+from contextual.types.agent_create_params import AgentCreateParams
 
 from .utils import update_env
 
@@ -727,7 +729,7 @@ class TestContextualAI:
         with pytest.raises(APITimeoutError):
             self.client.post(
                 "/agents",
-                body=cast(object, dict(name="Example")),
+                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -742,7 +744,7 @@ class TestContextualAI:
         with pytest.raises(APIStatusError):
             self.client.post(
                 "/agents",
-                body=cast(object, dict(name="Example")),
+                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1503,7 +1505,7 @@ class TestAsyncContextualAI:
         with pytest.raises(APITimeoutError):
             await self.client.post(
                 "/agents",
-                body=cast(object, dict(name="Example")),
+                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1518,7 +1520,7 @@ class TestAsyncContextualAI:
         with pytest.raises(APIStatusError):
             await self.client.post(
                 "/agents",
-                body=cast(object, dict(name="Example")),
+                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
