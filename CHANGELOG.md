@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.0 (2025-02-22)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **api:** update via SDK Studio ([#41](https://github.com/ContextualAI/contextual-client-python/issues/41)) ([4b3ea42](https://github.com/ContextualAI/contextual-client-python/commit/4b3ea42dd9effb3cec4fb078800ca96dc3609617))
+* **client:** allow passing `NotGiven` for body ([#46](https://github.com/ContextualAI/contextual-client-python/issues/46)) ([4e2264d](https://github.com/ContextualAI/contextual-client-python/commit/4e2264da0b35d4dcfbf33a77950f0f7d57f1db14))
+
+
+### Bug Fixes
+
+* asyncify on non-asyncio runtimes ([#44](https://github.com/ContextualAI/contextual-client-python/issues/44)) ([3a16763](https://github.com/ContextualAI/contextual-client-python/commit/3a16763381747ee6ccf829fb535927446634d54c))
+* **client:** mark some request bodies as optional ([4e2264d](https://github.com/ContextualAI/contextual-client-python/commit/4e2264da0b35d4dcfbf33a77950f0f7d57f1db14))
+
+
+### Chores
+
+* **internal:** codegen related update ([#45](https://github.com/ContextualAI/contextual-client-python/issues/45)) ([2651383](https://github.com/ContextualAI/contextual-client-python/commit/26513832dc75629f229493f4718e97a34588fd97))
+* **internal:** fix devcontainers setup ([#47](https://github.com/ContextualAI/contextual-client-python/issues/47)) ([f5ea511](https://github.com/ContextualAI/contextual-client-python/commit/f5ea51125d954e2ef39e817c0a7bae763661c571))
+* **internal:** update client tests ([#43](https://github.com/ContextualAI/contextual-client-python/issues/43)) ([ee164e9](https://github.com/ContextualAI/contextual-client-python/commit/ee164e9e3a7f15570560922d383565ea4a50d446))
+
 ## 0.2.0 (2025-02-08)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.1.0...v0.2.0)
