@@ -21,9 +21,10 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncUsersPage, AsyncUsersPage
+from .._base_client import AsyncPaginator, make_request_options
 from ..types.new_user_param import NewUserParam
-from ..types.list_users_response import ListUsersResponse
+from ..types.list_users_response import User
 from ..types.invite_users_response import InviteUsersResponse
 
 __all__ = ["UsersResource", "AsyncUsersResource"]
@@ -117,7 +118,7 @@ class UsersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ListUsersResponse:
+    ) -> SyncUsersPage[User]:
         """
         Retrieve a list of `users`.
 
@@ -138,8 +139,9 @@ class UsersResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/users",
+            page=SyncUsersPage[User],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -155,7 +157,7 @@ class UsersResource(SyncAPIResource):
                     user_list_params.UserListParams,
                 ),
             ),
-            cast_to=ListUsersResponse,
+            model=User,
         )
 
     def deactivate(
@@ -314,7 +316,7 @@ class AsyncUsersResource(AsyncAPIResource):
             cast_to=object,
         )
 
-    async def list(
+    def list(
         self,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
@@ -327,7 +329,7 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> ListUsersResponse:
+    ) -> AsyncPaginator[User, AsyncUsersPage[User]]:
         """
         Retrieve a list of `users`.
 
@@ -348,14 +350,15 @@ class AsyncUsersResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/users",
+            page=AsyncUsersPage[User],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "cursor": cursor,
                         "deactivated": deactivated,
@@ -365,7 +368,7 @@ class AsyncUsersResource(AsyncAPIResource):
                     user_list_params.UserListParams,
                 ),
             ),
-            cast_to=ListUsersResponse,
+            model=User,
         )
 
     async def deactivate(
