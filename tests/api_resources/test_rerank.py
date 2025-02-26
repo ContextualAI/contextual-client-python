@@ -22,7 +22,7 @@ class TestRerank:
         rerank = client.rerank.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
         )
         assert_matches_type(RerankCreateResponse, rerank, path=["response"])
 
@@ -31,7 +31,9 @@ class TestRerank:
         rerank = client.rerank.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
+            instruction="instruction",
+            metadata=["string"],
             top_n=0,
         )
         assert_matches_type(RerankCreateResponse, rerank, path=["response"])
@@ -41,7 +43,7 @@ class TestRerank:
         response = client.rerank.with_raw_response.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
         )
 
         assert response.is_closed is True
@@ -54,7 +56,7 @@ class TestRerank:
         with client.rerank.with_streaming_response.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -73,7 +75,7 @@ class TestAsyncRerank:
         rerank = await async_client.rerank.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
         )
         assert_matches_type(RerankCreateResponse, rerank, path=["response"])
 
@@ -82,7 +84,9 @@ class TestAsyncRerank:
         rerank = await async_client.rerank.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
+            instruction="instruction",
+            metadata=["string"],
             top_n=0,
         )
         assert_matches_type(RerankCreateResponse, rerank, path=["response"])
@@ -92,7 +96,7 @@ class TestAsyncRerank:
         response = await async_client.rerank.with_raw_response.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
         )
 
         assert response.is_closed is True
@@ -105,7 +109,7 @@ class TestAsyncRerank:
         async with async_client.rerank.with_streaming_response.create(
             documents=["string"],
             model="model",
-            query="x",
+            query="query",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

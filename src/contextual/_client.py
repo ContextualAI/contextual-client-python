@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import lmunit, rerank, generate
+from .resources import users, lmunit, rerank, generate
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, ContextualAIError
 from ._base_client import (
@@ -50,6 +50,7 @@ __all__ = [
 class ContextualAI(SyncAPIClient):
     datastores: datastores.DatastoresResource
     agents: agents.AgentsResource
+    users: users.UsersResource
     lmunit: lmunit.LMUnitResource
     rerank: rerank.RerankResource
     generate: generate.GenerateResource
@@ -112,6 +113,7 @@ class ContextualAI(SyncAPIClient):
 
         self.datastores = datastores.DatastoresResource(self)
         self.agents = agents.AgentsResource(self)
+        self.users = users.UsersResource(self)
         self.lmunit = lmunit.LMUnitResource(self)
         self.rerank = rerank.RerankResource(self)
         self.generate = generate.GenerateResource(self)
@@ -226,6 +228,7 @@ class ContextualAI(SyncAPIClient):
 class AsyncContextualAI(AsyncAPIClient):
     datastores: datastores.AsyncDatastoresResource
     agents: agents.AsyncAgentsResource
+    users: users.AsyncUsersResource
     lmunit: lmunit.AsyncLMUnitResource
     rerank: rerank.AsyncRerankResource
     generate: generate.AsyncGenerateResource
@@ -288,6 +291,7 @@ class AsyncContextualAI(AsyncAPIClient):
 
         self.datastores = datastores.AsyncDatastoresResource(self)
         self.agents = agents.AsyncAgentsResource(self)
+        self.users = users.AsyncUsersResource(self)
         self.lmunit = lmunit.AsyncLMUnitResource(self)
         self.rerank = rerank.AsyncRerankResource(self)
         self.generate = generate.AsyncGenerateResource(self)
@@ -403,6 +407,7 @@ class ContextualAIWithRawResponse:
     def __init__(self, client: ContextualAI) -> None:
         self.datastores = datastores.DatastoresResourceWithRawResponse(client.datastores)
         self.agents = agents.AgentsResourceWithRawResponse(client.agents)
+        self.users = users.UsersResourceWithRawResponse(client.users)
         self.lmunit = lmunit.LMUnitResourceWithRawResponse(client.lmunit)
         self.rerank = rerank.RerankResourceWithRawResponse(client.rerank)
         self.generate = generate.GenerateResourceWithRawResponse(client.generate)
@@ -412,6 +417,7 @@ class AsyncContextualAIWithRawResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = datastores.AsyncDatastoresResourceWithRawResponse(client.datastores)
         self.agents = agents.AsyncAgentsResourceWithRawResponse(client.agents)
+        self.users = users.AsyncUsersResourceWithRawResponse(client.users)
         self.lmunit = lmunit.AsyncLMUnitResourceWithRawResponse(client.lmunit)
         self.rerank = rerank.AsyncRerankResourceWithRawResponse(client.rerank)
         self.generate = generate.AsyncGenerateResourceWithRawResponse(client.generate)
@@ -421,6 +427,7 @@ class ContextualAIWithStreamedResponse:
     def __init__(self, client: ContextualAI) -> None:
         self.datastores = datastores.DatastoresResourceWithStreamingResponse(client.datastores)
         self.agents = agents.AgentsResourceWithStreamingResponse(client.agents)
+        self.users = users.UsersResourceWithStreamingResponse(client.users)
         self.lmunit = lmunit.LMUnitResourceWithStreamingResponse(client.lmunit)
         self.rerank = rerank.RerankResourceWithStreamingResponse(client.rerank)
         self.generate = generate.GenerateResourceWithStreamingResponse(client.generate)
@@ -430,6 +437,7 @@ class AsyncContextualAIWithStreamedResponse:
     def __init__(self, client: AsyncContextualAI) -> None:
         self.datastores = datastores.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
         self.agents = agents.AsyncAgentsResourceWithStreamingResponse(client.agents)
+        self.users = users.AsyncUsersResourceWithStreamingResponse(client.users)
         self.lmunit = lmunit.AsyncLMUnitResourceWithStreamingResponse(client.lmunit)
         self.rerank = rerank.AsyncRerankResourceWithStreamingResponse(client.rerank)
         self.generate = generate.AsyncGenerateResourceWithStreamingResponse(client.generate)

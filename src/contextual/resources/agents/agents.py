@@ -101,6 +101,7 @@ class AgentsResource(SyncAPIResource):
         self,
         *,
         name: str,
+        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
@@ -128,8 +129,9 @@ class AgentsResource(SyncAPIResource):
         Args:
           name: Name of the agent
 
-          datastore_ids: The IDs of the datastore associated with the agent. Leave empty to automatically
-              create a new datastore.
+          agent_configs: The following advanced parameters are experimental and subject to change.
+
+          datastore_ids: The IDs of the datastore to associate with this agent.
 
           description: Description of the agent
 
@@ -154,6 +156,7 @@ class AgentsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "name": name,
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "description": description,
                     "suggested_queries": suggested_queries,
@@ -171,6 +174,7 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
+        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
@@ -189,6 +193,8 @@ class AgentsResource(SyncAPIResource):
 
         Args:
           agent_id: ID of the agent to edit
+
+          agent_configs: The following advanced parameters are experimental and subject to change.
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
@@ -218,6 +224,7 @@ class AgentsResource(SyncAPIResource):
             f"/agents/{agent_id}",
             body=maybe_transform(
                 {
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "llm_model_id": llm_model_id,
                     "suggested_queries": suggested_queries,
@@ -395,6 +402,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         *,
         name: str,
+        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
@@ -422,8 +430,9 @@ class AsyncAgentsResource(AsyncAPIResource):
         Args:
           name: Name of the agent
 
-          datastore_ids: The IDs of the datastore associated with the agent. Leave empty to automatically
-              create a new datastore.
+          agent_configs: The following advanced parameters are experimental and subject to change.
+
+          datastore_ids: The IDs of the datastore to associate with this agent.
 
           description: Description of the agent
 
@@ -448,6 +457,7 @@ class AsyncAgentsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "name": name,
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "description": description,
                     "suggested_queries": suggested_queries,
@@ -465,6 +475,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
+        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
@@ -483,6 +494,8 @@ class AsyncAgentsResource(AsyncAPIResource):
 
         Args:
           agent_id: ID of the agent to edit
+
+          agent_configs: The following advanced parameters are experimental and subject to change.
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
@@ -512,6 +525,7 @@ class AsyncAgentsResource(AsyncAPIResource):
             f"/agents/{agent_id}",
             body=await async_maybe_transform(
                 {
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "llm_model_id": llm_model_id,
                     "suggested_queries": suggested_queries,
