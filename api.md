@@ -38,6 +38,7 @@ Methods:
 - <code title="delete /datastores/{datastore_id}/documents/{document_id}">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">delete</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_delete_response.py">object</a></code>
 - <code title="post /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">ingest</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_ingest_params.py">params</a>) -> <a href="./src/contextual/types/datastores/ingestion_response.py">IngestionResponse</a></code>
 - <code title="get /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">metadata</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_metadata.py">DocumentMetadata</a></code>
+- <code title="post /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">set_metadata</a>(document_id, \*, datastore_id, \*\*<a href="src/contextual/types/datastores/document_set_metadata_params.py">params</a>) -> <a href="./src/contextual/types/datastores/document_metadata.py">DocumentMetadata</a></code>
 
 # Agents
 
@@ -120,6 +121,23 @@ Types:
 from contextual.types.agents import CreateDatasetResponse, DatasetMetadata, ListDatasetsResponse
 ```
 
+### Tune
+
+Types:
+
+```python
+from contextual.types.agents.datasets import TuneDeleteResponse
+```
+
+Methods:
+
+- <code title="post /agents/{agent_id}/datasets/tune">client.agents.datasets.tune.<a href="./src/contextual/resources/agents/datasets/tune.py">create</a>(agent_id, \*\*<a href="src/contextual/types/agents/datasets/tune_create_params.py">params</a>) -> <a href="./src/contextual/types/agents/create_dataset_response.py">CreateDatasetResponse</a></code>
+- <code title="get /agents/{agent_id}/datasets/tune/{dataset_name}">client.agents.datasets.tune.<a href="./src/contextual/resources/agents/datasets/tune.py">retrieve</a>(dataset_name, \*, agent_id, \*\*<a href="src/contextual/types/agents/datasets/tune_retrieve_params.py">params</a>) -> BinaryAPIResponse</code>
+- <code title="put /agents/{agent_id}/datasets/tune/{dataset_name}">client.agents.datasets.tune.<a href="./src/contextual/resources/agents/datasets/tune.py">update</a>(dataset_name, \*, agent_id, \*\*<a href="src/contextual/types/agents/datasets/tune_update_params.py">params</a>) -> <a href="./src/contextual/types/agents/create_dataset_response.py">CreateDatasetResponse</a></code>
+- <code title="get /agents/{agent_id}/datasets/tune">client.agents.datasets.tune.<a href="./src/contextual/resources/agents/datasets/tune.py">list</a>(agent_id, \*\*<a href="src/contextual/types/agents/datasets/tune_list_params.py">params</a>) -> <a href="./src/contextual/types/agents/list_datasets_response.py">ListDatasetsResponse</a></code>
+- <code title="delete /agents/{agent_id}/datasets/tune/{dataset_name}">client.agents.datasets.tune.<a href="./src/contextual/resources/agents/datasets/tune.py">delete</a>(dataset_name, \*, agent_id) -> <a href="./src/contextual/types/agents/datasets/tune_delete_response.py">object</a></code>
+- <code title="get /agents/{agent_id}/datasets/tune/{dataset_name}/metadata">client.agents.datasets.tune.<a href="./src/contextual/resources/agents/datasets/tune.py">metadata</a>(dataset_name, \*, agent_id, \*\*<a href="src/contextual/types/agents/datasets/tune_metadata_params.py">params</a>) -> <a href="./src/contextual/types/agents/dataset_metadata.py">DatasetMetadata</a></code>
+
 ### Evaluate
 
 Types:
@@ -174,6 +192,27 @@ from contextual.types.agents.tune import ListTuneModelsResponse
 Methods:
 
 - <code title="get /agents/{agent_id}/tune/models">client.agents.tune.models.<a href="./src/contextual/resources/agents/tune/models.py">list</a>(agent_id) -> <a href="./src/contextual/types/agents/tune/list_tune_models_response.py">ListTuneModelsResponse</a></code>
+
+# Users
+
+Types:
+
+```python
+from contextual.types import (
+    InviteUsersResponse,
+    ListUsersResponse,
+    NewUser,
+    UserUpdateResponse,
+    UserDeactivateResponse,
+)
+```
+
+Methods:
+
+- <code title="put /users">client.users.<a href="./src/contextual/resources/users.py">update</a>(\*\*<a href="src/contextual/types/user_update_params.py">params</a>) -> <a href="./src/contextual/types/user_update_response.py">object</a></code>
+- <code title="get /users">client.users.<a href="./src/contextual/resources/users.py">list</a>(\*\*<a href="src/contextual/types/user_list_params.py">params</a>) -> SyncUsersPage[User]</code>
+- <code title="delete /users">client.users.<a href="./src/contextual/resources/users.py">deactivate</a>(\*\*<a href="src/contextual/types/user_deactivate_params.py">params</a>) -> <a href="./src/contextual/types/user_deactivate_response.py">object</a></code>
+- <code title="post /users">client.users.<a href="./src/contextual/resources/users.py">invite</a>(\*\*<a href="src/contextual/types/user_invite_params.py">params</a>) -> <a href="./src/contextual/types/invite_users_response.py">InviteUsersResponse</a></code>
 
 # LMUnit
 

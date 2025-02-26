@@ -42,6 +42,7 @@ class TestGenerate:
                 }
             ],
             model="model",
+            avoid_commentary=True,
             system_prompt="system_prompt",
         )
         assert_matches_type(GenerateCreateResponse, generate, path=["response"])
@@ -113,6 +114,7 @@ class TestAsyncGenerate:
                 }
             ],
             model="model",
+            avoid_commentary=True,
             system_prompt="system_prompt",
         )
         assert_matches_type(GenerateCreateResponse, generate, path=["response"])
