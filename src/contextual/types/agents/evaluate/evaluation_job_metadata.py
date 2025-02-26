@@ -15,6 +15,9 @@ class JobMetadata(BaseModel):
     num_predictions: Optional[int] = None
     """Total number of predictions made during the evaluation job"""
 
+    num_processed_predictions: Optional[int] = None
+    """Number of predictions that were processed during the evaluation job"""
+
     num_successful_predictions: Optional[int] = None
     """Number of predictions that were successful during the evaluation job"""
 

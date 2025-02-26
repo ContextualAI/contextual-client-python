@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing_extensions import Required, TypedDict
+from typing import Optional
+from typing_extensions import TypedDict
 
 from ..._types import FileTypes
 
@@ -10,7 +11,27 @@ __all__ = ["TuneCreateParams"]
 
 
 class TuneCreateParams(TypedDict, total=False):
-    training_file: Required[FileTypes]
+    test_dataset_name: Optional[str]
+    """Optional.
+
+    `Dataset` to use for testing model checkpoints, created through the
+    `/datasets/evaluate` API.
+    """
+
+    test_file: Optional[FileTypes]
+    """Optional.
+
+    Local path to the test data file. The test file should follow the same format as
+    the training data file.
+    """
+
+    train_dataset_name: Optional[str]
+    """`Dataset` to use for training, created through the `/datasets/tune` API.
+
+    Either `train_dataset_name` or `training_file` must be provided, but not both.
+    """
+
+    training_file: Optional[FileTypes]
     """Local path to the training data file.
 
     The file should be in JSON array format, where each element of the array is a
@@ -22,7 +43,9 @@ class TuneCreateParams(TypedDict, total=False):
 
     - `reference` (`str`): The gold-standard answer to the prompt.
 
-    - `guideline` (`str`): Guidelines for model output.
+    - `guideline` (`str`): Guidelines for model output. If you do not have special
+      guidelines for the model's output, you can use the `System Prompt` defined in
+      your Agent configuration as the `guideline`.
 
     - `prompt` (`str`): Question for the model to respond to.
 
@@ -43,17 +66,4 @@ class TuneCreateParams(TypedDict, total=False):
       ...
     ]
     ```
-    """
-
-    model_id: str
-    """ID of an existing model to tune.
-
-    Defaults to the agent's default model if not specified.
-    """
-
-    test_file: FileTypes
-    """Optional.
-
-    Local path to the test data file. The test file should follow the same format as
-    the training data file.
     """

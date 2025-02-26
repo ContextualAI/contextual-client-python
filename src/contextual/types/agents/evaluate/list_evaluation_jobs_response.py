@@ -37,6 +37,9 @@ class EvaluationRound(BaseModel):
     processing_started_at: Optional[datetime] = None
     """Timestamp indicating when the evaluation round started processing"""
 
+    results_dataset_name: Optional[str] = None
+    """Name of the dataset with the evaluation results"""
+
     summary_results: Optional[object] = None
     """Score of the evaluation round"""
 

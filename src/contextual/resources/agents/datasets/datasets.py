@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+from .tune import (
+    TuneResource,
+    AsyncTuneResource,
+    TuneResourceWithRawResponse,
+    AsyncTuneResourceWithRawResponse,
+    TuneResourceWithStreamingResponse,
+    AsyncTuneResourceWithStreamingResponse,
+)
 from .evaluate import (
     EvaluateResource,
     AsyncEvaluateResource,
@@ -17,6 +25,10 @@ __all__ = ["DatasetsResource", "AsyncDatasetsResource"]
 
 
 class DatasetsResource(SyncAPIResource):
+    @cached_property
+    def tune(self) -> TuneResource:
+        return TuneResource(self._client)
+
     @cached_property
     def evaluate(self) -> EvaluateResource:
         return EvaluateResource(self._client)
@@ -42,6 +54,10 @@ class DatasetsResource(SyncAPIResource):
 
 
 class AsyncDatasetsResource(AsyncAPIResource):
+    @cached_property
+    def tune(self) -> AsyncTuneResource:
+        return AsyncTuneResource(self._client)
+
     @cached_property
     def evaluate(self) -> AsyncEvaluateResource:
         return AsyncEvaluateResource(self._client)
@@ -71,6 +87,10 @@ class DatasetsResourceWithRawResponse:
         self._datasets = datasets
 
     @cached_property
+    def tune(self) -> TuneResourceWithRawResponse:
+        return TuneResourceWithRawResponse(self._datasets.tune)
+
+    @cached_property
     def evaluate(self) -> EvaluateResourceWithRawResponse:
         return EvaluateResourceWithRawResponse(self._datasets.evaluate)
 
@@ -78,6 +98,10 @@ class DatasetsResourceWithRawResponse:
 class AsyncDatasetsResourceWithRawResponse:
     def __init__(self, datasets: AsyncDatasetsResource) -> None:
         self._datasets = datasets
+
+    @cached_property
+    def tune(self) -> AsyncTuneResourceWithRawResponse:
+        return AsyncTuneResourceWithRawResponse(self._datasets.tune)
 
     @cached_property
     def evaluate(self) -> AsyncEvaluateResourceWithRawResponse:
@@ -89,6 +113,10 @@ class DatasetsResourceWithStreamingResponse:
         self._datasets = datasets
 
     @cached_property
+    def tune(self) -> TuneResourceWithStreamingResponse:
+        return TuneResourceWithStreamingResponse(self._datasets.tune)
+
+    @cached_property
     def evaluate(self) -> EvaluateResourceWithStreamingResponse:
         return EvaluateResourceWithStreamingResponse(self._datasets.evaluate)
 
@@ -96,6 +124,10 @@ class DatasetsResourceWithStreamingResponse:
 class AsyncDatasetsResourceWithStreamingResponse:
     def __init__(self, datasets: AsyncDatasetsResource) -> None:
         self._datasets = datasets
+
+    @cached_property
+    def tune(self) -> AsyncTuneResourceWithStreamingResponse:
+        return AsyncTuneResourceWithStreamingResponse(self._datasets.tune)
 
     @cached_property
     def evaluate(self) -> AsyncEvaluateResourceWithStreamingResponse:

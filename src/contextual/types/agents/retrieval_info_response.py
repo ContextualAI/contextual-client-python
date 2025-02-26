@@ -17,6 +17,9 @@ class ContentMetadata(BaseModel):
     height: float
     """Height of the image."""
 
+    page: int
+    """Page number of the content."""
+
     page_img: str
     """Image of the page on which the content occurs."""
 

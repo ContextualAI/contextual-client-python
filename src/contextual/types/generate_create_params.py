@@ -21,6 +21,15 @@ class GenerateCreateParams(TypedDict, total=False):
     model: Required[str]
     """The version of the Contextual's GLM to use. Currently, we just have "v1"."""
 
+    avoid_commentary: bool
+    """
+    Flag to indicate whether the model should avoid providing additional commentary
+    in responses. Commentary is conversational in nature and does not contain
+    verifiable claims; therefore, commentary is not strictly grounded in available
+    context. However, commentary may provide useful context which improves the
+    helpfulness of responses.
+    """
+
     system_prompt: str
     """Instructions that the model follows when generating responses.
 
@@ -32,5 +41,5 @@ class Message(TypedDict, total=False):
     content: Required[str]
     """Content of the message"""
 
-    role: Required[Literal["user", "system", "assistant"]]
+    role: Required[Literal["user", "system", "assistant", "knowledge"]]
     """Role of the sender"""
