@@ -18,7 +18,7 @@ class RetrievalContent(BaseModel):
     doc_name: str
     """Name of the document"""
 
-    format: Literal["pdf", "html"]
+    format: Literal["pdf", "html", "htm"]
     """Format of the content, such as `pdf` or `html`"""
 
     type: str
@@ -58,7 +58,7 @@ class Message(BaseModel):
     content: str
     """Content of the message"""
 
-    role: Literal["user", "system", "assistant"]
+    role: Literal["user", "system", "assistant", "knowledge"]
     """Role of the sender"""
 
 

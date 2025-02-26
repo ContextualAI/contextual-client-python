@@ -33,6 +33,26 @@ class TestAgents:
     def test_method_create_with_all_params(self, client: ContextualAI) -> None:
         agent = client.agents.create(
             name="xxx",
+            agent_configs={
+                "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
+                "generate_response_config": {
+                    "frequency_penalty": 0,
+                    "max_new_tokens": 0,
+                    "seed": 0,
+                    "temperature": 0,
+                    "top_p": 0,
+                },
+                "global_config": {
+                    "enable_filter": True,
+                    "enable_multi_turn": True,
+                    "enable_rerank": True,
+                },
+                "retrieval_config": {
+                    "lexical_alpha": 0,
+                    "semantic_alpha": 0,
+                    "top_k_retrieved_chunks": 0,
+                },
+            },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="xxx",
             suggested_queries=["string"],
@@ -75,6 +95,26 @@ class TestAgents:
     def test_method_update_with_all_params(self, client: ContextualAI) -> None:
         agent = client.agents.update(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            agent_configs={
+                "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
+                "generate_response_config": {
+                    "frequency_penalty": 0,
+                    "max_new_tokens": 0,
+                    "seed": 0,
+                    "temperature": 0,
+                    "top_p": 0,
+                },
+                "global_config": {
+                    "enable_filter": True,
+                    "enable_multi_turn": True,
+                    "enable_rerank": True,
+                },
+                "retrieval_config": {
+                    "lexical_alpha": 0,
+                    "semantic_alpha": 0,
+                    "top_k_retrieved_chunks": 0,
+                },
+            },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             llm_model_id="llm_model_id",
             suggested_queries=["string"],
@@ -237,6 +277,26 @@ class TestAsyncAgents:
     async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
         agent = await async_client.agents.create(
             name="xxx",
+            agent_configs={
+                "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
+                "generate_response_config": {
+                    "frequency_penalty": 0,
+                    "max_new_tokens": 0,
+                    "seed": 0,
+                    "temperature": 0,
+                    "top_p": 0,
+                },
+                "global_config": {
+                    "enable_filter": True,
+                    "enable_multi_turn": True,
+                    "enable_rerank": True,
+                },
+                "retrieval_config": {
+                    "lexical_alpha": 0,
+                    "semantic_alpha": 0,
+                    "top_k_retrieved_chunks": 0,
+                },
+            },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="xxx",
             suggested_queries=["string"],
@@ -279,6 +339,26 @@ class TestAsyncAgents:
     async def test_method_update_with_all_params(self, async_client: AsyncContextualAI) -> None:
         agent = await async_client.agents.update(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            agent_configs={
+                "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
+                "generate_response_config": {
+                    "frequency_penalty": 0,
+                    "max_new_tokens": 0,
+                    "seed": 0,
+                    "temperature": 0,
+                    "top_p": 0,
+                },
+                "global_config": {
+                    "enable_filter": True,
+                    "enable_multi_turn": True,
+                    "enable_rerank": True,
+                },
+                "retrieval_config": {
+                    "lexical_alpha": 0,
+                    "semantic_alpha": 0,
+                    "top_k_retrieved_chunks": 0,
+                },
+            },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             llm_model_id="llm_model_id",
             suggested_queries=["string"],

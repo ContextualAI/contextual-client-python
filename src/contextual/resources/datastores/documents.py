@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Mapping, cast
+from typing import Dict, List, Union, Mapping, cast
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -25,7 +25,7 @@ from ..._response import (
 )
 from ...pagination import SyncDocumentsPage, AsyncDocumentsPage
 from ..._base_client import AsyncPaginator, make_request_options
-from ...types.datastores import document_list_params, document_ingest_params
+from ...types.datastores import document_list_params, document_ingest_params, document_set_metadata_params
 from ...types.datastores.document_metadata import DocumentMetadata
 from ...types.datastores.ingestion_response import IngestionResponse
 
@@ -171,6 +171,7 @@ class DocumentsResource(SyncAPIResource):
         datastore_id: str,
         *,
         file: FileTypes,
+        metadata: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -196,6 +197,12 @@ class DocumentsResource(SyncAPIResource):
 
           file: File to ingest
 
+          metadata: Metadata in `JSON` format. Metadata should be passed in a nested dictionary
+              structure of `str` metadata type to `Dict` mapping `str` metadata keys to `str`,
+              `bool`, `float` or `int` values. Currently, `custom_metadata` is the only
+              supported metadata type.Example `metadata` dictionary: {"metadata":
+              {"custom_metadata": {"customKey1": "value3", "\\__filterKey": "filterValue3"}}
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -206,7 +213,12 @@ class DocumentsResource(SyncAPIResource):
         """
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
-        body = deepcopy_minimal({"file": file})
+        body = deepcopy_minimal(
+            {
+                "file": file,
+                "metadata": metadata,
+            }
+        )
         files = extract_files(cast(Mapping[str, object], body), paths=[["file"]])
         # It should be noted that the actual Content-Type header that will be
         # sent to the server will contain a `boundary` parameter, e.g.
@@ -257,6 +269,52 @@ class DocumentsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return self._get(
             f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DocumentMetadata,
+        )
+
+    def set_metadata(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        custom_metadata: Dict[str, Union[bool, float, str]] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentMetadata:
+        """
+        Post details of a given document that will enrich the chunk and be added to the
+        context or just for filtering. If JUst for filtering, start with "\\__" in the
+        key.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return self._post(
+            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            body=maybe_transform(
+                {"custom_metadata": custom_metadata}, document_set_metadata_params.DocumentSetMetadataParams
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -403,6 +461,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         datastore_id: str,
         *,
         file: FileTypes,
+        metadata: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -428,6 +487,12 @@ class AsyncDocumentsResource(AsyncAPIResource):
 
           file: File to ingest
 
+          metadata: Metadata in `JSON` format. Metadata should be passed in a nested dictionary
+              structure of `str` metadata type to `Dict` mapping `str` metadata keys to `str`,
+              `bool`, `float` or `int` values. Currently, `custom_metadata` is the only
+              supported metadata type.Example `metadata` dictionary: {"metadata":
+              {"custom_metadata": {"customKey1": "value3", "\\__filterKey": "filterValue3"}}
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -438,7 +503,12 @@ class AsyncDocumentsResource(AsyncAPIResource):
         """
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
-        body = deepcopy_minimal({"file": file})
+        body = deepcopy_minimal(
+            {
+                "file": file,
+                "metadata": metadata,
+            }
+        )
         files = extract_files(cast(Mapping[str, object], body), paths=[["file"]])
         # It should be noted that the actual Content-Type header that will be
         # sent to the server will contain a `boundary` parameter, e.g.
@@ -495,6 +565,52 @@ class AsyncDocumentsResource(AsyncAPIResource):
             cast_to=DocumentMetadata,
         )
 
+    async def set_metadata(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        custom_metadata: Dict[str, Union[bool, float, str]] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentMetadata:
+        """
+        Post details of a given document that will enrich the chunk and be added to the
+        context or just for filtering. If JUst for filtering, start with "\\__" in the
+        key.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return await self._post(
+            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            body=await async_maybe_transform(
+                {"custom_metadata": custom_metadata}, document_set_metadata_params.DocumentSetMetadataParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DocumentMetadata,
+        )
+
 
 class DocumentsResourceWithRawResponse:
     def __init__(self, documents: DocumentsResource) -> None:
@@ -511,6 +627,9 @@ class DocumentsResourceWithRawResponse:
         )
         self.metadata = to_raw_response_wrapper(
             documents.metadata,
+        )
+        self.set_metadata = to_raw_response_wrapper(
+            documents.set_metadata,
         )
 
 
@@ -530,6 +649,9 @@ class AsyncDocumentsResourceWithRawResponse:
         self.metadata = async_to_raw_response_wrapper(
             documents.metadata,
         )
+        self.set_metadata = async_to_raw_response_wrapper(
+            documents.set_metadata,
+        )
 
 
 class DocumentsResourceWithStreamingResponse:
@@ -548,6 +670,9 @@ class DocumentsResourceWithStreamingResponse:
         self.metadata = to_streamed_response_wrapper(
             documents.metadata,
         )
+        self.set_metadata = to_streamed_response_wrapper(
+            documents.set_metadata,
+        )
 
 
 class AsyncDocumentsResourceWithStreamingResponse:
@@ -565,4 +690,7 @@ class AsyncDocumentsResourceWithStreamingResponse:
         )
         self.metadata = async_to_streamed_response_wrapper(
             documents.metadata,
+        )
+        self.set_metadata = async_to_streamed_response_wrapper(
+            documents.set_metadata,
         )

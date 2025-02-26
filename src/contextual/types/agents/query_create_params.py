@@ -17,12 +17,13 @@ class QueryCreateParams(TypedDict, total=False):
     """
 
     include_retrieval_content_text: bool
-    """Ignored if `retrievals_only` is True.
+    """Set to `true` to include the text of the retrieved contents in the response.
 
-    Set to `true` to include the text of the retrieved contents in the response. If
-    `false`, only metadata about the retrieved contents will be included, not
-    content text. Content text and other metadata can also be fetched separately
-    using the `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
+    If `false`, only metadata about the retrieved contents will be included, not
+    content text. This parameter is ignored if `retrievals_only` is `true`, in which
+    case `content_text` will always be returned. Content text and other metadata can
+    also be fetched separately using the
+    `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
     """
 
     retrievals_only: bool
@@ -52,5 +53,5 @@ class Message(TypedDict, total=False):
     content: Required[str]
     """Content of the message"""
 
-    role: Required[Literal["user", "system", "assistant"]]
+    role: Required[Literal["user", "system", "assistant", "knowledge"]]
     """Role of the sender"""
