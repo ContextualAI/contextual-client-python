@@ -10,9 +10,10 @@ import pytest
 from contextual import ContextualAI, AsyncContextualAI
 from tests.utils import assert_matches_type
 from contextual.types import (
-    ListUsersResponse,
     InviteUsersResponse,
 )
+from contextual.pagination import SyncUsersPage, AsyncUsersPage
+from contextual.types.list_users_response import User
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -70,7 +71,7 @@ class TestUsers:
     @parametrize
     def test_method_list(self, client: ContextualAI) -> None:
         user = client.users.list()
-        assert_matches_type(ListUsersResponse, user, path=["response"])
+        assert_matches_type(SyncUsersPage[User], user, path=["response"])
 
     @parametrize
     def test_method_list_with_all_params(self, client: ContextualAI) -> None:
@@ -80,7 +81,7 @@ class TestUsers:
             limit=0,
             search="search",
         )
-        assert_matches_type(ListUsersResponse, user, path=["response"])
+        assert_matches_type(SyncUsersPage[User], user, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: ContextualAI) -> None:
@@ -89,7 +90,7 @@ class TestUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = response.parse()
-        assert_matches_type(ListUsersResponse, user, path=["response"])
+        assert_matches_type(SyncUsersPage[User], user, path=["response"])
 
     @parametrize
     def test_streaming_response_list(self, client: ContextualAI) -> None:
@@ -98,7 +99,7 @@ class TestUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = response.parse()
-            assert_matches_type(ListUsersResponse, user, path=["response"])
+            assert_matches_type(SyncUsersPage[User], user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -221,7 +222,7 @@ class TestAsyncUsers:
     @parametrize
     async def test_method_list(self, async_client: AsyncContextualAI) -> None:
         user = await async_client.users.list()
-        assert_matches_type(ListUsersResponse, user, path=["response"])
+        assert_matches_type(AsyncUsersPage[User], user, path=["response"])
 
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -231,7 +232,7 @@ class TestAsyncUsers:
             limit=0,
             search="search",
         )
-        assert_matches_type(ListUsersResponse, user, path=["response"])
+        assert_matches_type(AsyncUsersPage[User], user, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -240,7 +241,7 @@ class TestAsyncUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = await response.parse()
-        assert_matches_type(ListUsersResponse, user, path=["response"])
+        assert_matches_type(AsyncUsersPage[User], user, path=["response"])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncContextualAI) -> None:
@@ -249,7 +250,7 @@ class TestAsyncUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = await response.parse()
-            assert_matches_type(ListUsersResponse, user, path=["response"])
+            assert_matches_type(AsyncUsersPage[User], user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
