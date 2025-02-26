@@ -210,7 +210,7 @@ from contextual.types import (
 Methods:
 
 - <code title="put /users">client.users.<a href="./src/contextual/resources/users.py">update</a>(\*\*<a href="src/contextual/types/user_update_params.py">params</a>) -> <a href="./src/contextual/types/user_update_response.py">object</a></code>
-- <code title="get /users">client.users.<a href="./src/contextual/resources/users.py">list</a>(\*\*<a href="src/contextual/types/user_list_params.py">params</a>) -> <a href="./src/contextual/types/list_users_response.py">ListUsersResponse</a></code>
+- <code title="get /users">client.users.<a href="./src/contextual/resources/users.py">list</a>(\*\*<a href="src/contextual/types/user_list_params.py">params</a>) -> SyncUsersPage[User]</code>
 - <code title="delete /users">client.users.<a href="./src/contextual/resources/users.py">deactivate</a>(\*\*<a href="src/contextual/types/user_deactivate_params.py">params</a>) -> <a href="./src/contextual/types/user_deactivate_response.py">object</a></code>
 - <code title="post /users">client.users.<a href="./src/contextual/resources/users.py">invite</a>(\*\*<a href="src/contextual/types/user_invite_params.py">params</a>) -> <a href="./src/contextual/types/invite_users_response.py">InviteUsersResponse</a></code>
 
