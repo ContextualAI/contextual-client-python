@@ -102,5 +102,7 @@ virtualenv==20.24.5
     # via nox
 zipp==3.17.0
     # via importlib-metadata
-pandas==2.1.0
+pandas==2.2.3
+    # via contextual-client
+numpy==2.0.2
     # via contextual-client
