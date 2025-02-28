@@ -102,3 +102,5 @@ virtualenv==20.24.5
     # via nox
 zipp==3.17.0
     # via importlib-metadata
+pandas==2.1.0
+    # via contextual-client

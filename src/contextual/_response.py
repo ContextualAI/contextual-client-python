@@ -24,8 +24,8 @@ from typing_extensions import Awaitable, ParamSpec, override, get_origin
 
 import anyio
 import httpx
-import pandas as pd
 import pydantic
+from pandas import DataFrame  # type: ignore[import]
 
 from ._types import NoneType
 from ._utils import is_given, extract_type_arg, is_annotated_type, is_type_alias_type, extract_type_var_from_base
@@ -482,13 +482,13 @@ class BinaryAPIResponse(APIResponse[bytes]):
     the API request, e.g. `.with_streaming_response.get_binary_response()`
     """
 
-    def to_dataframe(self) -> pd.DataFrame:
+    def to_dataframe(self) -> DataFrame:
         """Convert the response data to a pandas DataFrame.
 
         Note: This method requires the `pandas` library to be installed.
 
         Returns:
-            pd.DataFrame: Processed evaluation data
+            DataFrame: Processed evaluation data
         """
         # Read the binary content
         content = self.read()
@@ -506,18 +506,18 @@ class BinaryAPIResponse(APIResponse[bytes]):
                     results = ast.literal_eval(entry["results"])
                     del entry["results"]
                     if isinstance(results, dict):
-                        for key, value in results.items():
+                        for key, value in results.items():  # type: ignore
                             if isinstance(value, dict):
-                                for subkey, subvalue in value.items():
+                                for subkey, subvalue in value.items():  # type: ignore
                                     entry[f"{key}_{subkey}"] = subvalue
                             else:
                                 entry[key] = value
 
-                data.append(entry)
+                data.append(entry)  # type: ignore
             except Exception as e:
                 log.info(f"Error processing line: {e}")
                 continue
-        return pd.DataFrame(data)
+        return DataFrame(data)
 
     def write_to_file(
         self,
