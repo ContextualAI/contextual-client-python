@@ -85,7 +85,7 @@ class ContextualAI(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous Contextual AI client instance.
+        """Construct a new synchronous ContextualAI client instance.
 
         This automatically infers the `api_key` argument from the `CONTEXTUAL_API_KEY` environment variable if it is not provided.
         """
@@ -276,7 +276,7 @@ class AsyncContextualAI(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async Contextual AI client instance.
+        """Construct a new async AsyncContextualAI client instance.
 
         This automatically infers the `api_key` argument from the `CONTEXTUAL_API_KEY` environment variable if it is not provided.
         """
