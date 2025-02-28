@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import ast
+import json
 import inspect
 import logging
 import datetime
@@ -22,6 +24,7 @@ from typing_extensions import Awaitable, ParamSpec, override, get_origin
 
 import anyio
 import httpx
+import pandas as pd
 import pydantic
 
 from ._types import NoneType
@@ -478,6 +481,43 @@ class BinaryAPIResponse(APIResponse[bytes]):
     all at once then you should use `.with_streaming_response` when making
     the API request, e.g. `.with_streaming_response.get_binary_response()`
     """
+
+    def to_dataframe(self) -> pd.DataFrame:
+        """Convert the response data to a pandas DataFrame.
+
+        Note: This method requires the `pandas` library to be installed.
+
+        Returns:
+            pd.DataFrame: Processed evaluation data
+        """
+        # Read the binary content
+        content = self.read()
+
+        # Now decode the content
+        lines = content.decode("utf-8").strip().split("\n")
+
+        # Parse each line and flatten the results
+        data = []
+        for line in lines:
+            try:
+                entry = json.loads(line)
+                # Parse the results string if it exists
+                if "results" in entry:
+                    results = ast.literal_eval(entry["results"])
+                    del entry["results"]
+                    if isinstance(results, dict):
+                        for key, value in results.items():
+                            if isinstance(value, dict):
+                                for subkey, subvalue in value.items():
+                                    entry[f"{key}_{subkey}"] = subvalue
+                            else:
+                                entry[key] = value
+
+                data.append(entry)
+            except Exception as e:
+                log.info(f"Error processing line: {e}")
+                continue
+        return pd.DataFrame(data)
 
     def write_to_file(
         self,
