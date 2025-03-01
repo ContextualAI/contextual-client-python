@@ -1615,7 +1615,8 @@ class TestAsyncContextualAI:
         #
         # Since nest_asyncio.apply() is global and cannot be un-applied, this
         # test is run in a separate process to avoid affecting other tests.
-        test_code = dedent("""
+        test_code = dedent(
+            """
         import asyncio
         import nest_asyncio
         import threading
@@ -1631,7 +1632,8 @@ class TestAsyncContextualAI:
 
         nest_asyncio.apply()
         asyncio.run(test_main())
-        """)
+        """
+        )
         with subprocess.Popen(
             [sys.executable, "-c", test_code],
             text=True,
