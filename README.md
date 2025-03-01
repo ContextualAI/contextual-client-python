@@ -30,7 +30,7 @@ client = ContextualAI(
 )
 
 create_agent_output = client.agents.create(
-    name="xxx",
+    name="Example",
 )
 print(create_agent_output.id)
 ```
@@ -56,7 +56,7 @@ client = AsyncContextualAI(
 
 async def main() -> None:
     create_agent_output = await client.agents.create(
-        name="xxx",
+        name="Example",
     )
     print(create_agent_output.id)
 
@@ -138,6 +138,24 @@ for agent in first_page.agents:
 # Remove `await` for non-async usage.
 ```
 
+## File uploads
+
+Request parameters that correspond to file uploads can be passed as `bytes`, a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
+
+```python
+from pathlib import Path
+from contextual import ContextualAI
+
+client = ContextualAI()
+
+client.datastores.documents.ingest(
+    datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+    file=Path("/path/to/file"),
+)
+```
+
+The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
+
 ## Handling errors
 
 When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `contextual.APIConnectionError` is raised.
@@ -155,7 +173,7 @@ client = ContextualAI()
 
 try:
     client.agents.create(
-        name="xxx",
+        name="Example",
     )
 except contextual.APIConnectionError as e:
     print("The server could not be reached")
@@ -200,7 +218,7 @@ client = ContextualAI(
 
 # Or, configure per-request:
 client.with_options(max_retries=5).agents.create(
-    name="xxx",
+    name="Example",
 )
 ```
 
@@ -225,7 +243,7 @@ client = ContextualAI(
 
 # Override per-request:
 client.with_options(timeout=5.0).agents.create(
-    name="xxx",
+    name="Example",
 )
 ```
 
@@ -268,7 +286,7 @@ from contextual import ContextualAI
 
 client = ContextualAI()
 response = client.agents.with_raw_response.create(
-    name="xxx",
+    name="Example",
 )
 print(response.headers.get('X-My-Header'))
 
@@ -288,7 +306,7 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 
 ```python
 with client.agents.with_streaming_response.create(
-    name="xxx",
+    name="Example",
 ) as response:
     print(response.headers.get("X-My-Header"))
 

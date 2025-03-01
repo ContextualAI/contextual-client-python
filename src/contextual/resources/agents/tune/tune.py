@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Mapping, cast
+from typing import Mapping, Optional, cast
 
 import httpx
 
@@ -76,9 +76,10 @@ class TuneResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        training_file: FileTypes,
-        model_id: str | NotGiven = NOT_GIVEN,
-        test_file: FileTypes | NotGiven = NOT_GIVEN,
+        test_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
+        test_file: Optional[FileTypes] | NotGiven = NOT_GIVEN,
+        train_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
+        training_file: Optional[FileTypes] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -90,20 +91,40 @@ class TuneResource(SyncAPIResource):
         Create a tuning job for the specified `Agent` to specialize it to your specific
         domain or use case.
 
-        This API initiates an asynchronous tuning task using the provided
-        `training_file` and an optional `test_file`. If no `test_file` is provided, the
-        tuning job will hold out a portion of the `training_file` as the test set.
+        This API initiates an asynchronous tuning task. You can provide the required
+        data through one of two ways:
 
-        Returns a tune job `id` which can be used to check on the status of your tuning
-        task through the `GET /tune/jobs/{job_id}/metadata` endpoint.
+        - Provide a `training_file` and an optional `test_file`. If no `test_file` is
+          provided, a portion of the `training_file` will be held out as the test set.
+          For easy reusability, the `training_file` is automatically saved as a `Tuning`
+          `Dataset`, and the `test_file` as an `Evaluation` `Dataset`. You can manage
+          them via the `/datasets/tune` and `/datasets/evaluation` endpoints.
+
+        - Provide a `Tuning` `Dataset` and an optional `Evaluation` `Dataset`. You can
+          create a `Tuning` `Dataset` and `Evaluation` `Dataset` using the
+          `/datasets/tune` and `/datasets/evaluation` endpoints respectively.
+
+        The API returns a tune job `id` which can be used to check on the status of your
+        tuning task through the `GET /tune/jobs/{job_id}/metadata` endpoint.
 
         After the tuning job is complete, the metadata associated with the tune job will
         include evaluation results and a model ID. You can then deploy the tuned model
         to the agent by editing its config with the tuned model ID and the "Edit Agent"
-        API (i.e. the `PUT /agents/{agent_id}` API).
+        API (i.e. the `PUT /agents/{agent_id}` API). To deactivate the tuned model, you
+        will need to edit the Agent's config again and set the `llm_model_id` field to
+        "default". For an end-to-end walkthrough, see the `Tune & Evaluation Guide`.
 
         Args:
-          agent_id: ID of the agent to tune
+          agent_id: ID of the Agent to list tuning jobs for
+
+          test_dataset_name: Optional. `Dataset` to use for testing model checkpoints, created through the
+              `/datasets/evaluate` API.
+
+          test_file: Optional. Local path to the test data file. The test file should follow the same
+              format as the training data file.
+
+          train_dataset_name: `Dataset` to use for training, created through the `/datasets/tune` API. Either
+              `train_dataset_name` or `training_file` must be provided, but not both.
 
           training_file: Local path to the training data file.
 
@@ -116,7 +137,9 @@ class TuneResource(SyncAPIResource):
 
               - `reference` (`str`): The gold-standard answer to the prompt.
 
-              - `guideline` (`str`): Guidelines for model output.
+              - `guideline` (`str`): Guidelines for model output. If you do not have special
+                guidelines for the model's output, you can use the `System Prompt` defined in
+                your Agent configuration as the `guideline`.
 
               - `prompt` (`str`): Question for the model to respond to.
 
@@ -138,12 +161,6 @@ class TuneResource(SyncAPIResource):
               ]
               ```
 
-          model_id: ID of an existing model to tune. Defaults to the agent's default model if not
-              specified.
-
-          test_file: Optional. Local path to the test data file. The test file should follow the same
-              format as the training data file.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -156,9 +173,10 @@ class TuneResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         body = deepcopy_minimal(
             {
-                "training_file": training_file,
-                "model_id": model_id,
+                "test_dataset_name": test_dataset_name,
                 "test_file": test_file,
+                "train_dataset_name": train_dataset_name,
+                "training_file": training_file,
             }
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["training_file"], ["test_file"]])
@@ -209,9 +227,10 @@ class AsyncTuneResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        training_file: FileTypes,
-        model_id: str | NotGiven = NOT_GIVEN,
-        test_file: FileTypes | NotGiven = NOT_GIVEN,
+        test_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
+        test_file: Optional[FileTypes] | NotGiven = NOT_GIVEN,
+        train_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
+        training_file: Optional[FileTypes] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -223,20 +242,40 @@ class AsyncTuneResource(AsyncAPIResource):
         Create a tuning job for the specified `Agent` to specialize it to your specific
         domain or use case.
 
-        This API initiates an asynchronous tuning task using the provided
-        `training_file` and an optional `test_file`. If no `test_file` is provided, the
-        tuning job will hold out a portion of the `training_file` as the test set.
+        This API initiates an asynchronous tuning task. You can provide the required
+        data through one of two ways:
 
-        Returns a tune job `id` which can be used to check on the status of your tuning
-        task through the `GET /tune/jobs/{job_id}/metadata` endpoint.
+        - Provide a `training_file` and an optional `test_file`. If no `test_file` is
+          provided, a portion of the `training_file` will be held out as the test set.
+          For easy reusability, the `training_file` is automatically saved as a `Tuning`
+          `Dataset`, and the `test_file` as an `Evaluation` `Dataset`. You can manage
+          them via the `/datasets/tune` and `/datasets/evaluation` endpoints.
+
+        - Provide a `Tuning` `Dataset` and an optional `Evaluation` `Dataset`. You can
+          create a `Tuning` `Dataset` and `Evaluation` `Dataset` using the
+          `/datasets/tune` and `/datasets/evaluation` endpoints respectively.
+
+        The API returns a tune job `id` which can be used to check on the status of your
+        tuning task through the `GET /tune/jobs/{job_id}/metadata` endpoint.
 
         After the tuning job is complete, the metadata associated with the tune job will
         include evaluation results and a model ID. You can then deploy the tuned model
         to the agent by editing its config with the tuned model ID and the "Edit Agent"
-        API (i.e. the `PUT /agents/{agent_id}` API).
+        API (i.e. the `PUT /agents/{agent_id}` API). To deactivate the tuned model, you
+        will need to edit the Agent's config again and set the `llm_model_id` field to
+        "default". For an end-to-end walkthrough, see the `Tune & Evaluation Guide`.
 
         Args:
-          agent_id: ID of the agent to tune
+          agent_id: ID of the Agent to list tuning jobs for
+
+          test_dataset_name: Optional. `Dataset` to use for testing model checkpoints, created through the
+              `/datasets/evaluate` API.
+
+          test_file: Optional. Local path to the test data file. The test file should follow the same
+              format as the training data file.
+
+          train_dataset_name: `Dataset` to use for training, created through the `/datasets/tune` API. Either
+              `train_dataset_name` or `training_file` must be provided, but not both.
 
           training_file: Local path to the training data file.
 
@@ -249,7 +288,9 @@ class AsyncTuneResource(AsyncAPIResource):
 
               - `reference` (`str`): The gold-standard answer to the prompt.
 
-              - `guideline` (`str`): Guidelines for model output.
+              - `guideline` (`str`): Guidelines for model output. If you do not have special
+                guidelines for the model's output, you can use the `System Prompt` defined in
+                your Agent configuration as the `guideline`.
 
               - `prompt` (`str`): Question for the model to respond to.
 
@@ -271,12 +312,6 @@ class AsyncTuneResource(AsyncAPIResource):
               ]
               ```
 
-          model_id: ID of an existing model to tune. Defaults to the agent's default model if not
-              specified.
-
-          test_file: Optional. Local path to the test data file. The test file should follow the same
-              format as the training data file.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -289,9 +324,10 @@ class AsyncTuneResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         body = deepcopy_minimal(
             {
-                "training_file": training_file,
-                "model_id": model_id,
+                "test_dataset_name": test_dataset_name,
                 "test_file": test_file,
+                "train_dataset_name": train_dataset_name,
+                "training_file": training_file,
             }
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["training_file"], ["test_file"]])

@@ -51,10 +51,10 @@ class ModelsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListTuneModelsResponse:
         """
-        Retrieves a list of tuned models associated with the specified agent.
+        Retrieves a list of tuned models associated with the specified Agent.
 
         Args:
-          agent_id: ID of the agent from which to retrieve tuned models
+          agent_id: ID of the Agent from which to retrieve tuned models
 
           extra_headers: Send extra headers
 
@@ -107,10 +107,10 @@ class AsyncModelsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListTuneModelsResponse:
         """
-        Retrieves a list of tuned models associated with the specified agent.
+        Retrieves a list of tuned models associated with the specified Agent.
 
         Args:
-          agent_id: ID of the agent from which to retrieve tuned models
+          agent_id: ID of the Agent from which to retrieve tuned models
 
           extra_headers: Send extra headers
 

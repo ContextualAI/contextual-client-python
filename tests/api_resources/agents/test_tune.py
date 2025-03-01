@@ -21,7 +21,6 @@ class TestTune:
     def test_method_create(self, client: ContextualAI) -> None:
         tune = client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
         )
         assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
@@ -29,9 +28,10 @@ class TestTune:
     def test_method_create_with_all_params(self, client: ContextualAI) -> None:
         tune = client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
-            model_id="model_id",
+            test_dataset_name="test_dataset_name",
             test_file=b"raw file contents",
+            train_dataset_name="train_dataset_name",
+            training_file=b"raw file contents",
         )
         assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
@@ -39,7 +39,6 @@ class TestTune:
     def test_raw_response_create(self, client: ContextualAI) -> None:
         response = client.agents.tune.with_raw_response.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
         )
 
         assert response.is_closed is True
@@ -51,7 +50,6 @@ class TestTune:
     def test_streaming_response_create(self, client: ContextualAI) -> None:
         with client.agents.tune.with_streaming_response.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -66,7 +64,6 @@ class TestTune:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
             client.agents.tune.with_raw_response.create(
                 agent_id="",
-                training_file=b"raw file contents",
             )
 
 
@@ -77,7 +74,6 @@ class TestAsyncTune:
     async def test_method_create(self, async_client: AsyncContextualAI) -> None:
         tune = await async_client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
         )
         assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
@@ -85,9 +81,10 @@ class TestAsyncTune:
     async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
         tune = await async_client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
-            model_id="model_id",
+            test_dataset_name="test_dataset_name",
             test_file=b"raw file contents",
+            train_dataset_name="train_dataset_name",
+            training_file=b"raw file contents",
         )
         assert_matches_type(CreateTuneResponse, tune, path=["response"])
 
@@ -95,7 +92,6 @@ class TestAsyncTune:
     async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
         response = await async_client.agents.tune.with_raw_response.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
         )
 
         assert response.is_closed is True
@@ -107,7 +103,6 @@ class TestAsyncTune:
     async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
         async with async_client.agents.tune.with_streaming_response.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            training_file=b"raw file contents",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -122,5 +117,4 @@ class TestAsyncTune:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
             await async_client.agents.tune.with_raw_response.create(
                 agent_id="",
-                training_file=b"raw file contents",
             )

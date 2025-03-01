@@ -52,6 +52,8 @@ class RerankResource(SyncAPIResource):
         documents: List[str],
         model: str,
         query: str,
+        instruction: str | NotGiven = NOT_GIVEN,
+        metadata: List[str] | NotGiven = NOT_GIVEN,
         top_n: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -64,7 +66,7 @@ class RerankResource(SyncAPIResource):
         Rank a list of documents according to their relevance to a query.
 
         The total request cannot exceed 400,000 tokens. The combined length of any
-        document and the query must not exceed 4,000 tokens.
+        document, instruction and the query must not exceed 4,000 tokens.
 
         Args:
           documents: The texts to be reranked according to their relevance to the query
@@ -72,6 +74,11 @@ class RerankResource(SyncAPIResource):
           model: The version of the reranker to use. Currently, we just have "v1".
 
           query: The string against which documents will be ranked for relevance
+
+          instruction: The instruction to be used for the reranker
+
+          metadata: Metadata for documents being passed to the reranker. Must be the same length as
+              the documents list.
 
           top_n: The number of top-ranked results to return
 
@@ -90,6 +97,8 @@ class RerankResource(SyncAPIResource):
                     "documents": documents,
                     "model": model,
                     "query": query,
+                    "instruction": instruction,
+                    "metadata": metadata,
                     "top_n": top_n,
                 },
                 rerank_create_params.RerankCreateParams,
@@ -127,6 +136,8 @@ class AsyncRerankResource(AsyncAPIResource):
         documents: List[str],
         model: str,
         query: str,
+        instruction: str | NotGiven = NOT_GIVEN,
+        metadata: List[str] | NotGiven = NOT_GIVEN,
         top_n: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -139,7 +150,7 @@ class AsyncRerankResource(AsyncAPIResource):
         Rank a list of documents according to their relevance to a query.
 
         The total request cannot exceed 400,000 tokens. The combined length of any
-        document and the query must not exceed 4,000 tokens.
+        document, instruction and the query must not exceed 4,000 tokens.
 
         Args:
           documents: The texts to be reranked according to their relevance to the query
@@ -147,6 +158,11 @@ class AsyncRerankResource(AsyncAPIResource):
           model: The version of the reranker to use. Currently, we just have "v1".
 
           query: The string against which documents will be ranked for relevance
+
+          instruction: The instruction to be used for the reranker
+
+          metadata: Metadata for documents being passed to the reranker. Must be the same length as
+              the documents list.
 
           top_n: The number of top-ranked results to return
 
@@ -165,6 +181,8 @@ class AsyncRerankResource(AsyncAPIResource):
                     "documents": documents,
                     "model": model,
                     "query": query,
+                    "instruction": instruction,
+                    "metadata": metadata,
                     "top_n": top_n,
                 },
                 rerank_create_params.RerankCreateParams,

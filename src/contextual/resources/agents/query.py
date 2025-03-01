@@ -83,10 +83,11 @@ class QueryResource(SyncAPIResource):
               multiple objects to provide conversation history. Last message in the list must
               be a `user`-sent message (i.e. `role` equals `"user"`).
 
-          include_retrieval_content_text: Ignored if `retrievals_only` is True. Set to `true` to include the text of the
-              retrieved contents in the response. If `false`, only metadata about the
-              retrieved contents will be included, not content text. Content text and other
-              metadata can also be fetched separately using the
+          include_retrieval_content_text: Set to `true` to include the text of the retrieved contents in the response. If
+              `false`, only metadata about the retrieved contents will be included, not
+              content text. This parameter is ignored if `retrievals_only` is `true`, in which
+              case `content_text` will always be returned. Content text and other metadata can
+              also be fetched separately using the
               `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
 
           retrievals_only: Set to `true` to fetch retrieval content and metadata, and then skip generation
@@ -365,10 +366,11 @@ class AsyncQueryResource(AsyncAPIResource):
               multiple objects to provide conversation history. Last message in the list must
               be a `user`-sent message (i.e. `role` equals `"user"`).
 
-          include_retrieval_content_text: Ignored if `retrievals_only` is True. Set to `true` to include the text of the
-              retrieved contents in the response. If `false`, only metadata about the
-              retrieved contents will be included, not content text. Content text and other
-              metadata can also be fetched separately using the
+          include_retrieval_content_text: Set to `true` to include the text of the retrieved contents in the response. If
+              `false`, only metadata about the retrieved contents will be included, not
+              content text. This parameter is ignored if `retrievals_only` is `true`, in which
+              case `content_text` will always be returned. Content text and other metadata can
+              also be fetched separately using the
               `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
 
           retrievals_only: Set to `true` to fetch retrieval content and metadata, and then skip generation

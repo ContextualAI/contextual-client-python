@@ -52,6 +52,7 @@ class GenerateResource(SyncAPIResource):
         knowledge: List[str],
         messages: Iterable[generate_create_params.Message],
         model: str,
+        avoid_commentary: bool | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -65,7 +66,8 @@ class GenerateResource(SyncAPIResource):
         engineered specifically to prioritize faithfulness to in-context retrievals over
         parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation.
 
-        The total request cannot exceed 6,100 tokens.
+        The total request cannot exceed 32,000 tokens. Email glm-feedback@contextual.ai
+        with any feedback or questions.
 
         Args:
           knowledge: The knowledge sources the model can use when generating a response.
@@ -74,6 +76,12 @@ class GenerateResource(SyncAPIResource):
               user.
 
           model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+
+          avoid_commentary: Flag to indicate whether the model should avoid providing additional commentary
+              in responses. Commentary is conversational in nature and does not contain
+              verifiable claims; therefore, commentary is not strictly grounded in available
+              context. However, commentary may provide useful context which improves the
+              helpfulness of responses.
 
           system_prompt: Instructions that the model follows when generating responses. Note that we do
               not guarantee that the model follows these instructions exactly.
@@ -93,6 +101,7 @@ class GenerateResource(SyncAPIResource):
                     "knowledge": knowledge,
                     "messages": messages,
                     "model": model,
+                    "avoid_commentary": avoid_commentary,
                     "system_prompt": system_prompt,
                 },
                 generate_create_params.GenerateCreateParams,
@@ -130,6 +139,7 @@ class AsyncGenerateResource(AsyncAPIResource):
         knowledge: List[str],
         messages: Iterable[generate_create_params.Message],
         model: str,
+        avoid_commentary: bool | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -143,7 +153,8 @@ class AsyncGenerateResource(AsyncAPIResource):
         engineered specifically to prioritize faithfulness to in-context retrievals over
         parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation.
 
-        The total request cannot exceed 6,100 tokens.
+        The total request cannot exceed 32,000 tokens. Email glm-feedback@contextual.ai
+        with any feedback or questions.
 
         Args:
           knowledge: The knowledge sources the model can use when generating a response.
@@ -152,6 +163,12 @@ class AsyncGenerateResource(AsyncAPIResource):
               user.
 
           model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+
+          avoid_commentary: Flag to indicate whether the model should avoid providing additional commentary
+              in responses. Commentary is conversational in nature and does not contain
+              verifiable claims; therefore, commentary is not strictly grounded in available
+              context. However, commentary may provide useful context which improves the
+              helpfulness of responses.
 
           system_prompt: Instructions that the model follows when generating responses. Note that we do
               not guarantee that the model follows these instructions exactly.
@@ -171,6 +188,7 @@ class AsyncGenerateResource(AsyncAPIResource):
                     "knowledge": knowledge,
                     "messages": messages,
                     "model": model,
+                    "avoid_commentary": avoid_commentary,
                     "system_prompt": system_prompt,
                 },
                 generate_create_params.GenerateCreateParams,

@@ -1,51 +1,16 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import List
 
-from ...._compat import PYDANTIC_V2, ConfigDict
 from ...._models import BaseModel
+from .tune_job_metadata import TuneJobMetadata
 
-__all__ = ["ListTuneJobsResponse", "Job"]
-
-
-class Job(BaseModel):
-    id: str
-    """ID of the tune job"""
-
-    job_status: str
-    """Status of the tune job.
-
-    There are four possible statuses: 'failed', 'pending', 'processing' and
-    'completed'.
-    """
-
-    evaluation_results: Optional[Dict[str, float]] = None
-    """
-    Evaluation results of the tuned model, represented as an object mapping metric
-    names (strings) to their scores (floats). Omitted if the tuning job failed or is
-    still in progress.
-    """
-
-    model_id: Optional[str] = None
-    """ID of the tuned model.
-
-    Omitted if the tuning job failed or is still in progress.
-    """
-
-    if PYDANTIC_V2:
-        # allow fields with a `model_` prefix
-        model_config = ConfigDict(protected_namespaces=tuple())
+__all__ = ["ListTuneJobsResponse"]
 
 
 class ListTuneJobsResponse(BaseModel):
-    jobs: List[Job]
-    """List of tune jobs"""
+    jobs: List[TuneJobMetadata]
+    """List of fine-tuning jobs for the agent"""
 
-    next_cursor: Optional[str] = None
-    """Next cursor to continue pagination.
-
-    Omitted if there are no more specialization jobs.
-    """
-
-    total_count: Optional[int] = None
-    """Total number of available specialization jobs"""
+    total_count: int
+    """Total number of jobs associated with the agent"""
