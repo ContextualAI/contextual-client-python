@@ -58,8 +58,9 @@ class ContextualAI(SyncAPIClient):
     with_streaming_response: ContextualAIWithStreamedResponse
 
     # client options
-    api_key: str
-    is_snowflake: bool
+    api_key: str | None = None
+    is_snowflake: bool = False
+    is_snowflake_internal: bool = False
 
     def __init__(
         self,
@@ -91,9 +92,12 @@ class ContextualAI(SyncAPIClient):
         if api_key is None:
             api_key = os.environ.get("CONTEXTUAL_API_KEY")
         if api_key is None:
-            raise ContextualAIError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the CONTEXTUAL_API_KEY environment variable"
-            )
+            if os.getenv('SNOWFLAKE_INTERNAL_API_SERVICE', False):
+                self.is_snowflake_internal = True
+            else:
+                raise ContextualAIError(
+                    "The api_key client option must be set either by passing api_key to the client or by setting the CONTEXTUAL_API_KEY environment variable"
+                )
         self.api_key = api_key
 
         if base_url is None:
@@ -103,8 +107,6 @@ class ContextualAI(SyncAPIClient):
 
         if 'snowflakecomputing.app' in str(base_url):
             self.is_snowflake = True
-        else:
-            self.is_snowflake = False
 
         super().__init__(
             version=__version__,
@@ -137,6 +139,8 @@ class ContextualAI(SyncAPIClient):
         api_key = self.api_key
         if self.is_snowflake:
             return {"Authorization": f"Snowflake Token={api_key}"}
+        elif self.is_snowflake_internal:
+            return {}
         else:
             return {"Authorization": f"Bearer {api_key}"}
 
@@ -245,8 +249,9 @@ class AsyncContextualAI(AsyncAPIClient):
     with_streaming_response: AsyncContextualAIWithStreamedResponse
 
     # client options
-    api_key: str
-    is_snowflake: bool
+    api_key: str | None = None
+    is_snowflake: bool = False
+    is_snowflake_internal: bool = False
 
     def __init__(
         self,
@@ -278,9 +283,12 @@ class AsyncContextualAI(AsyncAPIClient):
         if api_key is None:
             api_key = os.environ.get("CONTEXTUAL_API_KEY")
         if api_key is None:
-            raise ContextualAIError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the CONTEXTUAL_API_KEY environment variable"
-            )
+            if os.getenv('SNOWFLAKE_INTERNAL_API_SERVICE', False):
+                self.is_snowflake_internal = True
+            else:
+                raise ContextualAIError(
+                    "The api_key client option must be set either by passing api_key to the client or by setting the CONTEXTUAL_API_KEY environment variable"
+                )
         self.api_key = api_key
 
         if base_url is None:
@@ -290,8 +298,6 @@ class AsyncContextualAI(AsyncAPIClient):
 
         if 'snowflakecomputing.app' in str(base_url):
             self.is_snowflake = True
-        else:
-            self.is_snowflake = False
 
         super().__init__(
             version=__version__,
@@ -319,11 +325,13 @@ class AsyncContextualAI(AsyncAPIClient):
         return Querystring(array_format="repeat")
 
     @property
-    @override
+    @override 
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
         if self.is_snowflake:
             return {"Authorization": f"Snowflake Token={api_key}"}
+        elif self.is_snowflake_internal:
+            return {}
         else:
             return {"Authorization": f"Bearer {api_key}"}
 
