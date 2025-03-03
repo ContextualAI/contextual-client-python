@@ -30,10 +30,26 @@ class GenerateCreateParams(TypedDict, total=False):
     helpfulness of responses.
     """
 
+    max_new_tokens: int
+    """The maximum number of tokens that the model can generate in the response."""
+
     system_prompt: str
     """Instructions that the model follows when generating responses.
 
     Note that we do not guarantee that the model follows these instructions exactly.
+    """
+
+    temperature: float
+    """The sampling temperature, which affects the randomness in the response.
+
+    Note that higher temperature values can reduce groundedness
+    """
+
+    top_p: float
+    """
+    A parameter for nucleus sampling, an alternative to temperature which also
+    affects the randomness of the response. Note that higher top_p values can reduce
+    groundedness
     """
 
 
@@ -41,5 +57,5 @@ class Message(TypedDict, total=False):
     content: Required[str]
     """Content of the message"""
 
-    role: Required[Literal["user", "system", "assistant", "knowledge"]]
+    role: Required[Literal["user", "assistant"]]
     """Role of the sender"""
