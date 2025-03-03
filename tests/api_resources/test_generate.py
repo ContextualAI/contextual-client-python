@@ -43,7 +43,10 @@ class TestGenerate:
             ],
             model="model",
             avoid_commentary=True,
+            max_new_tokens=1,
             system_prompt="system_prompt",
+            temperature=0,
+            top_p=1,
         )
         assert_matches_type(GenerateCreateResponse, generate, path=["response"])
 
@@ -115,7 +118,10 @@ class TestAsyncGenerate:
             ],
             model="model",
             avoid_commentary=True,
+            max_new_tokens=1,
             system_prompt="system_prompt",
+            temperature=0,
+            top_p=1,
         )
         assert_matches_type(GenerateCreateResponse, generate, path=["response"])
 
