@@ -31,6 +31,9 @@ class EvaluationRound(BaseModel):
     num_predictions: Optional[int] = None
     """Total number of predictions made during the evaluation round"""
 
+    num_processed_predictions: Optional[int] = None
+    """Number of predictions that have been processed during the evaluation round"""
+
     num_successful_predictions: Optional[int] = None
     """Number of predictions that were successful during the evaluation round"""
 
