@@ -53,7 +53,10 @@ class GenerateResource(SyncAPIResource):
         messages: Iterable[generate_create_params.Message],
         model: str,
         avoid_commentary: bool | NotGiven = NOT_GIVEN,
+        max_new_tokens: int | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
+        temperature: float | NotGiven = NOT_GIVEN,
+        top_p: float | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -83,8 +86,17 @@ class GenerateResource(SyncAPIResource):
               context. However, commentary may provide useful context which improves the
               helpfulness of responses.
 
+          max_new_tokens: The maximum number of tokens that the model can generate in the response.
+
           system_prompt: Instructions that the model follows when generating responses. Note that we do
               not guarantee that the model follows these instructions exactly.
+
+          temperature: The sampling temperature, which affects the randomness in the response. Note
+              that higher temperature values can reduce groundedness
+
+          top_p: A parameter for nucleus sampling, an alternative to temperature which also
+              affects the randomness of the response. Note that higher top_p values can reduce
+              groundedness
 
           extra_headers: Send extra headers
 
@@ -102,7 +114,10 @@ class GenerateResource(SyncAPIResource):
                     "messages": messages,
                     "model": model,
                     "avoid_commentary": avoid_commentary,
+                    "max_new_tokens": max_new_tokens,
                     "system_prompt": system_prompt,
+                    "temperature": temperature,
+                    "top_p": top_p,
                 },
                 generate_create_params.GenerateCreateParams,
             ),
@@ -140,7 +155,10 @@ class AsyncGenerateResource(AsyncAPIResource):
         messages: Iterable[generate_create_params.Message],
         model: str,
         avoid_commentary: bool | NotGiven = NOT_GIVEN,
+        max_new_tokens: int | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
+        temperature: float | NotGiven = NOT_GIVEN,
+        top_p: float | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -170,8 +188,17 @@ class AsyncGenerateResource(AsyncAPIResource):
               context. However, commentary may provide useful context which improves the
               helpfulness of responses.
 
+          max_new_tokens: The maximum number of tokens that the model can generate in the response.
+
           system_prompt: Instructions that the model follows when generating responses. Note that we do
               not guarantee that the model follows these instructions exactly.
+
+          temperature: The sampling temperature, which affects the randomness in the response. Note
+              that higher temperature values can reduce groundedness
+
+          top_p: A parameter for nucleus sampling, an alternative to temperature which also
+              affects the randomness of the response. Note that higher top_p values can reduce
+              groundedness
 
           extra_headers: Send extra headers
 
@@ -189,7 +216,10 @@ class AsyncGenerateResource(AsyncAPIResource):
                     "messages": messages,
                     "model": model,
                     "avoid_commentary": avoid_commentary,
+                    "max_new_tokens": max_new_tokens,
                     "system_prompt": system_prompt,
+                    "temperature": temperature,
+                    "top_p": top_p,
                 },
                 generate_create_params.GenerateCreateParams,
             ),
