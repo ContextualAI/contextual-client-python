@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0 (2025-03-03)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* Add special snowflake path for internal dns usage ([#52](https://github.com/ContextualAI/contextual-client-python/issues/52)) ([dd0ea41](https://github.com/ContextualAI/contextual-client-python/commit/dd0ea4117c37eb53620304a30f736747f30f6ce6))
+* **api:** update via SDK Studio ([#59](https://github.com/ContextualAI/contextual-client-python/issues/59)) ([9b116a4](https://github.com/ContextualAI/contextual-client-python/commit/9b116a4e1d935a32ab8a44a36042891edf4d2125))
+
+
+### Chores
+
+* **docs:** update client docstring ([#55](https://github.com/ContextualAI/contextual-client-python/issues/55)) ([ef1ee6e](https://github.com/ContextualAI/contextual-client-python/commit/ef1ee6e351e2c1a84af871f70742045df23fbe7f))
+
+
+### Documentation
+
+* update URLs from stainlessapi.com to stainless.com ([#53](https://github.com/ContextualAI/contextual-client-python/issues/53)) ([4162888](https://github.com/ContextualAI/contextual-client-python/commit/41628880bfb7d72cb3759ea06f1c09c11bb60e1a))
+
 ## 0.3.0 (2025-02-26)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.2.0...v0.3.0)
