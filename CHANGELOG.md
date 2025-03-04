@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 (2025-03-04)
+
+Full Changelog: [v0.4.0...v0.4.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.4.0...v0.4.1)
+
+### Chores
+
+* **internal:** remove unused http client options forwarding ([#61](https://github.com/ContextualAI/contextual-client-python/issues/61)) ([40d345d](https://github.com/ContextualAI/contextual-client-python/commit/40d345dd52af82e31e8fa34e5b0b1eebad006684))
+
 ## 0.4.0 (2025-03-03)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.3.0...v0.4.0)
