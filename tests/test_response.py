@@ -73,6 +73,24 @@ def test_response_parse_mismatched_basemodel(client: ContextualAI) -> None:
         response.parse(to=PydanticModel)
 
 
+def test_response_binary_response_to_dataframe(client: ContextualAI) -> None:
+    response = BinaryAPIResponse(
+        raw=httpx.Response(
+            200,
+            content=b'{"prompt": "What was Apple\'s total net sales for 2022?", "reference": "...", "response": "...", "guideline": "", "knowledge": "[]", "results": "{\'equivalence_score\': {\'score\': 0.0, \'metadata\': \\"The generated response does not provide any information about Apple\'s total net sales for 2022, whereas the reference response provides the specific figure.\\"}, \'factuality_v4.5_score\': {\'score\': 0.0, \'metadata\': {\'description\': \'There are claims but no knowledge so response is ungrounded.\'}}}", "status": "completed"}\r\n',
+        ),
+        client=client,
+        stream=False,
+        stream_cls=None,
+        cast_to=bytes,
+        options=FinalRequestOptions.construct(method="get", url="/foo"),
+    )
+    df = response.to_dataframe()
+    assert df.shape == (1, 10)
+    assert df["prompt"].astype(str).iloc[0] == "What was Apple's total net sales for 2022?"  # type: ignore
+    assert df["equivalence_score_score"].astype(float).iloc[0] == 0.0  # type: ignore
+
+
 @pytest.mark.asyncio
 async def test_async_response_parse_mismatched_basemodel(async_client: AsyncContextualAI) -> None:
     response = AsyncAPIResponse(
