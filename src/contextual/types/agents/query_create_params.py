@@ -113,4 +113,4 @@ class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
 
 DocumentsFilters: TypeAlias = Union[DocumentsFiltersBaseMetadataFilter, "CompositeMetadataFilterParam"]
 
-from ..composite_metadata_filter_param import CompositeMetadataFilterParam
+from ..datastores.composite_metadata_filter_param import CompositeMetadataFilterParam
