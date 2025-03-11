@@ -501,21 +501,39 @@ class BinaryAPIResponse(APIResponse[bytes]):
         for line in lines:
             try:
                 entry = json.loads(line)
-                # Parse the results string if it exists
-                if "results" in entry:
-                    results = ast.literal_eval(entry["results"])
-                    del entry["results"]
+                # Parse the results field directly from JSON
+                if 'results' in entry:
+                    if isinstance(entry['results'], str):
+                        # Try to handle string representations that are valid JSON
+                        try:
+                            results = json.loads(entry['results'])
+                        except Exception as e:
+                            # If not valid JSON, fall back to safer processing
+                            results = ast.literal_eval(entry['results'])
+                    else:
+                        # Already a dictionary
+                        results = entry['results']
+
+                    # Remove the original results field
+                    del entry['results']
+                    # Flatten the nested dictionary structure
                     if isinstance(results, dict):
                         for key, value in results.items():  # type: ignore
                             if isinstance(value, dict):
                                 for subkey, subvalue in value.items():  # type: ignore
-                                    entry[f"{key}_{subkey}"] = subvalue
+                                    if isinstance(subvalue, dict):
+                                        # Handle one more level of nesting
+                                        for subsubkey, subsubvalue in subvalue.items():  # type: ignore
+                                            entry[f'{key}_{subkey}_{subsubkey}'] = subsubvalue
+                                    else:
+                                        entry[f'{key}_{subkey}'] = subvalue
                             else:
                                 entry[key] = value
 
-                data.append(entry)  # type: ignore
+                data.append(entry) # type: ignore
             except Exception as e:
-                log.info(f"Error processing line: {e}")
+                log.error(f"Error processing line: {e}")
+                log.error(f"Problematic line: {line[:200]}...")  # Print first 200 chars of the line
                 continue
         return DataFrame(data)
 
