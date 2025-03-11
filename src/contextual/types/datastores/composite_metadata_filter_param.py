@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Union, Iterable, Optional
 from typing_extensions import Literal, Required, TypeAlias, TypedDict, TypeAliasType
 
-from .._compat import PYDANTIC_V2
+from ..._compat import PYDANTIC_V2
 
 __all__ = ["CompositeMetadataFilterParam", "Filter", "FilterBaseMetadataFilter"]
 
