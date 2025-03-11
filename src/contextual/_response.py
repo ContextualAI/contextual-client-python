@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import ast
+import json
 import inspect
 import logging
 import datetime
@@ -23,6 +25,7 @@ from typing_extensions import Awaitable, ParamSpec, override, get_origin
 import anyio
 import httpx
 import pydantic
+from pandas import DataFrame  # type: ignore[import]
 
 from ._types import NoneType
 from ._utils import is_given, extract_type_arg, is_annotated_type, is_type_alias_type, extract_type_var_from_base
@@ -478,6 +481,61 @@ class BinaryAPIResponse(APIResponse[bytes]):
     all at once then you should use `.with_streaming_response` when making
     the API request, e.g. `.with_streaming_response.get_binary_response()`
     """
+
+    def to_dataframe(self) -> DataFrame:
+        """Convert the response data to a pandas DataFrame.
+
+        Note: This method requires the `pandas` library to be installed.
+
+        Returns:
+            DataFrame: Processed evaluation data
+        """
+        # Read the binary content
+        content = self.read()
+
+        # Now decode the content
+        lines = content.decode("utf-8").strip().split("\n")
+
+        # Parse each line and flatten the results
+        data = []
+        for line in lines:
+            try:
+                entry = json.loads(line)
+                # Parse the results field directly from JSON
+                if 'results' in entry:
+                    if isinstance(entry['results'], str):
+                        # Try to handle string representations that are valid JSON
+                        try:
+                            results = json.loads(entry['results'])
+                        except Exception as e:
+                            # If not valid JSON, fall back to safer processing
+                            results = ast.literal_eval(entry['results'])
+                    else:
+                        # Already a dictionary
+                        results = entry['results']
+
+                    # Remove the original results field
+                    del entry['results']
+                    # Flatten the nested dictionary structure
+                    if isinstance(results, dict):
+                        for key, value in results.items():  # type: ignore
+                            if isinstance(value, dict):
+                                for subkey, subvalue in value.items():  # type: ignore
+                                    if isinstance(subvalue, dict):
+                                        # Handle one more level of nesting
+                                        for subsubkey, subsubvalue in subvalue.items():  # type: ignore
+                                            entry[f'{key}_{subkey}_{subsubkey}'] = subsubvalue
+                                    else:
+                                        entry[f'{key}_{subkey}'] = subvalue
+                            else:
+                                entry[key] = value
+
+                data.append(entry) # type: ignore
+            except Exception as e:
+                log.error(f"Error processing line: {e}")
+                log.error(f"Problematic line: {line[:200]}...")  # Print first 200 chars of the line
+                continue
+        return DataFrame(data)
 
     def write_to_file(
         self,
