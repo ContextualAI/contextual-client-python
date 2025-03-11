@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable
+from typing import Union, Iterable
 from datetime import datetime
 from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 
@@ -108,7 +108,17 @@ class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
     """Operator to be used for the filter."""
 
     value: Annotated[
-        Union[str, Union[str, datetime], float, bool, Iterable[object], List[Union[str, float, bool]]],
+        Union[
+            str,
+            Union[str, datetime],
+            float,
+            bool,
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+        ],
         PropertyInfo(format="iso8601"),
     ]
     """The value to be searched for in the field.
