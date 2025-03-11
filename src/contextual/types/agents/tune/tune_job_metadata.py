@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from typing import List, Optional
 
 from ...._compat import PYDANTIC_V2, ConfigDict
 from ...._models import BaseModel
@@ -15,7 +15,7 @@ class TuneJobMetadata(BaseModel):
     job_status: str
     """Status of the tune job"""
 
-    evaluation_metadata: Optional[object] = None
+    evaluation_metadata: Optional[List[object]] = None
     """Metadata about the model evaluation, including status and results if completed."""
 
     model_id: Optional[str] = None

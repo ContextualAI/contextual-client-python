@@ -28,6 +28,12 @@ class AgentCreateParams(TypedDict, total=False):
     description: str
     """Description of the agent"""
 
+    filter_prompt: str
+    """
+    The prompt to an LLM which determines whether retrieved chunks are relevant to a
+    given query and filters out irrelevant chunks.
+    """
+
     suggested_queries: List[str]
     """
     These queries will show up as suggestions in the Contextual UI when users load
@@ -50,6 +56,9 @@ class AgentConfigsFilterAndRerankConfig(TypedDict, total=False):
 
 
 class AgentConfigsGenerateResponseConfig(TypedDict, total=False):
+    calculate_groundedness: bool
+    """This parameter controls generation of groundedness scores."""
+
     frequency_penalty: float
     """
     This parameter adjusts how the model treats repeated tokens during text

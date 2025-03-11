@@ -36,6 +36,7 @@ class TestAgents:
             agent_configs={
                 "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
                 "generate_response_config": {
+                    "calculate_groundedness": True,
                     "frequency_penalty": 0,
                     "max_new_tokens": 0,
                     "seed": 0,
@@ -55,6 +56,7 @@ class TestAgents:
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="xxx",
+            filter_prompt="filter_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
         )
@@ -98,6 +100,7 @@ class TestAgents:
             agent_configs={
                 "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
                 "generate_response_config": {
+                    "calculate_groundedness": True,
                     "frequency_penalty": 0,
                     "max_new_tokens": 0,
                     "seed": 0,
@@ -116,6 +119,7 @@ class TestAgents:
                 },
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            filter_prompt="filter_prompt",
             llm_model_id="llm_model_id",
             suggested_queries=["string"],
             system_prompt="system_prompt",
@@ -280,6 +284,7 @@ class TestAsyncAgents:
             agent_configs={
                 "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
                 "generate_response_config": {
+                    "calculate_groundedness": True,
                     "frequency_penalty": 0,
                     "max_new_tokens": 0,
                     "seed": 0,
@@ -299,6 +304,7 @@ class TestAsyncAgents:
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="xxx",
+            filter_prompt="filter_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
         )
@@ -342,6 +348,7 @@ class TestAsyncAgents:
             agent_configs={
                 "filter_and_rerank_config": {"top_k_reranked_chunks": 0},
                 "generate_response_config": {
+                    "calculate_groundedness": True,
                     "frequency_penalty": 0,
                     "max_new_tokens": 0,
                     "seed": 0,
@@ -360,6 +367,7 @@ class TestAsyncAgents:
                 },
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            filter_prompt="filter_prompt",
             llm_model_id="llm_model_id",
             suggested_queries=["string"],
             system_prompt="system_prompt",

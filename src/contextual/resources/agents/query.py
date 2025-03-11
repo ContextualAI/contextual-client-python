@@ -63,6 +63,7 @@ class QueryResource(SyncAPIResource):
         include_retrieval_content_text: bool | NotGiven = NOT_GIVEN,
         retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
+        documents_filters: query_create_params.DocumentsFilters | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -97,6 +98,41 @@ class QueryResource(SyncAPIResource):
               provided, all messages in the `messages` list prior to the latest user-sent
               query will be ignored.
 
+          documents_filters: Defines an Optional custom metadata filter, which can be a list of filters or
+              nested filters. The expected input is a nested JSON object that can represent a
+              single filter or a composite (logical) combination of filters.
+
+              Unnested Example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [{ "field": "status", "operator": "equals", "value": "active" }]
+              }
+              ```
+
+              Nested example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [
+                  { "field": "status", "operator": "equals", "value": "active" },
+                  {
+                    "operator": "OR",
+                    "filters": [
+                      {
+                        "field": "category",
+                        "operator": "containsany",
+                        "value": ["policy", "HR"]
+                      },
+                      { "field": "tags", "operator": "exists" }
+                    ]
+                  }
+                ]
+              }
+              ```
+
           llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
               base model if not specified.
 
@@ -118,6 +154,7 @@ class QueryResource(SyncAPIResource):
                 {
                     "messages": messages,
                     "conversation_id": conversation_id,
+                    "documents_filters": documents_filters,
                     "llm_model_id": llm_model_id,
                     "stream": stream,
                 },
@@ -210,10 +247,12 @@ class QueryResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
+        conversation_ids: List[str] | NotGiven = NOT_GIVEN,
         created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
         created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         offset: int | NotGiven = NOT_GIVEN,
+        user_emails: List[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -229,6 +268,8 @@ class QueryResource(SyncAPIResource):
         Args:
           agent_id: Agent ID of the agent to get metrics for
 
+          conversation_ids: Filter messages by conversation ids.
+
           created_after: Filters messages that are created after the specified timestamp.
 
           created_before: Filters messages that are created before specified timestamp.
@@ -236,6 +277,8 @@ class QueryResource(SyncAPIResource):
           limit: Limits the number of messages to return.
 
           offset: Offset for pagination.
+
+          user_emails: Filter messages by users.
 
           extra_headers: Send extra headers
 
@@ -256,10 +299,12 @@ class QueryResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "conversation_ids": conversation_ids,
                         "created_after": created_after,
                         "created_before": created_before,
                         "limit": limit,
                         "offset": offset,
+                        "user_emails": user_emails,
                     },
                     query_metrics_params.QueryMetricsParams,
                 ),
@@ -346,6 +391,7 @@ class AsyncQueryResource(AsyncAPIResource):
         include_retrieval_content_text: bool | NotGiven = NOT_GIVEN,
         retrievals_only: bool | NotGiven = NOT_GIVEN,
         conversation_id: str | NotGiven = NOT_GIVEN,
+        documents_filters: query_create_params.DocumentsFilters | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -380,6 +426,41 @@ class AsyncQueryResource(AsyncAPIResource):
               provided, all messages in the `messages` list prior to the latest user-sent
               query will be ignored.
 
+          documents_filters: Defines an Optional custom metadata filter, which can be a list of filters or
+              nested filters. The expected input is a nested JSON object that can represent a
+              single filter or a composite (logical) combination of filters.
+
+              Unnested Example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [{ "field": "status", "operator": "equals", "value": "active" }]
+              }
+              ```
+
+              Nested example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [
+                  { "field": "status", "operator": "equals", "value": "active" },
+                  {
+                    "operator": "OR",
+                    "filters": [
+                      {
+                        "field": "category",
+                        "operator": "containsany",
+                        "value": ["policy", "HR"]
+                      },
+                      { "field": "tags", "operator": "exists" }
+                    ]
+                  }
+                ]
+              }
+              ```
+
           llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
               base model if not specified.
 
@@ -401,6 +482,7 @@ class AsyncQueryResource(AsyncAPIResource):
                 {
                     "messages": messages,
                     "conversation_id": conversation_id,
+                    "documents_filters": documents_filters,
                     "llm_model_id": llm_model_id,
                     "stream": stream,
                 },
@@ -493,10 +575,12 @@ class AsyncQueryResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
+        conversation_ids: List[str] | NotGiven = NOT_GIVEN,
         created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
         created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         offset: int | NotGiven = NOT_GIVEN,
+        user_emails: List[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -512,6 +596,8 @@ class AsyncQueryResource(AsyncAPIResource):
         Args:
           agent_id: Agent ID of the agent to get metrics for
 
+          conversation_ids: Filter messages by conversation ids.
+
           created_after: Filters messages that are created after the specified timestamp.
 
           created_before: Filters messages that are created before specified timestamp.
@@ -519,6 +605,8 @@ class AsyncQueryResource(AsyncAPIResource):
           limit: Limits the number of messages to return.
 
           offset: Offset for pagination.
+
+          user_emails: Filter messages by users.
 
           extra_headers: Send extra headers
 
@@ -539,10 +627,12 @@ class AsyncQueryResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "conversation_ids": conversation_ids,
                         "created_after": created_after,
                         "created_before": created_before,
                         "limit": limit,
                         "offset": offset,
+                        "user_emails": user_emails,
                     },
                     query_metrics_params.QueryMetricsParams,
                 ),
