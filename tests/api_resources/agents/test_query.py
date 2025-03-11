@@ -48,6 +48,11 @@ class TestQuery:
             include_retrieval_content_text=True,
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            documents_filters={
+                "field": "field",
+                "operator": "equals",
+                "value": "string",
+            },
             llm_model_id="llm_model_id",
             stream=True,
         )
@@ -170,10 +175,12 @@ class TestQuery:
     def test_method_metrics_with_all_params(self, client: ContextualAI) -> None:
         query = client.agents.query.metrics(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            conversation_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
             limit=1000,
             offset=0,
+            user_emails=["string"],
         )
         assert_matches_type(QueryMetricsResponse, query, path=["response"])
 
@@ -291,6 +298,11 @@ class TestAsyncQuery:
             include_retrieval_content_text=True,
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            documents_filters={
+                "field": "field",
+                "operator": "equals",
+                "value": "string",
+            },
             llm_model_id="llm_model_id",
             stream=True,
         )
@@ -413,10 +425,12 @@ class TestAsyncQuery:
     async def test_method_metrics_with_all_params(self, async_client: AsyncContextualAI) -> None:
         query = await async_client.agents.query.metrics(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            conversation_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
             limit=1000,
             offset=0,
+            user_emails=["string"],
         )
         assert_matches_type(QueryMetricsResponse, query, path=["response"])
 

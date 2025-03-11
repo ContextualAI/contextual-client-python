@@ -28,3 +28,4 @@ from .datastore_create_params import DatastoreCreateParams as DatastoreCreatePar
 from .generate_create_response import GenerateCreateResponse as GenerateCreateResponse
 from .list_datastores_response import ListDatastoresResponse as ListDatastoresResponse
 from .create_datastore_response import CreateDatastoreResponse as CreateDatastoreResponse
+from .composite_metadata_filter_param import CompositeMetadataFilterParam as CompositeMetadataFilterParam

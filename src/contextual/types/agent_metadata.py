@@ -20,6 +20,9 @@ class AgentConfigsFilterAndRerankConfig(BaseModel):
 
 
 class AgentConfigsGenerateResponseConfig(BaseModel):
+    calculate_groundedness: Optional[bool] = None
+    """This parameter controls generation of groundedness scores."""
+
     frequency_penalty: Optional[float] = None
     """
     This parameter adjusts how the model treats repeated tokens during text
@@ -96,6 +99,12 @@ class AgentMetadata(BaseModel):
 
     description: Optional[str] = None
     """Description of the agent"""
+
+    filter_prompt: Optional[str] = None
+    """
+    The prompt to an LLM which determines whether retrieved chunks are relevant to a
+    given query and filters out irrelevant chunks. This prompt is applied per chunk.
+    """
 
     llm_model_id: Optional[str] = None
     """The model ID to use for generation.
