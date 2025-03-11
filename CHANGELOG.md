@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0 (2025-03-11)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* Add to_dataframe method to BinaryAPIReponse ([#56](https://github.com/ContextualAI/contextual-client-python/issues/56)) ([39b862e](https://github.com/ContextualAI/contextual-client-python/commit/39b862eca8d7443c2c86063123d8dfdc484a3c53))
+* **api:** update via SDK Studio ([#63](https://github.com/ContextualAI/contextual-client-python/issues/63)) ([59bb1ab](https://github.com/ContextualAI/contextual-client-python/commit/59bb1ab3d790ee7e3d73b2b6a85e67a905d0ca22))
+
+
+### Chores
+
+* **internal:** remove unused http client options forwarding ([#61](https://github.com/ContextualAI/contextual-client-python/issues/61)) ([40d345d](https://github.com/ContextualAI/contextual-client-python/commit/40d345dd52af82e31e8fa34e5b0b1eebad006684))
+
 ## 0.4.0 (2025-03-03)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.3.0...v0.4.0)

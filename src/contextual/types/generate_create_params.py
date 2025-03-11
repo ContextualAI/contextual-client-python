@@ -42,14 +42,14 @@ class GenerateCreateParams(TypedDict, total=False):
     temperature: float
     """The sampling temperature, which affects the randomness in the response.
 
-    Note that higher temperature values can reduce groundedness
+    Note that higher temperature values can reduce groundedness.
     """
 
     top_p: float
     """
     A parameter for nucleus sampling, an alternative to temperature which also
     affects the randomness of the response. Note that higher top_p values can reduce
-    groundedness
+    groundedness.
     """
 
 

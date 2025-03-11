@@ -5,7 +5,7 @@ from typing_extensions import Literal
 
 from ..._models import BaseModel
 
-__all__ = ["QueryResponse", "RetrievalContent", "Attribution", "Message"]
+__all__ = ["QueryResponse", "RetrievalContent", "Attribution", "GroundednessScore", "Message"]
 
 
 class RetrievalContent(BaseModel):
@@ -18,7 +18,7 @@ class RetrievalContent(BaseModel):
     doc_name: str
     """Name of the document"""
 
-    format: Literal["pdf", "html", "htm"]
+    format: Literal["pdf", "html", "htm", "mhtml", "doc", "docx", "ppt", "pptx"]
     """Format of the content, such as `pdf` or `html`"""
 
     type: str
@@ -54,6 +54,17 @@ class Attribution(BaseModel):
     """Start index of the attributed text in the generated message"""
 
 
+class GroundednessScore(BaseModel):
+    end_idx: int
+    """End index of the span in the generated message"""
+
+    score: int
+    """Groundedness score for the span"""
+
+    start_idx: int
+    """Start index of the span in the generated message"""
+
+
 class Message(BaseModel):
     content: str
     """Content of the message"""
@@ -75,6 +86,9 @@ class QueryResponse(BaseModel):
 
     attributions: Optional[List[Attribution]] = None
     """Attributions for the response"""
+
+    groundedness_scores: Optional[List[GroundednessScore]] = None
+    """Groundedness scores for the response"""
 
     message: Optional[Message] = None
     """Response to the query request"""

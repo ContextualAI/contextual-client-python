@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Iterable
-from typing_extensions import Literal, Required, TypedDict
+from typing import List, Union, Iterable
+from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
-__all__ = ["QueryCreateParams", "Message"]
+__all__ = ["QueryCreateParams", "Message", "DocumentsFilters", "DocumentsFiltersBaseMetadataFilter"]
 
 
 class QueryCreateParams(TypedDict, total=False):
@@ -39,6 +39,44 @@ class QueryCreateParams(TypedDict, total=False):
     query will be ignored.
     """
 
+    documents_filters: DocumentsFilters
+    """
+    Defines an Optional custom metadata filter, which can be a list of filters or
+    nested filters. The expected input is a nested JSON object that can represent a
+    single filter or a composite (logical) combination of filters.
+
+    Unnested Example:
+
+    ```json
+    {
+      "operator": "AND",
+      "filters": [{ "field": "status", "operator": "equals", "value": "active" }]
+    }
+    ```
+
+    Nested example:
+
+    ```json
+    {
+      "operator": "AND",
+      "filters": [
+        { "field": "status", "operator": "equals", "value": "active" },
+        {
+          "operator": "OR",
+          "filters": [
+            {
+              "field": "category",
+              "operator": "containsany",
+              "value": ["policy", "HR"]
+            },
+            { "field": "tags", "operator": "exists" }
+          ]
+        }
+      ]
+    }
+    ```
+    """
+
     llm_model_id: str
     """Model ID of the specific fine-tuned or aligned LLM model to use.
 
@@ -55,3 +93,24 @@ class Message(TypedDict, total=False):
 
     role: Required[Literal["user", "system", "assistant", "knowledge"]]
     """Role of the sender"""
+
+
+class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
+    field: Required[str]
+    """Field name to search for in the metadata"""
+
+    operator: Required[
+        Literal["equals", "containsany", "exists", "startswith", "gt", "gte", "lt", "lte", "notequals", "between"]
+    ]
+    """Operator to be used for the filter."""
+
+    value: Union[str, float, bool, List[Union[str, float, bool]], None]
+    """The value to be searched for in the field.
+
+    In case of exists operator, it is not needed.
+    """
+
+
+DocumentsFilters: TypeAlias = Union[DocumentsFiltersBaseMetadataFilter, "CompositeMetadataFilterParam"]
+
+from ..composite_metadata_filter_param import CompositeMetadataFilterParam

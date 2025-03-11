@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Union
+from typing import List, Union
 from datetime import datetime
 from typing_extensions import Annotated, TypedDict
 
@@ -12,6 +12,9 @@ __all__ = ["QueryMetricsParams"]
 
 
 class QueryMetricsParams(TypedDict, total=False):
+    conversation_ids: List[str]
+    """Filter messages by conversation ids."""
+
     created_after: Annotated[Union[str, datetime], PropertyInfo(format="iso8601")]
     """Filters messages that are created after the specified timestamp."""
 
@@ -23,3 +26,6 @@ class QueryMetricsParams(TypedDict, total=False):
 
     offset: int
     """Offset for pagination."""
+
+    user_emails: List[str]
+    """Filter messages by users."""
