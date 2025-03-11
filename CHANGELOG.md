@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1 (2025-03-11)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.5.0...v0.5.1)
+
+### Features
+
+* **api:** update via SDK Studio ([#65](https://github.com/ContextualAI/contextual-client-python/issues/65)) ([b890fa1](https://github.com/ContextualAI/contextual-client-python/commit/b890fa187655a83f4d5251916ba887e91dc0193e))
+
 ## 0.5.0 (2025-03-11)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.4.0...v0.5.0)
