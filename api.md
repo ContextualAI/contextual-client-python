@@ -1,11 +1,3 @@
-# ContextualAI
-
-Types:
-
-```python
-from contextual.types import CompositeMetadataFilter
-```
-
 # Datastores
 
 Types:
@@ -33,6 +25,7 @@ Types:
 
 ```python
 from contextual.types.datastores import (
+    CompositeMetadataFilter,
     DocumentMetadata,
     IngestionResponse,
     ListDocumentsResponse,
