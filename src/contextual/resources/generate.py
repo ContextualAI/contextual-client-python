@@ -67,10 +67,14 @@ class GenerateResource(SyncAPIResource):
         """
         Generate a response using Contextual's Grounded Language Model (GLM), an LLM
         engineered specifically to prioritize faithfulness to in-context retrievals over
-        parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation.
+        parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation
+        and agentic use cases.
 
-        The total request cannot exceed 32,000 tokens. Email glm-feedback@contextual.ai
-        with any feedback or questions.
+        The total request cannot exceed 32,000 tokens. See more details and code
+        examples in our
+        [our blog post](https://contextual.ai/blog/introducing-grounded-language-model/).
+        Email [glm-feedback@contextual.ai](mailto:glm-feedback@contextual.ai) with any
+        feedback or questions.
 
         Args:
           knowledge: The knowledge sources the model can use when generating a response.
@@ -92,11 +96,11 @@ class GenerateResource(SyncAPIResource):
               not guarantee that the model follows these instructions exactly.
 
           temperature: The sampling temperature, which affects the randomness in the response. Note
-              that higher temperature values can reduce groundedness
+              that higher temperature values can reduce groundedness.
 
           top_p: A parameter for nucleus sampling, an alternative to temperature which also
               affects the randomness of the response. Note that higher top_p values can reduce
-              groundedness
+              groundedness.
 
           extra_headers: Send extra headers
 
@@ -169,10 +173,14 @@ class AsyncGenerateResource(AsyncAPIResource):
         """
         Generate a response using Contextual's Grounded Language Model (GLM), an LLM
         engineered specifically to prioritize faithfulness to in-context retrievals over
-        parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation.
+        parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation
+        and agentic use cases.
 
-        The total request cannot exceed 32,000 tokens. Email glm-feedback@contextual.ai
-        with any feedback or questions.
+        The total request cannot exceed 32,000 tokens. See more details and code
+        examples in our
+        [our blog post](https://contextual.ai/blog/introducing-grounded-language-model/).
+        Email [glm-feedback@contextual.ai](mailto:glm-feedback@contextual.ai) with any
+        feedback or questions.
 
         Args:
           knowledge: The knowledge sources the model can use when generating a response.
@@ -194,11 +202,11 @@ class AsyncGenerateResource(AsyncAPIResource):
               not guarantee that the model follows these instructions exactly.
 
           temperature: The sampling temperature, which affects the randomness in the response. Note
-              that higher temperature values can reduce groundedness
+              that higher temperature values can reduce groundedness.
 
           top_p: A parameter for nucleus sampling, an alternative to temperature which also
               affects the randomness of the response. Note that higher top_p values can reduce
-              groundedness
+              groundedness.
 
           extra_headers: Send extra headers
 

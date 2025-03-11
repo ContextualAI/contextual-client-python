@@ -22,6 +22,12 @@ class AgentUpdateParams(TypedDict, total=False):
     datastore_ids: List[str]
     """IDs of the datastore to associate with the agent."""
 
+    filter_prompt: str
+    """
+    The prompt to an LLM which determines whether retrieved chunks are relevant to a
+    given query and filters out irrelevant chunks.
+    """
+
     llm_model_id: str
     """The model ID to use for generation.
 
@@ -52,6 +58,9 @@ class AgentConfigsFilterAndRerankConfig(TypedDict, total=False):
 
 
 class AgentConfigsGenerateResponseConfig(TypedDict, total=False):
+    calculate_groundedness: bool
+    """This parameter controls generation of groundedness scores."""
+
     frequency_penalty: float
     """
     This parameter adjusts how the model treats repeated tokens during text

@@ -1,3 +1,11 @@
+# ContextualAI
+
+Types:
+
+```python
+from contextual.types import CompositeMetadataFilter
+```
+
 # Datastores
 
 Types:

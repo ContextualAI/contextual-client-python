@@ -104,6 +104,7 @@ class AgentsResource(SyncAPIResource):
         agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
+        filter_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -126,6 +127,11 @@ class AgentsResource(SyncAPIResource):
         creates an empty `Datastore` and configures the `Agent` to use the newly created
         `Datastore`.
 
+        > Note that self-serve users are currently required to create agents through our
+        > UI. Otherwise, they will receive the following message: "This endpoint is
+        > disabled as you need to go through checkout. Please use the UI to make this
+        > request."
+
         Args:
           name: Name of the agent
 
@@ -134,6 +140,9 @@ class AgentsResource(SyncAPIResource):
           datastore_ids: The IDs of the datastore to associate with this agent.
 
           description: Description of the agent
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
@@ -159,6 +168,7 @@ class AgentsResource(SyncAPIResource):
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "description": description,
+                    "filter_prompt": filter_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -176,6 +186,7 @@ class AgentsResource(SyncAPIResource):
         *,
         agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
+        filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
@@ -197,6 +208,9 @@ class AgentsResource(SyncAPIResource):
           agent_configs: The following advanced parameters are experimental and subject to change.
 
           datastore_ids: IDs of the datastore to associate with the agent.
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
 
           llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
               on which they were tuned. If no model is specified, the default model is used.
@@ -226,6 +240,7 @@ class AgentsResource(SyncAPIResource):
                 {
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
+                    "filter_prompt": filter_prompt,
                     "llm_model_id": llm_model_id,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -405,6 +420,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
+        filter_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -427,6 +443,11 @@ class AsyncAgentsResource(AsyncAPIResource):
         creates an empty `Datastore` and configures the `Agent` to use the newly created
         `Datastore`.
 
+        > Note that self-serve users are currently required to create agents through our
+        > UI. Otherwise, they will receive the following message: "This endpoint is
+        > disabled as you need to go through checkout. Please use the UI to make this
+        > request."
+
         Args:
           name: Name of the agent
 
@@ -435,6 +456,9 @@ class AsyncAgentsResource(AsyncAPIResource):
           datastore_ids: The IDs of the datastore to associate with this agent.
 
           description: Description of the agent
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
@@ -460,6 +484,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "description": description,
+                    "filter_prompt": filter_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -477,6 +502,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         *,
         agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
+        filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
@@ -498,6 +524,9 @@ class AsyncAgentsResource(AsyncAPIResource):
           agent_configs: The following advanced parameters are experimental and subject to change.
 
           datastore_ids: IDs of the datastore to associate with the agent.
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
 
           llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
               on which they were tuned. If no model is specified, the default model is used.
@@ -527,6 +556,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                 {
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
+                    "filter_prompt": filter_prompt,
                     "llm_model_id": llm_model_id,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,

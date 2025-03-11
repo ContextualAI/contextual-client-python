@@ -190,18 +190,34 @@ class DocumentsResource(SyncAPIResource):
         This `id` can also be used to delete the document through the
         `DELETE /datastores/{datastore_id}/documents/{document_id}` API.
 
-        `file` must be a PDF or HTML file.
+        `file` must be a PDF, HTML, DOC(X) or PPT(X) file. The filename must end with
+        one of the following extensions: `.pdf`, `.html`, `.htm`, `.mhtml`, `.doc`,
+        `.docx`, `.ppt`, `.pptx`.
 
         Args:
           datastore_id: Datastore ID of the datastore in which to ingest the document
 
-          file: File to ingest
+          file: File to ingest.
 
-          metadata: Metadata in `JSON` format. Metadata should be passed in a nested dictionary
-              structure of `str` metadata type to `Dict` mapping `str` metadata keys to `str`,
-              `bool`, `float` or `int` values. Currently, `custom_metadata` is the only
-              supported metadata type.Example `metadata` dictionary: {"metadata":
-              {"custom_metadata": {"customKey1": "value3", "\\__filterKey": "filterValue3"}}
+          metadata: Metadata in `JSON` format. Metadata should be passed as a nested dictionary
+              structure where:
+
+              - The **metadata type** `custom_metadata` is mapped to a dictionary. - The
+                **dictionary keys** represent metadata attributes. - The **values** can be of
+                type `str`, `bool`, `float`, or `int`.
+
+              **Example Metadata JSON:**
+
+              ```json
+              {
+                "metadata": {
+                  "custom_metadata": {
+                    "customKey1": "value3",
+                    "_filterKey": "filterValue3"
+                  }
+                }
+              }
+              ```
 
           extra_headers: Send extra headers
 
@@ -290,7 +306,7 @@ class DocumentsResource(SyncAPIResource):
     ) -> DocumentMetadata:
         """
         Post details of a given document that will enrich the chunk and be added to the
-        context or just for filtering. If JUst for filtering, start with "\\__" in the
+        context or just for filtering. If Just for filtering, start with "\\__" in the
         key.
 
         Args:
@@ -480,18 +496,34 @@ class AsyncDocumentsResource(AsyncAPIResource):
         This `id` can also be used to delete the document through the
         `DELETE /datastores/{datastore_id}/documents/{document_id}` API.
 
-        `file` must be a PDF or HTML file.
+        `file` must be a PDF, HTML, DOC(X) or PPT(X) file. The filename must end with
+        one of the following extensions: `.pdf`, `.html`, `.htm`, `.mhtml`, `.doc`,
+        `.docx`, `.ppt`, `.pptx`.
 
         Args:
           datastore_id: Datastore ID of the datastore in which to ingest the document
 
-          file: File to ingest
+          file: File to ingest.
 
-          metadata: Metadata in `JSON` format. Metadata should be passed in a nested dictionary
-              structure of `str` metadata type to `Dict` mapping `str` metadata keys to `str`,
-              `bool`, `float` or `int` values. Currently, `custom_metadata` is the only
-              supported metadata type.Example `metadata` dictionary: {"metadata":
-              {"custom_metadata": {"customKey1": "value3", "\\__filterKey": "filterValue3"}}
+          metadata: Metadata in `JSON` format. Metadata should be passed as a nested dictionary
+              structure where:
+
+              - The **metadata type** `custom_metadata` is mapped to a dictionary. - The
+                **dictionary keys** represent metadata attributes. - The **values** can be of
+                type `str`, `bool`, `float`, or `int`.
+
+              **Example Metadata JSON:**
+
+              ```json
+              {
+                "metadata": {
+                  "custom_metadata": {
+                    "customKey1": "value3",
+                    "_filterKey": "filterValue3"
+                  }
+                }
+              }
+              ```
 
           extra_headers: Send extra headers
 
@@ -580,7 +612,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
     ) -> DocumentMetadata:
         """
         Post details of a given document that will enrich the chunk and be added to the
-        context or just for filtering. If JUst for filtering, start with "\\__" in the
+        context or just for filtering. If Just for filtering, start with "\\__" in the
         key.
 
         Args:
