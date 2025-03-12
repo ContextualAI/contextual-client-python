@@ -1,6 +1,6 @@
 [project]
 name = "contextual-client"
-version = "0.4.0"
+version = "0.5.1"
 description = "The official Python library for the Contextual AI API"
 dynamic = ["readme"]
 license = "Apache-2.0"
@@ -14,8 +14,8 @@ dependencies = [
     "anyio>=3.5.0, <5",
     "distro>=1.7.0, <2",
     "sniffio",
-    "pandas==2.2.3",
-    "numpy==2.0.2",
+    "pandas>=1.0.0, <3",
+    "numpy>=1.24.0, <2"
 ]
 requires-python = ">= 3.8"
 classifiers = [
@@ -57,8 +57,8 @@ dev-dependencies = [
     "importlib-metadata>=6.7.0",
     "rich>=13.7.1",
     "nest_asyncio==1.6.0",
-    "pandas==2.2.3",
-    "numpy==2.0.2",
+    "pandas>=1.0.0, <3",  # Ensures pandas 2.x series, which has stable API and good performance
+    "numpy>=1.24.0, <2"   # Numpy 1.24+ provides good compatibility with modern Python versions
 ]
 
 [tool.rye.scripts]
