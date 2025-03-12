@@ -56,9 +56,14 @@ nest-asyncio==1.6.0
 nodeenv==1.8.0
     # via pyright
 nox==2023.4.22
+numpy==1.26.4
+    # via contextual-client
+    # via pandas
 packaging==23.2
     # via nox
     # via pytest
+pandas==2.2.3
+    # via contextual-client
 platformdirs==3.11.0
     # via virtualenv
 pluggy==1.5.0
@@ -74,9 +79,11 @@ pytest==8.3.3
     # via pytest-asyncio
 pytest-asyncio==0.24.0
 python-dateutil==2.8.2
+    # via pandas
     # via time-machine
 pytz==2023.3.post1
     # via dirty-equals
+    # via pandas
 respx==0.22.0
 rich==13.7.1
 ruff==0.9.4
@@ -98,11 +105,9 @@ typing-extensions==4.12.2
     # via pydantic
     # via pydantic-core
     # via pyright
+tzdata==2025.1
+    # via pandas
 virtualenv==20.24.5
     # via nox
 zipp==3.17.0
     # via importlib-metadata
-pandas==2.2.3
-    # via contextual-client
-numpy==2.0.2
-    # via contextual-client
