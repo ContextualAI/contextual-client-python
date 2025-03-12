@@ -43,7 +43,3 @@ typing-extensions==4.12.2
     # via contextual-client
     # via pydantic
     # via pydantic-core
-pandas==2.2.3
-    # via contextual-client
-numpy==2.0.2
-    # via contextual-client
