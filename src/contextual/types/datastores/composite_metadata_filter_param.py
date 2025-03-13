@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union, Iterable, Optional
-from datetime import datetime
-from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict, TypeAliasType
+from typing import TYPE_CHECKING, List, Union, Iterable, Optional
+from typing_extensions import Literal, Required, TypeAlias, TypedDict, TypeAliasType
 
-from ..._utils import PropertyInfo
 from ..._compat import PYDANTIC_V2
 
 __all__ = ["CompositeMetadataFilterParam", "Filter", "FilterBaseMetadataFilter"]
@@ -21,20 +19,7 @@ class FilterBaseMetadataFilter(TypedDict, total=False):
     ]
     """Operator to be used for the filter."""
 
-    value: Annotated[
-        Union[
-            str,
-            Union[str, datetime],
-            float,
-            bool,
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-        ],
-        PropertyInfo(format="iso8601"),
-    ]
+    value: Union[str, float, bool, List[Union[str, float, bool]], None]
     """The value to be searched for in the field.
 
     In case of exists operator, it is not needed.
