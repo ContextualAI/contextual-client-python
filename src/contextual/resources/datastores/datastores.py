@@ -83,11 +83,6 @@ class DatastoresResource(SyncAPIResource):
         from multiple sources of information. This linkage of `Datastore` to `Agent` is
         done through the `Create Agent` or `Edit Agent` APIs.
 
-        > Note that self-serve users are currently required to create datastores through
-        > our UI. Otherwise, they will receive the following message: "This endpoint is
-        > disabled as you need to go through checkout. Please use the UI to make this
-        > request."
-
         Args:
           name: Name of the datastore
 
@@ -289,11 +284,6 @@ class AsyncDatastoresResource(AsyncAPIResource):
         relevant data. This flexible many-to-many relationship allows `Agents` to draw
         from multiple sources of information. This linkage of `Datastore` to `Agent` is
         done through the `Create Agent` or `Edit Agent` APIs.
-
-        > Note that self-serve users are currently required to create datastores through
-        > our UI. Otherwise, they will receive the following message: "This endpoint is
-        > disabled as you need to go through checkout. Please use the UI to make this
-        > request."
 
         Args:
           name: Name of the datastore

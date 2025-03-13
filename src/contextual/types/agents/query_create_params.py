@@ -2,11 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Union, Iterable
-from datetime import datetime
-from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
-
-from ..._utils import PropertyInfo
+from typing import List, Union, Iterable
+from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
 __all__ = ["QueryCreateParams", "Message", "DocumentsFilters", "DocumentsFiltersBaseMetadataFilter"]
 
@@ -107,20 +104,7 @@ class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
     ]
     """Operator to be used for the filter."""
 
-    value: Annotated[
-        Union[
-            str,
-            Union[str, datetime],
-            float,
-            bool,
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-        ],
-        PropertyInfo(format="iso8601"),
-    ]
+    value: Union[str, float, bool, List[Union[str, float, bool]], None]
     """The value to be searched for in the field.
 
     In case of exists operator, it is not needed.
