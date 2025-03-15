@@ -1,6 +1,6 @@
 [project]
 name = "contextual-client"
-version = "0.5.1"
+version = "0.6.0"
 description = "The official Python library for the Contextual AI API"
 dynamic = ["readme"]
 license = "Apache-2.0"
@@ -36,7 +36,6 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/ContextualAI/contextual-client-python"
 Repository = "https://github.com/ContextualAI/contextual-client-python"
-
 
 
 [tool.rye]
@@ -151,7 +150,6 @@ reportImplicitOverride = true
 
 reportImportCycles = false
 reportPrivateUsage = false
-
 
 [tool.ruff]
 line-length = 120
