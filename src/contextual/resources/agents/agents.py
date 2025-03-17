@@ -127,11 +127,6 @@ class AgentsResource(SyncAPIResource):
         creates an empty `Datastore` and configures the `Agent` to use the newly created
         `Datastore`.
 
-        > Note that self-serve users are currently required to create agents through our
-        > UI. Otherwise, they will receive the following message: "This endpoint is
-        > disabled as you need to go through checkout. Please use the UI to make this
-        > request."
-
         Args:
           name: Name of the agent
 
@@ -442,11 +437,6 @@ class AsyncAgentsResource(AsyncAPIResource):
         If no `datastore_id` is provided in the configuration, this API automatically
         creates an empty `Datastore` and configures the `Agent` to use the newly created
         `Datastore`.
-
-        > Note that self-serve users are currently required to create agents through our
-        > UI. Otherwise, they will receive the following message: "This endpoint is
-        > disabled as you need to go through checkout. Please use the UI to make this
-        > request."
 
         Args:
           name: Name of the agent
