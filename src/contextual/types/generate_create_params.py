@@ -19,7 +19,10 @@ class GenerateCreateParams(TypedDict, total=False):
     """
 
     model: Required[str]
-    """The version of the Contextual's GLM to use. Currently, we just have "v1"."""
+    """The version of the Contextual's GLM to use.
+
+    Currently, we just have "ctxl-rerank-en-v1-instruct".
+    """
 
     avoid_commentary: bool
     """
