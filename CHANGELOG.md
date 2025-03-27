@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.6.0 (2025-03-27)
+
+Full Changelog: [v0.5.1...v0.6.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.5.1...v0.6.0)
+
+### Features
+
+* **api:** update via SDK Studio ([#68](https://github.com/ContextualAI/contextual-client-python/issues/68)) ([7b8f948](https://github.com/ContextualAI/contextual-client-python/commit/7b8f9488ff9ba324210a23694065830a25985edc))
+* **api:** update via SDK Studio ([#70](https://github.com/ContextualAI/contextual-client-python/issues/70)) ([25477c7](https://github.com/ContextualAI/contextual-client-python/commit/25477c7d93934f2b5b72f5b24857f023c17349cf))
+* **api:** update via SDK Studio ([#73](https://github.com/ContextualAI/contextual-client-python/issues/73)) ([e07435e](https://github.com/ContextualAI/contextual-client-python/commit/e07435e7ab08a53cd13f4f8d91f2baca1ec2c28d))
+
+
+### Bug Fixes
+
+* **ci:** ensure pip is always available ([#79](https://github.com/ContextualAI/contextual-client-python/issues/79)) ([ec1e2ce](https://github.com/ContextualAI/contextual-client-python/commit/ec1e2ce6de25021983b0a48b90069f24e3ee8def))
+* **ci:** remove publishing patch ([#80](https://github.com/ContextualAI/contextual-client-python/issues/80)) ([9e32578](https://github.com/ContextualAI/contextual-client-python/commit/9e32578922eb4dbad057231999add02c8aca3eb1))
+* **types:** handle more discriminated union shapes ([#78](https://github.com/ContextualAI/contextual-client-python/issues/78)) ([473adf4](https://github.com/ContextualAI/contextual-client-python/commit/473adf4d731241a2c34271d39a37d0ac2bc99d4e))
+
+
+### Chores
+
+* fix typos ([#81](https://github.com/ContextualAI/contextual-client-python/issues/81)) ([9ba43be](https://github.com/ContextualAI/contextual-client-python/commit/9ba43bed2b39d60d599b90e624a2a40e57584749))
+* **internal:** bump rye to 0.44.0 ([#77](https://github.com/ContextualAI/contextual-client-python/issues/77)) ([520ba3a](https://github.com/ContextualAI/contextual-client-python/commit/520ba3a8e069a19543238009a241579ede90c2fe))
+* **internal:** codegen related update ([#74](https://github.com/ContextualAI/contextual-client-python/issues/74)) ([6e8bc46](https://github.com/ContextualAI/contextual-client-python/commit/6e8bc46fab20d9babe7b047298b55b0565ba4a8b))
+* **internal:** remove extra empty newlines ([#75](https://github.com/ContextualAI/contextual-client-python/issues/75)) ([8117197](https://github.com/ContextualAI/contextual-client-python/commit/81171975661f4a03f22820a36773bdff14b79e20))
+
 ## 0.5.1 (2025-03-11)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.5.0...v0.5.1)
