@@ -36,6 +36,12 @@ class AgentUpdateParams(TypedDict, total=False):
     tuned model to the default model.
     """
 
+    no_retrieval_system_prompt: str
+    """
+    Instructions on how the agent should respond when there are no relevant
+    retrievals that can be used to answer a query.
+    """
+
     suggested_queries: List[str]
     """
     These queries will show up as suggestions in the Contextual UI when users load
@@ -53,11 +59,39 @@ class AgentUpdateParams(TypedDict, total=False):
 
 
 class AgentConfigsFilterAndRerankConfig(TypedDict, total=False):
+    rerank_instructions: str
+    """Instructions that the reranker references when ranking retrievals.
+
+    Note that we do not guarantee that the reranker will follow these instructions
+    exactly. Examples: "Prioritize internal sales documents over market analysis
+    reports. More recent documents should be weighted higher. Enterprise portal
+    content supersedes distributor communications." and "Emphasize forecasts from
+    top-tier investment banks. Recent analysis should take precedence. Disregard
+    aggregator sites and favor detailed research notes over news summaries."
+    """
+
+    reranker_score_filter_threshold: float
+    """
+    If the reranker relevance score associated with a chunk is below this threshold,
+    then the chunk will be filtered out and not used for generation. Scores are
+    between 0 and 1, with scores closer to 1 being more relevant. Set the value to 0
+    to disable the reranker score filtering.
+    """
+
     top_k_reranked_chunks: int
     """The number of highest ranked chunks after reranking to be used"""
 
 
 class AgentConfigsGenerateResponseConfig(TypedDict, total=False):
+    avoid_commentary: bool
+    """
+    Flag to indicate whether the model should avoid providing additional commentary
+    in responses. Commentary is conversational in nature and does not contain
+    verifiable claims; therefore, commentary is not strictly grounded in available
+    context. However, commentary may provide useful context which improves the
+    helpfulness of responses.
+    """
+
     calculate_groundedness: bool
     """This parameter controls generation of groundedness scores."""
 
@@ -99,13 +133,25 @@ class AgentConfigsGlobalConfig(TypedDict, total=False):
     enable_rerank: bool
     """Enables reranking of retrieved chunks"""
 
+    should_check_retrieval_need: bool
+    """Enables checking if retrieval is needed for the query.
+
+    This feature is currently experimental and will be improved.
+    """
+
 
 class AgentConfigsRetrievalConfig(TypedDict, total=False):
     lexical_alpha: float
-    """The weight of lexical search during retrieval"""
+    """The weight of lexical search during retrieval.
+
+    Must sum to 1 with semantic_alpha.
+    """
 
     semantic_alpha: float
-    """The weight of semantic search during retrieval"""
+    """The weight of semantic search during retrieval.
+
+    Must sum to 1 with lexical_alpha.
+    """
 
     top_k_retrieved_chunks: int
     """The maximum number of retrieved chunks from the datastore."""

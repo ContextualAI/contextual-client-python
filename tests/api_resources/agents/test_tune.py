@@ -28,6 +28,15 @@ class TestTune:
     def test_method_create_with_all_params(self, client: ContextualAI) -> None:
         tune = client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            hyperparams_learning_rate=2,
+            hyperparams_lora_alpha=8,
+            hyperparams_lora_dropout=0,
+            hyperparams_lora_rank=8,
+            hyperparams_num_epochs=1,
+            hyperparams_warmup_ratio=0,
+            metadata_file=b"raw file contents",
+            sdp_only=True,
+            synth_data=True,
             test_dataset_name="test_dataset_name",
             test_file=b"raw file contents",
             train_dataset_name="train_dataset_name",
@@ -81,6 +90,15 @@ class TestAsyncTune:
     async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
         tune = await async_client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            hyperparams_learning_rate=2,
+            hyperparams_lora_alpha=8,
+            hyperparams_lora_dropout=0,
+            hyperparams_lora_rank=8,
+            hyperparams_num_epochs=1,
+            hyperparams_warmup_ratio=0,
+            metadata_file=b"raw file contents",
+            sdp_only=True,
+            synth_data=True,
             test_dataset_name="test_dataset_name",
             test_file=b"raw file contents",
             train_dataset_name="train_dataset_name",

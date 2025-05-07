@@ -33,6 +33,8 @@ class TestEvaluate:
             evalset_file=b"raw file contents",
             evalset_name="evalset_name",
             llm_model_id="llm_model_id",
+            notes="notes",
+            override_configuration="override_configuration",
         )
         assert_matches_type(CreateEvaluationResponse, evaluate, path=["response"])
 
@@ -90,6 +92,8 @@ class TestAsyncEvaluate:
             evalset_file=b"raw file contents",
             evalset_name="evalset_name",
             llm_model_id="llm_model_id",
+            notes="notes",
+            override_configuration="override_configuration",
         )
         assert_matches_type(CreateEvaluationResponse, evaluate, path=["response"])
 

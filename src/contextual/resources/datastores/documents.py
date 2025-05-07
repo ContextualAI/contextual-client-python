@@ -52,7 +52,21 @@ class DocumentsResource(SyncAPIResource):
         datastore_id: str,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
-        ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
+        ingestion_job_status: List[
+            Literal[
+                "pending",
+                "processing",
+                "retrying",
+                "completed",
+                "failed",
+                "cancelled",
+                "failed_to_provision",
+                "generating_data",
+                "training_in_progress",
+                "failed_to_generate_data",
+                "provisioning",
+            ]
+        ]
         | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
@@ -204,13 +218,11 @@ class DocumentsResource(SyncAPIResource):
               **Example Metadata JSON:**
 
               ```json
-              {
-                "metadata": {
+              metadata = {
                   "custom_metadata": {
-                    "customKey1": "value3",
-                    "_filterKey": "filterValue3"
-                  }
-                }
+                      "field1": "value1",
+                      "field2": "value2"
+                   }
               }
               ```
 
@@ -358,7 +370,21 @@ class AsyncDocumentsResource(AsyncAPIResource):
         datastore_id: str,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
-        ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
+        ingestion_job_status: List[
+            Literal[
+                "pending",
+                "processing",
+                "retrying",
+                "completed",
+                "failed",
+                "cancelled",
+                "failed_to_provision",
+                "generating_data",
+                "training_in_progress",
+                "failed_to_generate_data",
+                "provisioning",
+            ]
+        ]
         | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
@@ -510,13 +536,11 @@ class AsyncDocumentsResource(AsyncAPIResource):
               **Example Metadata JSON:**
 
               ```json
-              {
-                "metadata": {
+              metadata = {
                   "custom_metadata": {
-                    "customKey1": "value3",
-                    "_filterKey": "filterValue3"
-                  }
-                }
+                      "field1": "value1",
+                      "field2": "value2"
+                   }
               }
               ```
 
