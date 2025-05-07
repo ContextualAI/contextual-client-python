@@ -31,7 +31,8 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import users, agents, lmunit, rerank, generate, datastores
+    from .resources import parse, users, agents, lmunit, rerank, generate, datastores
+    from .resources.parse import ParseResource, AsyncParseResource
     from .resources.users import UsersResource, AsyncUsersResource
     from .resources.lmunit import LMUnitResource, AsyncLMUnitResource
     from .resources.rerank import RerankResource, AsyncRerankResource
@@ -141,6 +142,12 @@ class ContextualAI(SyncAPIClient):
         from .resources.generate import GenerateResource
 
         return GenerateResource(self)
+
+    @cached_property
+    def parse(self) -> ParseResource:
+        from .resources.parse import ParseResource
+
+        return ParseResource(self)
 
     @cached_property
     def with_raw_response(self) -> ContextualAIWithRawResponse:
@@ -347,6 +354,12 @@ class AsyncContextualAI(AsyncAPIClient):
         return AsyncGenerateResource(self)
 
     @cached_property
+    def parse(self) -> AsyncParseResource:
+        from .resources.parse import AsyncParseResource
+
+        return AsyncParseResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncContextualAIWithRawResponse:
         return AsyncContextualAIWithRawResponse(self)
 
@@ -501,6 +514,12 @@ class ContextualAIWithRawResponse:
 
         return GenerateResourceWithRawResponse(self._client.generate)
 
+    @cached_property
+    def parse(self) -> parse.ParseResourceWithRawResponse:
+        from .resources.parse import ParseResourceWithRawResponse
+
+        return ParseResourceWithRawResponse(self._client.parse)
+
 
 class AsyncContextualAIWithRawResponse:
     _client: AsyncContextualAI
@@ -543,6 +562,12 @@ class AsyncContextualAIWithRawResponse:
         from .resources.generate import AsyncGenerateResourceWithRawResponse
 
         return AsyncGenerateResourceWithRawResponse(self._client.generate)
+
+    @cached_property
+    def parse(self) -> parse.AsyncParseResourceWithRawResponse:
+        from .resources.parse import AsyncParseResourceWithRawResponse
+
+        return AsyncParseResourceWithRawResponse(self._client.parse)
 
 
 class ContextualAIWithStreamedResponse:
@@ -587,6 +612,12 @@ class ContextualAIWithStreamedResponse:
 
         return GenerateResourceWithStreamingResponse(self._client.generate)
 
+    @cached_property
+    def parse(self) -> parse.ParseResourceWithStreamingResponse:
+        from .resources.parse import ParseResourceWithStreamingResponse
+
+        return ParseResourceWithStreamingResponse(self._client.parse)
+
 
 class AsyncContextualAIWithStreamedResponse:
     _client: AsyncContextualAI
@@ -629,6 +660,12 @@ class AsyncContextualAIWithStreamedResponse:
         from .resources.generate import AsyncGenerateResourceWithStreamingResponse
 
         return AsyncGenerateResourceWithStreamingResponse(self._client.generate)
+
+    @cached_property
+    def parse(self) -> parse.AsyncParseResourceWithStreamingResponse:
+        from .resources.parse import AsyncParseResourceWithStreamingResponse
+
+        return AsyncParseResourceWithStreamingResponse(self._client.parse)
 
 
 Client = ContextualAI

@@ -33,14 +33,7 @@ class TestUsers:
         user = client.users.update(
             email="email",
             is_tenant_admin=True,
-            per_agent_roles=[
-                {
-                    "agent_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-                    "grant": True,
-                    "roles": ["AGENT_USER"],
-                }
-            ],
-            roles=["AGENT_USER"],
+            roles=["VISITOR"],
         )
         assert_matches_type(object, user, path=["response"])
 
@@ -184,14 +177,7 @@ class TestAsyncUsers:
         user = await async_client.users.update(
             email="email",
             is_tenant_admin=True,
-            per_agent_roles=[
-                {
-                    "agent_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-                    "grant": True,
-                    "roles": ["AGENT_USER"],
-                }
-            ],
-            roles=["AGENT_USER"],
+            roles=["VISITOR"],
         )
         assert_matches_type(object, user, path=["response"])
 

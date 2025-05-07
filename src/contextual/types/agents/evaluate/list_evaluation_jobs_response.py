@@ -16,7 +16,19 @@ class EvaluationRound(BaseModel):
     created_at: datetime
     """Timestamp indicating when the evaluation round was created"""
 
-    status: Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]
+    status: Literal[
+        "pending",
+        "processing",
+        "retrying",
+        "completed",
+        "failed",
+        "cancelled",
+        "failed_to_provision",
+        "generating_data",
+        "training_in_progress",
+        "failed_to_generate_data",
+        "provisioning",
+    ]
     """Status of the evaluation round"""
 
     user_email: str
@@ -24,6 +36,9 @@ class EvaluationRound(BaseModel):
 
     finished_at: Optional[datetime] = None
     """Timestamp indicating when the evaluation round finished processing"""
+
+    notes: Optional[str] = None
+    """User notes for the evaluation job"""
 
     num_failed_predictions: Optional[int] = None
     """Number of predictions that failed during the evaluation round"""

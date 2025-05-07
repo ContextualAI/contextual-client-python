@@ -133,7 +133,7 @@ class TestDocuments:
         document = client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
-            metadata="metadata",
+            metadata='{"field1": "value1", "field2": "value2"}}',
         )
         assert_matches_type(IngestionResponse, document, path=["response"])
 
@@ -391,7 +391,7 @@ class TestAsyncDocuments:
         document = await async_client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
-            metadata="metadata",
+            metadata='{"field1": "value1", "field2": "value2"}}',
         )
         assert_matches_type(IngestionResponse, document, path=["response"])
 

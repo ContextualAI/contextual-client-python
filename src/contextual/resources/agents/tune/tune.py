@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Mapping, Optional, cast
+from typing_extensions import Literal
 
 import httpx
 
@@ -71,6 +72,15 @@ class TuneResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
+        hyperparams_learning_rate: float | NotGiven = NOT_GIVEN,
+        hyperparams_lora_alpha: Literal[8, 16, 32, 64, 128] | NotGiven = NOT_GIVEN,
+        hyperparams_lora_dropout: float | NotGiven = NOT_GIVEN,
+        hyperparams_lora_rank: Literal[8, 16, 32, 64] | NotGiven = NOT_GIVEN,
+        hyperparams_num_epochs: int | NotGiven = NOT_GIVEN,
+        hyperparams_warmup_ratio: float | NotGiven = NOT_GIVEN,
+        metadata_file: FileTypes | NotGiven = NOT_GIVEN,
+        sdp_only: bool | NotGiven = NOT_GIVEN,
+        synth_data: bool | NotGiven = NOT_GIVEN,
         test_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
         test_file: Optional[FileTypes] | NotGiven = NOT_GIVEN,
         train_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
@@ -111,6 +121,30 @@ class TuneResource(SyncAPIResource):
 
         Args:
           agent_id: ID of the Agent to list tuning jobs for
+
+          hyperparams_learning_rate: Controls how quickly the model adapts to the training data. Must be greater than
+              0 and less than or equal to 0.1.
+
+          hyperparams_lora_alpha: Scaling factor that controls the magnitude of LoRA updates. Higher values lead
+              to stronger adaptation effects. The effective learning strength is determined by
+              the ratio of lora_alpha/lora_rank. Must be one of: 8, 16, 32, 64 or 128
+
+          hyperparams_lora_dropout: LoRA dropout randomly disables connections during training to prevent
+              overfitting and improve generalization when fine-tuning language models with
+              Low-Rank Adaptation. Must be between 0 and 1 (exclusive).
+
+          hyperparams_lora_rank: Controls the capacity of the LoRA adapters. Must be one of: 8, 16, 32, or 64.
+
+          hyperparams_num_epochs: Number of complete passes through the training dataset.
+
+          hyperparams_warmup_ratio: Fraction of training steps used for learning rate warmup. Must be between 0 and
+              1 (exclusive).
+
+          metadata_file: Optional. Metadata file to use for synthetic data pipeline.
+
+          sdp_only: Runs the SDP pipeline only if set to True.
+
+          synth_data: Optional. Whether to generate synthetic data for training
 
           test_dataset_name: Optional. `Dataset` to use for testing model checkpoints, created through the
               `/datasets/evaluate` API.
@@ -168,13 +202,24 @@ class TuneResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         body = deepcopy_minimal(
             {
+                "hyperparams_learning_rate": hyperparams_learning_rate,
+                "hyperparams_lora_alpha": hyperparams_lora_alpha,
+                "hyperparams_lora_dropout": hyperparams_lora_dropout,
+                "hyperparams_lora_rank": hyperparams_lora_rank,
+                "hyperparams_num_epochs": hyperparams_num_epochs,
+                "hyperparams_warmup_ratio": hyperparams_warmup_ratio,
+                "metadata_file": metadata_file,
+                "sdp_only": sdp_only,
+                "synth_data": synth_data,
                 "test_dataset_name": test_dataset_name,
                 "test_file": test_file,
                 "train_dataset_name": train_dataset_name,
                 "training_file": training_file,
             }
         )
-        files = extract_files(cast(Mapping[str, object], body), paths=[["training_file"], ["test_file"]])
+        files = extract_files(
+            cast(Mapping[str, object], body), paths=[["training_file"], ["test_file"], ["metadata_file"]]
+        )
         # It should be noted that the actual Content-Type header that will be
         # sent to the server will contain a `boundary` parameter, e.g.
         # multipart/form-data; boundary=---abc--
@@ -222,6 +267,15 @@ class AsyncTuneResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
+        hyperparams_learning_rate: float | NotGiven = NOT_GIVEN,
+        hyperparams_lora_alpha: Literal[8, 16, 32, 64, 128] | NotGiven = NOT_GIVEN,
+        hyperparams_lora_dropout: float | NotGiven = NOT_GIVEN,
+        hyperparams_lora_rank: Literal[8, 16, 32, 64] | NotGiven = NOT_GIVEN,
+        hyperparams_num_epochs: int | NotGiven = NOT_GIVEN,
+        hyperparams_warmup_ratio: float | NotGiven = NOT_GIVEN,
+        metadata_file: FileTypes | NotGiven = NOT_GIVEN,
+        sdp_only: bool | NotGiven = NOT_GIVEN,
+        synth_data: bool | NotGiven = NOT_GIVEN,
         test_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
         test_file: Optional[FileTypes] | NotGiven = NOT_GIVEN,
         train_dataset_name: Optional[str] | NotGiven = NOT_GIVEN,
@@ -262,6 +316,30 @@ class AsyncTuneResource(AsyncAPIResource):
 
         Args:
           agent_id: ID of the Agent to list tuning jobs for
+
+          hyperparams_learning_rate: Controls how quickly the model adapts to the training data. Must be greater than
+              0 and less than or equal to 0.1.
+
+          hyperparams_lora_alpha: Scaling factor that controls the magnitude of LoRA updates. Higher values lead
+              to stronger adaptation effects. The effective learning strength is determined by
+              the ratio of lora_alpha/lora_rank. Must be one of: 8, 16, 32, 64 or 128
+
+          hyperparams_lora_dropout: LoRA dropout randomly disables connections during training to prevent
+              overfitting and improve generalization when fine-tuning language models with
+              Low-Rank Adaptation. Must be between 0 and 1 (exclusive).
+
+          hyperparams_lora_rank: Controls the capacity of the LoRA adapters. Must be one of: 8, 16, 32, or 64.
+
+          hyperparams_num_epochs: Number of complete passes through the training dataset.
+
+          hyperparams_warmup_ratio: Fraction of training steps used for learning rate warmup. Must be between 0 and
+              1 (exclusive).
+
+          metadata_file: Optional. Metadata file to use for synthetic data pipeline.
+
+          sdp_only: Runs the SDP pipeline only if set to True.
+
+          synth_data: Optional. Whether to generate synthetic data for training
 
           test_dataset_name: Optional. `Dataset` to use for testing model checkpoints, created through the
               `/datasets/evaluate` API.
@@ -319,13 +397,24 @@ class AsyncTuneResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         body = deepcopy_minimal(
             {
+                "hyperparams_learning_rate": hyperparams_learning_rate,
+                "hyperparams_lora_alpha": hyperparams_lora_alpha,
+                "hyperparams_lora_dropout": hyperparams_lora_dropout,
+                "hyperparams_lora_rank": hyperparams_lora_rank,
+                "hyperparams_num_epochs": hyperparams_num_epochs,
+                "hyperparams_warmup_ratio": hyperparams_warmup_ratio,
+                "metadata_file": metadata_file,
+                "sdp_only": sdp_only,
+                "synth_data": synth_data,
                 "test_dataset_name": test_dataset_name,
                 "test_file": test_file,
                 "train_dataset_name": train_dataset_name,
                 "training_file": training_file,
             }
         )
-        files = extract_files(cast(Mapping[str, object], body), paths=[["training_file"], ["test_file"]])
+        files = extract_files(
+            cast(Mapping[str, object], body), paths=[["training_file"], ["test_file"], ["metadata_file"]]
+        )
         # It should be noted that the actual Content-Type header that will be
         # sent to the server will contain a `boundary` parameter, e.g.
         # multipart/form-data; boundary=---abc--

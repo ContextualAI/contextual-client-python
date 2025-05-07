@@ -52,8 +52,19 @@ class UsersResource(SyncAPIResource):
         *,
         email: str,
         is_tenant_admin: bool | NotGiven = NOT_GIVEN,
-        per_agent_roles: Iterable[user_update_params.PerAgentRole] | NotGiven = NOT_GIVEN,
-        roles: List[Literal["AGENT_USER"]] | NotGiven = NOT_GIVEN,
+        roles: List[
+            Literal[
+                "VISITOR",
+                "AGENT_USER",
+                "CUSTOMER_INTERNAL_USER",
+                "CONTEXTUAL_STAFF_USER",
+                "CONTEXTUAL_EXTERNAL_STAFF_USER",
+                "CONTEXTUAL_INTERNAL_STAFF_USER",
+                "TENANT_ADMIN",
+                "SUPER_ADMIN",
+            ]
+        ]
+        | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -71,10 +82,6 @@ class UsersResource(SyncAPIResource):
 
           is_tenant_admin: Flag indicating if the user is a tenant admin
 
-          per_agent_roles: Per agent level roles for the user. If a user is granted any role under `roles`,
-              then the user has that role for all the agents. Only the roles that need to be
-              updated should be part of this.
-
           roles: The user level roles of the user.
 
           extra_headers: Send extra headers
@@ -91,7 +98,6 @@ class UsersResource(SyncAPIResource):
                 {
                     "email": email,
                     "is_tenant_admin": is_tenant_admin,
-                    "per_agent_roles": per_agent_roles,
                     "roles": roles,
                 },
                 user_update_params.UserUpdateParams,
@@ -263,8 +269,19 @@ class AsyncUsersResource(AsyncAPIResource):
         *,
         email: str,
         is_tenant_admin: bool | NotGiven = NOT_GIVEN,
-        per_agent_roles: Iterable[user_update_params.PerAgentRole] | NotGiven = NOT_GIVEN,
-        roles: List[Literal["AGENT_USER"]] | NotGiven = NOT_GIVEN,
+        roles: List[
+            Literal[
+                "VISITOR",
+                "AGENT_USER",
+                "CUSTOMER_INTERNAL_USER",
+                "CONTEXTUAL_STAFF_USER",
+                "CONTEXTUAL_EXTERNAL_STAFF_USER",
+                "CONTEXTUAL_INTERNAL_STAFF_USER",
+                "TENANT_ADMIN",
+                "SUPER_ADMIN",
+            ]
+        ]
+        | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -282,10 +299,6 @@ class AsyncUsersResource(AsyncAPIResource):
 
           is_tenant_admin: Flag indicating if the user is a tenant admin
 
-          per_agent_roles: Per agent level roles for the user. If a user is granted any role under `roles`,
-              then the user has that role for all the agents. Only the roles that need to be
-              updated should be part of this.
-
           roles: The user level roles of the user.
 
           extra_headers: Send extra headers
@@ -302,7 +315,6 @@ class AsyncUsersResource(AsyncAPIResource):
                 {
                     "email": email,
                     "is_tenant_admin": is_tenant_admin,
-                    "per_agent_roles": per_agent_roles,
                     "roles": roles,
                 },
                 user_update_params.UserUpdateParams,
