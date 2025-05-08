@@ -35,10 +35,10 @@ class TestParse:
         parse = client.parse.create(
             raw_file=b"raw file contents",
             enable_document_hierarchy=True,
-            enable_split_tables=False,
+            enable_split_tables=True,
             figure_caption_mode="concise",
-            max_split_table_cells=100,
-            page_range="0,1,2,5,6",
+            max_split_table_cells=0,
+            page_range="page_range",
             parse_mode="standard",
         )
         assert_matches_type(ParseCreateResponse, parse, path=["response"])
@@ -199,10 +199,10 @@ class TestAsyncParse:
         parse = await async_client.parse.create(
             raw_file=b"raw file contents",
             enable_document_hierarchy=True,
-            enable_split_tables=False,
+            enable_split_tables=True,
             figure_caption_mode="concise",
-            max_split_table_cells=100,
-            page_range="0,1,2,5,6",
+            max_split_table_cells=0,
+            page_range="page_range",
             parse_mode="standard",
         )
         assert_matches_type(ParseCreateResponse, parse, path=["response"])
