@@ -25,13 +25,11 @@ class DocumentIngestParams(TypedDict, total=False):
     **Example Metadata JSON:**
 
     ```json
-    {
-      "metadata": {
+    metadata = {
         "custom_metadata": {
-          "customKey1": "value3",
-          "_filterKey": "filterValue3"
-        }
-      }
+            "field1": "value1",
+            "field2": "value2"
+         }
     }
     ```
     """

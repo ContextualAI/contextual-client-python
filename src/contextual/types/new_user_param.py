@@ -2,21 +2,10 @@
 
 from __future__ import annotations
 
-from typing import List, Iterable
+from typing import List
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["NewUserParam", "PerAgentRole"]
-
-
-class PerAgentRole(TypedDict, total=False):
-    agent_id: Required[str]
-    """ID of the agent on which to grant/revoke the role."""
-
-    grant: Required[bool]
-    """When set to true, the roles will be granted o/w revoked."""
-
-    roles: Required[List[Literal["AGENT_USER"]]]
-    """The roles that are granted/revoked"""
+__all__ = ["NewUserParam"]
 
 
 class NewUserParam(TypedDict, total=False):
@@ -26,12 +15,16 @@ class NewUserParam(TypedDict, total=False):
     is_tenant_admin: bool
     """Flag indicating if the user is a tenant admin"""
 
-    per_agent_roles: Iterable[PerAgentRole]
-    """Per agent level roles for the user.
-
-    If a user is granted any role under `roles`, then the user has that role for all
-    the agents. Only the roles that need to be updated should be part of this.
-    """
-
-    roles: List[Literal["AGENT_USER"]]
+    roles: List[
+        Literal[
+            "VISITOR",
+            "AGENT_USER",
+            "CUSTOMER_INTERNAL_USER",
+            "CONTEXTUAL_STAFF_USER",
+            "CONTEXTUAL_EXTERNAL_STAFF_USER",
+            "CONTEXTUAL_INTERNAL_STAFF_USER",
+            "TENANT_ADMIN",
+            "SUPER_ADMIN",
+        ]
+    ]
     """The user level roles of the user."""

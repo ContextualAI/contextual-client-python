@@ -16,12 +16,7 @@ from .jobs import (
     AsyncJobsResourceWithStreamingResponse,
 )
 from ...._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
-from ...._utils import (
-    extract_files,
-    maybe_transform,
-    deepcopy_minimal,
-    async_maybe_transform,
-)
+from ...._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
 from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
 from ...._response import (
@@ -69,6 +64,8 @@ class EvaluateResource(SyncAPIResource):
         evalset_file: FileTypes | NotGiven = NOT_GIVEN,
         evalset_name: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        notes: str | NotGiven = NOT_GIVEN,
+        override_configuration: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -110,6 +107,11 @@ class EvaluateResource(SyncAPIResource):
 
           llm_model_id: ID of the model to evaluate. Uses the default model if not specified.
 
+          notes: User notes for the evaluation job.
+
+          override_configuration: Override the configuration for the query. This will override the configuration
+              for the agent during evaluation.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -126,6 +128,8 @@ class EvaluateResource(SyncAPIResource):
                 "evalset_file": evalset_file,
                 "evalset_name": evalset_name,
                 "llm_model_id": llm_model_id,
+                "notes": notes,
+                "override_configuration": override_configuration,
             }
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["evalset_file"]])
@@ -176,6 +180,8 @@ class AsyncEvaluateResource(AsyncAPIResource):
         evalset_file: FileTypes | NotGiven = NOT_GIVEN,
         evalset_name: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        notes: str | NotGiven = NOT_GIVEN,
+        override_configuration: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -217,6 +223,11 @@ class AsyncEvaluateResource(AsyncAPIResource):
 
           llm_model_id: ID of the model to evaluate. Uses the default model if not specified.
 
+          notes: User notes for the evaluation job.
+
+          override_configuration: Override the configuration for the query. This will override the configuration
+              for the agent during evaluation.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -233,6 +244,8 @@ class AsyncEvaluateResource(AsyncAPIResource):
                 "evalset_file": evalset_file,
                 "evalset_name": evalset_name,
                 "llm_model_id": llm_model_id,
+                "notes": notes,
+                "override_configuration": override_configuration,
             }
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["evalset_file"]])

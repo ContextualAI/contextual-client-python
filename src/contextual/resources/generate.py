@@ -8,10 +8,7 @@ import httpx
 
 from ..types import generate_create_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -70,9 +67,11 @@ class GenerateResource(SyncAPIResource):
         parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation
         and agentic use cases.
 
-        The total request cannot exceed 32,000 tokens. See more details and code
-        examples in our
-        [our blog post](https://contextual.ai/blog/introducing-grounded-language-model/).
+        The total request cannot exceed 32,000 tokens.
+
+        See our
+        [blog post](https://contextual.ai/blog/introducing-grounded-language-model/) and
+        [code examples](https://colab.research.google.com/github/ContextualAI/examples/blob/main/03-standalone-api/02-generate/generate.ipynb).
         Email [glm-feedback@contextual.ai](mailto:glm-feedback@contextual.ai) with any
         feedback or questions.
 
@@ -176,9 +175,11 @@ class AsyncGenerateResource(AsyncAPIResource):
         parametric knowledge to reduce hallucinations in Retrieval-Augmented Generation
         and agentic use cases.
 
-        The total request cannot exceed 32,000 tokens. See more details and code
-        examples in our
-        [our blog post](https://contextual.ai/blog/introducing-grounded-language-model/).
+        The total request cannot exceed 32,000 tokens.
+
+        See our
+        [blog post](https://contextual.ai/blog/introducing-grounded-language-model/) and
+        [code examples](https://colab.research.google.com/github/ContextualAI/examples/blob/main/03-standalone-api/02-generate/generate.ipynb).
         Email [glm-feedback@contextual.ai](mailto:glm-feedback@contextual.ai) with any
         feedback or questions.
 

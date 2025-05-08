@@ -25,16 +25,15 @@ class RerankCreateParams(TypedDict, total=False):
     """The string against which documents will be ranked for relevance"""
 
     instruction: str
-    """Instructions that the reranker references when ranking retrievals.
-
-    We evaluated the model on instructions for recency, document type, source, and
-    metadata, and it can generalize to other instructions as well. Note that we do
-    not guarantee that the reranker will follow these instructions exactly.
-    Examples: "Prioritize internal sales documents over market analysis reports.
-    More recent documents should be weighted higher. Enterprise portal content
-    supersedes distributor communications." and "Emphasize forecasts from top-tier
-    investment banks. Recent analysis should take precedence. Disregard aggregator
-    sites and favor detailed research notes over news summaries."
+    """
+    Instructions that the reranker references when ranking documents, after
+    considering relevance. We evaluated the model on instructions for recency,
+    document type, source, and metadata, and it can generalize to other instructions
+    as well. For instructions related to recency and timeframe, specify the
+    timeframe (e.g., instead of saying "this year") because the reranker doesn't
+    know the current date. Example: "Prioritize internal sales documents over market
+    analysis reports. More recent documents should be weighted higher. Enterprise
+    portal content supersedes distributor communications."
     """
 
     metadata: List[str]

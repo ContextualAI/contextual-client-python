@@ -18,7 +18,21 @@ class DocumentListParams(TypedDict, total=False):
     of results
     """
 
-    ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
+    ingestion_job_status: List[
+        Literal[
+            "pending",
+            "processing",
+            "retrying",
+            "completed",
+            "failed",
+            "cancelled",
+            "failed_to_provision",
+            "generating_data",
+            "training_in_progress",
+            "failed_to_generate_data",
+            "provisioning",
+        ]
+    ]
     """
     Filters documents whose ingestion job status matches (one of) the provided
     status(es).

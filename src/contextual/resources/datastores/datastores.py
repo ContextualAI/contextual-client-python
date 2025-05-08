@@ -6,10 +6,7 @@ import httpx
 
 from ...types import datastore_list_params, datastore_create_params
 from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from .documents import (
     DocumentsResource,
@@ -241,6 +238,43 @@ class DatastoresResource(SyncAPIResource):
             cast_to=DatastoreMetadata,
         )
 
+    def reset(
+        self,
+        datastore_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> object:
+        """Reset the give `Datastore`.
+
+        This operation is irreversible and it deletes all
+        the documents associated with the datastore.
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return self._put(
+            f"/datastores/{datastore_id}/reset",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=object,
+        )
+
 
 class AsyncDatastoresResource(AsyncAPIResource):
     @cached_property
@@ -448,6 +482,43 @@ class AsyncDatastoresResource(AsyncAPIResource):
             cast_to=DatastoreMetadata,
         )
 
+    async def reset(
+        self,
+        datastore_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> object:
+        """Reset the give `Datastore`.
+
+        This operation is irreversible and it deletes all
+        the documents associated with the datastore.
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return await self._put(
+            f"/datastores/{datastore_id}/reset",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=object,
+        )
+
 
 class DatastoresResourceWithRawResponse:
     def __init__(self, datastores: DatastoresResource) -> None:
@@ -464,6 +535,9 @@ class DatastoresResourceWithRawResponse:
         )
         self.metadata = to_raw_response_wrapper(
             datastores.metadata,
+        )
+        self.reset = to_raw_response_wrapper(
+            datastores.reset,
         )
 
     @cached_property
@@ -487,6 +561,9 @@ class AsyncDatastoresResourceWithRawResponse:
         self.metadata = async_to_raw_response_wrapper(
             datastores.metadata,
         )
+        self.reset = async_to_raw_response_wrapper(
+            datastores.reset,
+        )
 
     @cached_property
     def documents(self) -> AsyncDocumentsResourceWithRawResponse:
@@ -509,6 +586,9 @@ class DatastoresResourceWithStreamingResponse:
         self.metadata = to_streamed_response_wrapper(
             datastores.metadata,
         )
+        self.reset = to_streamed_response_wrapper(
+            datastores.reset,
+        )
 
     @cached_property
     def documents(self) -> DocumentsResourceWithStreamingResponse:
@@ -530,6 +610,9 @@ class AsyncDatastoresResourceWithStreamingResponse:
         )
         self.metadata = async_to_streamed_response_wrapper(
             datastores.metadata,
+        )
+        self.reset = async_to_streamed_response_wrapper(
+            datastores.reset,
         )
 
     @cached_property

@@ -30,3 +30,12 @@ class EvaluateCreateParams(TypedDict, total=False):
 
     llm_model_id: str
     """ID of the model to evaluate. Uses the default model if not specified."""
+
+    notes: str
+    """User notes for the evaluation job."""
+
+    override_configuration: str
+    """Override the configuration for the query.
+
+    This will override the configuration for the agent during evaluation.
+    """

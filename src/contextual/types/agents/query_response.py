@@ -39,6 +39,9 @@ class RetrievalContent(BaseModel):
     page: Optional[int] = None
     """Page number of the content in the document"""
 
+    score: Optional[float] = None
+    """Score of the retrieval, if applicable"""
+
     url: Optional[str] = None
     """URL of the source content, if applicable"""
 

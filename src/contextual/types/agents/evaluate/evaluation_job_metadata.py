@@ -35,5 +35,17 @@ class EvaluationJobMetadata(BaseModel):
     metrics: object
     """Results of the evaluation round, grouped by each metric"""
 
-    status: Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]
+    status: Literal[
+        "pending",
+        "processing",
+        "retrying",
+        "completed",
+        "failed",
+        "cancelled",
+        "failed_to_provision",
+        "generating_data",
+        "training_in_progress",
+        "failed_to_generate_data",
+        "provisioning",
+    ]
     """Status of the evaluation round"""

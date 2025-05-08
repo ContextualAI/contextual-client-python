@@ -9,6 +9,7 @@ from contextual.types import (
     DatastoreMetadata,
     ListDatastoresResponse,
     DatastoreDeleteResponse,
+    DatastoreResetResponse,
 )
 ```
 
@@ -18,6 +19,7 @@ Methods:
 - <code title="get /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">list</a>(\*\*<a href="src/contextual/types/datastore_list_params.py">params</a>) -> <a href="./src/contextual/types/datastore.py">SyncDatastoresPage[Datastore]</a></code>
 - <code title="delete /datastores/{datastore_id}">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">delete</a>(datastore_id) -> <a href="./src/contextual/types/datastore_delete_response.py">object</a></code>
 - <code title="get /datastores/{datastore_id}/metadata">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">metadata</a>(datastore_id) -> <a href="./src/contextual/types/datastore_metadata.py">DatastoreMetadata</a></code>
+- <code title="put /datastores/{datastore_id}/reset">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">reset</a>(datastore_id) -> <a href="./src/contextual/types/datastore_reset_response.py">object</a></code>
 
 ## Documents
 
@@ -48,11 +50,18 @@ Types:
 ```python
 from contextual.types import (
     Agent,
+    AgentConfigs,
     AgentMetadata,
     CreateAgentOutput,
+    FilterAndRerankConfig,
+    GenerateResponseConfig,
+    GlobalConfig,
     ListAgentsResponse,
+    RetrievalConfig,
     AgentUpdateResponse,
     AgentDeleteResponse,
+    AgentMetadataResponse,
+    AgentResetResponse,
 )
 ```
 
@@ -62,7 +71,8 @@ Methods:
 - <code title="put /agents/{agent_id}">client.agents.<a href="./src/contextual/resources/agents/agents.py">update</a>(agent_id, \*\*<a href="src/contextual/types/agent_update_params.py">params</a>) -> <a href="./src/contextual/types/agent_update_response.py">object</a></code>
 - <code title="get /agents">client.agents.<a href="./src/contextual/resources/agents/agents.py">list</a>(\*\*<a href="src/contextual/types/agent_list_params.py">params</a>) -> <a href="./src/contextual/types/agent.py">SyncPage[Agent]</a></code>
 - <code title="delete /agents/{agent_id}">client.agents.<a href="./src/contextual/resources/agents/agents.py">delete</a>(agent_id) -> <a href="./src/contextual/types/agent_delete_response.py">object</a></code>
-- <code title="get /agents/{agent_id}/metadata">client.agents.<a href="./src/contextual/resources/agents/agents.py">metadata</a>(agent_id) -> <a href="./src/contextual/types/agent_metadata.py">AgentMetadata</a></code>
+- <code title="get /agents/{agent_id}/metadata">client.agents.<a href="./src/contextual/resources/agents/agents.py">metadata</a>(agent_id) -> <a href="./src/contextual/types/agent_metadata_response.py">AgentMetadataResponse</a></code>
+- <code title="put /agents/{agent_id}/reset">client.agents.<a href="./src/contextual/resources/agents/agents.py">reset</a>(agent_id) -> <a href="./src/contextual/types/agent_reset_response.py">object</a></code>
 
 ## Query
 
@@ -250,3 +260,23 @@ from contextual.types import GenerateCreateResponse
 Methods:
 
 - <code title="post /generate">client.generate.<a href="./src/contextual/resources/generate.py">create</a>(\*\*<a href="src/contextual/types/generate_create_params.py">params</a>) -> <a href="./src/contextual/types/generate_create_response.py">GenerateCreateResponse</a></code>
+
+# Parse
+
+Types:
+
+```python
+from contextual.types import (
+    ParseCreateResponse,
+    ParseJobResultsResponse,
+    ParseJobStatusResponse,
+    ParseJobsResponse,
+)
+```
+
+Methods:
+
+- <code title="post /parse">client.parse.<a href="./src/contextual/resources/parse.py">create</a>(\*\*<a href="src/contextual/types/parse_create_params.py">params</a>) -> <a href="./src/contextual/types/parse_create_response.py">ParseCreateResponse</a></code>
+- <code title="get /parse/jobs/{job_id}/results">client.parse.<a href="./src/contextual/resources/parse.py">job_results</a>(job_id, \*\*<a href="src/contextual/types/parse_job_results_params.py">params</a>) -> <a href="./src/contextual/types/parse_job_results_response.py">ParseJobResultsResponse</a></code>
+- <code title="get /parse/jobs/{job_id}/status">client.parse.<a href="./src/contextual/resources/parse.py">job_status</a>(job_id) -> <a href="./src/contextual/types/parse_job_status_response.py">ParseJobStatusResponse</a></code>
+- <code title="get /parse/jobs">client.parse.<a href="./src/contextual/resources/parse.py">jobs</a>(\*\*<a href="src/contextual/types/parse_jobs_params.py">params</a>) -> <a href="./src/contextual/types/parse_jobs_response.py">ParseJobsResponse</a></code>

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List
+from typing import Any, List, cast
 
 import httpx
 
@@ -16,10 +16,7 @@ from .query import (
 )
 from ...types import agent_list_params, agent_create_params, agent_update_params
 from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from .tune.tune import (
     TuneResource,
@@ -55,8 +52,9 @@ from .evaluate.evaluate import (
     EvaluateResourceWithStreamingResponse,
     AsyncEvaluateResourceWithStreamingResponse,
 )
-from ...types.agent_metadata import AgentMetadata
+from ...types.agent_configs_param import AgentConfigsParam
 from ...types.create_agent_output import CreateAgentOutput
+from ...types.agent_metadata_response import AgentMetadataResponse
 
 __all__ = ["AgentsResource", "AsyncAgentsResource"]
 
@@ -101,10 +99,11 @@ class AgentsResource(SyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
+        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -144,6 +143,9 @@ class AgentsResource(SyncAPIResource):
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
+
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
@@ -169,6 +171,7 @@ class AgentsResource(SyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "description": description,
                     "filter_prompt": filter_prompt,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -184,10 +187,11 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -216,6 +220,9 @@ class AgentsResource(SyncAPIResource):
               on which they were tuned. If no model is specified, the default model is used.
               Set to `default` to switch from a tuned model to the default model.
 
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
+
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
@@ -242,6 +249,7 @@ class AgentsResource(SyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "filter_prompt": filter_prompt,
                     "llm_model_id": llm_model_id,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -351,7 +359,7 @@ class AgentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AgentMetadata:
+    ) -> AgentMetadataResponse:
         """
         Get metadata and configuration of a given `Agent`.
 
@@ -368,12 +376,52 @@ class AgentsResource(SyncAPIResource):
         """
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
-        return self._get(
-            f"/agents/{agent_id}/metadata",
+        return cast(
+            AgentMetadataResponse,
+            self._get(
+                f"/agents/{agent_id}/metadata",
+                options=make_request_options(
+                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                ),
+                cast_to=cast(
+                    Any, AgentMetadataResponse
+                ),  # Union types cannot be passed in as arguments in the type system
+            ),
+        )
+
+    def reset(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> object:
+        """
+        Reset a given `Agent` to default configuration.
+
+        Args:
+          agent_id: ID of the agent to reset
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return self._put(
+            f"/agents/{agent_id}/reset",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=AgentMetadata,
+            cast_to=object,
         )
 
 
@@ -417,10 +465,11 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
+        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -460,6 +509,9 @@ class AsyncAgentsResource(AsyncAPIResource):
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
+
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
@@ -485,6 +537,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "description": description,
                     "filter_prompt": filter_prompt,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -500,10 +553,11 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -532,6 +586,9 @@ class AsyncAgentsResource(AsyncAPIResource):
               on which they were tuned. If no model is specified, the default model is used.
               Set to `default` to switch from a tuned model to the default model.
 
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
+
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
@@ -558,6 +615,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "filter_prompt": filter_prompt,
                     "llm_model_id": llm_model_id,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -667,7 +725,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AgentMetadata:
+    ) -> AgentMetadataResponse:
         """
         Get metadata and configuration of a given `Agent`.
 
@@ -684,12 +742,52 @@ class AsyncAgentsResource(AsyncAPIResource):
         """
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
-        return await self._get(
-            f"/agents/{agent_id}/metadata",
+        return cast(
+            AgentMetadataResponse,
+            await self._get(
+                f"/agents/{agent_id}/metadata",
+                options=make_request_options(
+                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                ),
+                cast_to=cast(
+                    Any, AgentMetadataResponse
+                ),  # Union types cannot be passed in as arguments in the type system
+            ),
+        )
+
+    async def reset(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> object:
+        """
+        Reset a given `Agent` to default configuration.
+
+        Args:
+          agent_id: ID of the agent to reset
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return await self._put(
+            f"/agents/{agent_id}/reset",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=AgentMetadata,
+            cast_to=object,
         )
 
 
@@ -711,6 +809,9 @@ class AgentsResourceWithRawResponse:
         )
         self.metadata = to_raw_response_wrapper(
             agents.metadata,
+        )
+        self.reset = to_raw_response_wrapper(
+            agents.reset,
         )
 
     @cached_property
@@ -749,6 +850,9 @@ class AsyncAgentsResourceWithRawResponse:
         self.metadata = async_to_raw_response_wrapper(
             agents.metadata,
         )
+        self.reset = async_to_raw_response_wrapper(
+            agents.reset,
+        )
 
     @cached_property
     def query(self) -> AsyncQueryResourceWithRawResponse:
@@ -786,6 +890,9 @@ class AgentsResourceWithStreamingResponse:
         self.metadata = to_streamed_response_wrapper(
             agents.metadata,
         )
+        self.reset = to_streamed_response_wrapper(
+            agents.reset,
+        )
 
     @cached_property
     def query(self) -> QueryResourceWithStreamingResponse:
@@ -822,6 +929,9 @@ class AsyncAgentsResourceWithStreamingResponse:
         )
         self.metadata = async_to_streamed_response_wrapper(
             agents.metadata,
+        )
+        self.reset = async_to_streamed_response_wrapper(
+            agents.reset,
         )
 
     @cached_property

@@ -1,5 +1,13 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .parse import (
+    ParseResource,
+    AsyncParseResource,
+    ParseResourceWithRawResponse,
+    AsyncParseResourceWithRawResponse,
+    ParseResourceWithStreamingResponse,
+    AsyncParseResourceWithStreamingResponse,
+)
 from .users import (
     UsersResource,
     AsyncUsersResource,
@@ -86,4 +94,10 @@ __all__ = [
     "AsyncGenerateResourceWithRawResponse",
     "GenerateResourceWithStreamingResponse",
     "AsyncGenerateResourceWithStreamingResponse",
+    "ParseResource",
+    "AsyncParseResource",
+    "ParseResourceWithRawResponse",
+    "AsyncParseResourceWithRawResponse",
+    "ParseResourceWithStreamingResponse",
+    "AsyncParseResourceWithStreamingResponse",
 ]

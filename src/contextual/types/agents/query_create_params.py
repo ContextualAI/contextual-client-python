@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import List, Union, Iterable
 from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
-__all__ = ["QueryCreateParams", "Message", "DocumentsFilters", "DocumentsFiltersBaseMetadataFilter"]
+__all__ = ["QueryCreateParams", "Message", "DocumentsFilters", "DocumentsFiltersBaseMetadataFilter", "StructuredOutput"]
 
 
 class QueryCreateParams(TypedDict, total=False):
@@ -86,6 +86,9 @@ class QueryCreateParams(TypedDict, total=False):
     stream: bool
     """Set to `true` to receive a streamed response"""
 
+    structured_output: StructuredOutput
+    """Custom output structure format."""
+
 
 class Message(TypedDict, total=False):
     content: Required[str]
@@ -112,5 +115,14 @@ class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
 
 
 DocumentsFilters: TypeAlias = Union[DocumentsFiltersBaseMetadataFilter, "CompositeMetadataFilterParam"]
+
+
+class StructuredOutput(TypedDict, total=False):
+    json_schema: Required[object]
+    """The output json structure."""
+
+    type: Literal["JSON"]
+    """Type of the structured output. The default is JSON"""
+
 
 from ..datastores.composite_metadata_filter_param import CompositeMetadataFilterParam

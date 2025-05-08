@@ -1,11 +1,16 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["DatastoreMetadata"]
+__all__ = ["DatastoreMetadata", "DatastoreUsages"]
+
+
+class DatastoreUsages(BaseModel):
+    size_gb: float
+    """Actual size of the datastore in GB"""
 
 
 class DatastoreMetadata(BaseModel):
@@ -17,3 +22,6 @@ class DatastoreMetadata(BaseModel):
 
     name: str
     """Name of the datastore"""
+
+    datastore_usages: Optional[DatastoreUsages] = None
+    """Datastore usage"""

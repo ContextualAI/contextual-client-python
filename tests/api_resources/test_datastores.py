@@ -163,6 +163,44 @@ class TestDatastores:
                 "",
             )
 
+    @parametrize
+    def test_method_reset(self, client: ContextualAI) -> None:
+        datastore = client.datastores.reset(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(object, datastore, path=["response"])
+
+    @parametrize
+    def test_raw_response_reset(self, client: ContextualAI) -> None:
+        response = client.datastores.with_raw_response.reset(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        datastore = response.parse()
+        assert_matches_type(object, datastore, path=["response"])
+
+    @parametrize
+    def test_streaming_response_reset(self, client: ContextualAI) -> None:
+        with client.datastores.with_streaming_response.reset(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            datastore = response.parse()
+            assert_matches_type(object, datastore, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_reset(self, client: ContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
+            client.datastores.with_raw_response.reset(
+                "",
+            )
+
 
 class TestAsyncDatastores:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
@@ -305,5 +343,43 @@ class TestAsyncDatastores:
     async def test_path_params_metadata(self, async_client: AsyncContextualAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             await async_client.datastores.with_raw_response.metadata(
+                "",
+            )
+
+    @parametrize
+    async def test_method_reset(self, async_client: AsyncContextualAI) -> None:
+        datastore = await async_client.datastores.reset(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(object, datastore, path=["response"])
+
+    @parametrize
+    async def test_raw_response_reset(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.datastores.with_raw_response.reset(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        datastore = await response.parse()
+        assert_matches_type(object, datastore, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_reset(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.datastores.with_streaming_response.reset(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            datastore = await response.parse()
+            assert_matches_type(object, datastore, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_reset(self, async_client: AsyncContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
+            await async_client.datastores.with_raw_response.reset(
                 "",
             )

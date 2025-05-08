@@ -138,9 +138,51 @@ for agent in first_page.agents:
 # Remove `await` for non-async usage.
 ```
 
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from contextual import ContextualAI
+
+client = ContextualAI()
+
+create_agent_output = client.agents.create(
+    name="xxx",
+    agent_configs={
+        "filter_and_rerank_config": {
+            "rerank_instructions": "rerank_instructions",
+            "reranker_score_filter_threshold": 0,
+            "top_k_reranked_chunks": 0,
+        },
+        "generate_response_config": {
+            "avoid_commentary": True,
+            "calculate_groundedness": True,
+            "frequency_penalty": 0,
+            "max_new_tokens": 0,
+            "seed": 0,
+            "temperature": 0,
+            "top_p": 0,
+        },
+        "global_config": {
+            "enable_filter": True,
+            "enable_multi_turn": True,
+            "enable_rerank": True,
+            "should_check_retrieval_need": True,
+        },
+        "retrieval_config": {
+            "lexical_alpha": 0,
+            "semantic_alpha": 0,
+            "top_k_retrieved_chunks": 0,
+        },
+    },
+)
+print(create_agent_output.agent_configs)
+```
+
 ## File uploads
 
-Request parameters that correspond to file uploads can be passed as `bytes`, a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
+Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
 
 ```python
 from pathlib import Path

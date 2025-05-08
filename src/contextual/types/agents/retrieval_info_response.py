@@ -1,13 +1,20 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List, Union, Optional
+from typing_extensions import Literal, Annotated, TypeAlias
 
+from ..._utils import PropertyInfo
 from ..._models import BaseModel
 
-__all__ = ["RetrievalInfoResponse", "ContentMetadata"]
+__all__ = [
+    "RetrievalInfoResponse",
+    "ContentMetadata",
+    "ContentMetadataUnstructuredContentMetadata",
+    "ContentMetadataStructuredContentMetadata",
+]
 
 
-class ContentMetadata(BaseModel):
+class ContentMetadataUnstructuredContentMetadata(BaseModel):
     content_id: str
     """Id of the content."""
 
@@ -37,6 +44,24 @@ class ContentMetadata(BaseModel):
 
     y1: float
     """Y coordinate of the bottom right corner on the bounding box."""
+
+    content_type: Optional[Literal["unstructured"]] = None
+
+
+class ContentMetadataStructuredContentMetadata(BaseModel):
+    content_id: str
+    """Id of the content."""
+
+    content_text: object
+    """Text of the content."""
+
+    content_type: Optional[Literal["structured"]] = None
+
+
+ContentMetadata: TypeAlias = Annotated[
+    Union[ContentMetadataUnstructuredContentMetadata, ContentMetadataStructuredContentMetadata],
+    PropertyInfo(discriminator="content_type"),
+]
 
 
 class RetrievalInfoResponse(BaseModel):

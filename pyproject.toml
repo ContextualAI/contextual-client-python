@@ -1,6 +1,6 @@
 [project]
 name = "contextual-client"
-version = "0.5.1"
+version = "0.6.0"
 description = "The official Python library for the Contextual AI API"
 dynamic = ["readme"]
 license = "Apache-2.0"
@@ -38,12 +38,11 @@ Homepage = "https://github.com/ContextualAI/contextual-client-python"
 Repository = "https://github.com/ContextualAI/contextual-client-python"
 
 
-
 [tool.rye]
 managed = true
 # version pins are in requirements-dev.lock
 dev-dependencies = [
-    "pyright>=1.1.359",
+    "pyright==1.1.399",
     "mypy",
     "respx",
     "pytest",
@@ -87,7 +86,7 @@ typecheck = { chain = [
 "typecheck:mypy" = "mypy ."
 
 [build-system]
-requires = ["hatchling", "hatch-fancy-pypi-readme"]
+requires = ["hatchling==1.26.3", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build]
@@ -148,10 +147,10 @@ exclude = [
 ]
 
 reportImplicitOverride = true
+reportOverlappingOverload = false
 
 reportImportCycles = false
 reportPrivateUsage = false
-
 
 [tool.ruff]
 line-length = 120

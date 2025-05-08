@@ -1,2 +1,4 @@
-configured_endpoints: 46
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/contextual-ai%2Fsunrise-194878b194cd507d7c5418ff38cc0fc53441ef618f991990d334b4b75775cd8f.yml
+configured_endpoints: 52
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/contextual-ai%2Fsunrise-17bdb8a33fb4fcade827bba868bd65cd30c64b1d09b4a6d83c3e37a8439ed37f.yml
+openapi_spec_hash: bc325b52f3b20d8c56e0be5de88f2dc3
+config_hash: 1ecef0ff4fd125bbc00eec65e3dd4798
