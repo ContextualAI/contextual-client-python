@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.6.0 (2025-05-08)
+
+Full Changelog: [v0.5.1...v0.6.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.5.1...v0.6.0)
+
+### Features
+
+* **api:** update via SDK Studio ([2024a46](https://github.com/ContextualAI/contextual-client-python/commit/2024a46629ceca81d6c146b2e4d92ed4afb72e4b))
+* **api:** update via SDK Studio ([dba986f](https://github.com/ContextualAI/contextual-client-python/commit/dba986f3194a37160064270836d15a88ed0f8ee4))
+* **api:** update via SDK Studio ([a707edc](https://github.com/ContextualAI/contextual-client-python/commit/a707edc06c74353788bfa182d07682f7352a7a02))
+* **api:** update via SDK Studio ([#68](https://github.com/ContextualAI/contextual-client-python/issues/68)) ([7b8f948](https://github.com/ContextualAI/contextual-client-python/commit/7b8f9488ff9ba324210a23694065830a25985edc))
+* **api:** update via SDK Studio ([#70](https://github.com/ContextualAI/contextual-client-python/issues/70)) ([25477c7](https://github.com/ContextualAI/contextual-client-python/commit/25477c7d93934f2b5b72f5b24857f023c17349cf))
+* **api:** update via SDK Studio ([#73](https://github.com/ContextualAI/contextual-client-python/issues/73)) ([e07435e](https://github.com/ContextualAI/contextual-client-python/commit/e07435e7ab08a53cd13f4f8d91f2baca1ec2c28d))
+
+
+### Bug Fixes
+
+* **ci:** ensure pip is always available ([#79](https://github.com/ContextualAI/contextual-client-python/issues/79)) ([ec1e2ce](https://github.com/ContextualAI/contextual-client-python/commit/ec1e2ce6de25021983b0a48b90069f24e3ee8def))
+* **ci:** remove publishing patch ([#80](https://github.com/ContextualAI/contextual-client-python/issues/80)) ([9e32578](https://github.com/ContextualAI/contextual-client-python/commit/9e32578922eb4dbad057231999add02c8aca3eb1))
+* **perf:** optimize some hot paths ([b88026d](https://github.com/ContextualAI/contextual-client-python/commit/b88026d6bfee7100a5663a95dd9800ed0059b353))
+* **perf:** skip traversing types for NotGiven values ([5bd2eab](https://github.com/ContextualAI/contextual-client-python/commit/5bd2eabd88852941a46d70823cb6163db08558eb))
+* **pydantic v1:** more robust ModelField.annotation check ([ce1ecab](https://github.com/ContextualAI/contextual-client-python/commit/ce1ecab62f47913665a51e3116232f65de95a3f3))
+* testing value for tune endpoints. ([7be555f](https://github.com/ContextualAI/contextual-client-python/commit/7be555fe0f39430923a9473420a88fc8c065a299))
+* **types:** handle more discriminated union shapes ([#78](https://github.com/ContextualAI/contextual-client-python/issues/78)) ([473adf4](https://github.com/ContextualAI/contextual-client-python/commit/473adf4d731241a2c34271d39a37d0ac2bc99d4e))
+
+
+### Chores
+
+* broadly detect json family of content-type headers ([f4f3951](https://github.com/ContextualAI/contextual-client-python/commit/f4f39513b3f9a1c1cb5f323d2c0da2b0d04eff06))
+* **ci:** add timeout thresholds for CI jobs ([542b4ad](https://github.com/ContextualAI/contextual-client-python/commit/542b4adaefef61d93d6d7ec971c50d3d87490c17))
+* **ci:** only use depot for staging repos ([973153b](https://github.com/ContextualAI/contextual-client-python/commit/973153b08c9780b0d27ee107f71045c5921ee4f5))
+* **client:** minor internal fixes ([379b18e](https://github.com/ContextualAI/contextual-client-python/commit/379b18e3382f4cb3cbf2f4fb768a0d23885ec562))
+* fix typos ([#81](https://github.com/ContextualAI/contextual-client-python/issues/81)) ([9ba43be](https://github.com/ContextualAI/contextual-client-python/commit/9ba43bed2b39d60d599b90e624a2a40e57584749))
+* **internal:** base client updates ([1c44fea](https://github.com/ContextualAI/contextual-client-python/commit/1c44fea55a67de0d11f00fd3b63f64302f5eee51))
+* **internal:** bump pyright version ([6878eae](https://github.com/ContextualAI/contextual-client-python/commit/6878eae3717d1076836f59dafcab08a44ec573c8))
+* **internal:** bump rye to 0.44.0 ([#77](https://github.com/ContextualAI/contextual-client-python/issues/77)) ([520ba3a](https://github.com/ContextualAI/contextual-client-python/commit/520ba3a8e069a19543238009a241579ede90c2fe))
+* **internal:** codegen related update ([ddb9f6c](https://github.com/ContextualAI/contextual-client-python/commit/ddb9f6c3be981908de24cb485b4787a2fa969b80))
+* **internal:** codegen related update ([#74](https://github.com/ContextualAI/contextual-client-python/issues/74)) ([6e8bc46](https://github.com/ContextualAI/contextual-client-python/commit/6e8bc46fab20d9babe7b047298b55b0565ba4a8b))
+* **internal:** expand CI branch coverage ([fce3ddf](https://github.com/ContextualAI/contextual-client-python/commit/fce3ddf98a13402dc63da54b1042e625247e1e72))
+* **internal:** fix list file params ([561214d](https://github.com/ContextualAI/contextual-client-python/commit/561214d491c29833c6babc1ad1f5d6cc4367f794))
+* **internal:** import reformatting ([a9e8ae2](https://github.com/ContextualAI/contextual-client-python/commit/a9e8ae26c8f15d4bc385890eb0954d41475f5fba))
+* **internal:** minor formatting changes ([d036bee](https://github.com/ContextualAI/contextual-client-python/commit/d036bee6b1e9e9bf16d775f1f48732d5cf0bd206))
+* **internal:** reduce CI branch coverage ([b10d32e](https://github.com/ContextualAI/contextual-client-python/commit/b10d32ecd725652eba23d9e14714f82af0ead691))
+* **internal:** refactor retries to not use recursion ([7689427](https://github.com/ContextualAI/contextual-client-python/commit/7689427fe4667c1efcf66ba7ee6ace7e2dbd05f3))
+* **internal:** remove extra empty newlines ([#75](https://github.com/ContextualAI/contextual-client-python/issues/75)) ([8117197](https://github.com/ContextualAI/contextual-client-python/commit/81171975661f4a03f22820a36773bdff14b79e20))
+* **internal:** remove trailing character ([#82](https://github.com/ContextualAI/contextual-client-python/issues/82)) ([72018c8](https://github.com/ContextualAI/contextual-client-python/commit/72018c8784cf5d9974fca682b2b9998e2c4d341c))
+* **internal:** slight transform perf improvement ([#83](https://github.com/ContextualAI/contextual-client-python/issues/83)) ([29e9d80](https://github.com/ContextualAI/contextual-client-python/commit/29e9d80b25a84deb927098fd9c7bc0341a8e165f))
+* **internal:** update models test ([c3fcd9c](https://github.com/ContextualAI/contextual-client-python/commit/c3fcd9c8c1ef3de1b9681a8298ac508b758bf98c))
+* **internal:** update pyright settings ([9a560f4](https://github.com/ContextualAI/contextual-client-python/commit/9a560f4f6234c724a0426356e1c154ddfbccfa71))
+* slight wording improvement in README ([#84](https://github.com/ContextualAI/contextual-client-python/issues/84)) ([d5d7f2a](https://github.com/ContextualAI/contextual-client-python/commit/d5d7f2a5ece5735e83e431c9f231b94eb7d41773))
+* use lazy imports for resources ([e41fd1c](https://github.com/ContextualAI/contextual-client-python/commit/e41fd1c3869c16d18ba7f9151a1b3f1a463f0fd6))
+
 ## 0.5.1 (2025-03-11)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.5.0...v0.5.1)
