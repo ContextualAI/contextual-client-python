@@ -52,6 +52,7 @@ from .evaluate.evaluate import (
     EvaluateResourceWithStreamingResponse,
     AsyncEvaluateResourceWithStreamingResponse,
 )
+from ...types.agent_configs_param import AgentConfigsParam
 from ...types.create_agent_output import CreateAgentOutput
 from ...types.agent_metadata_response import AgentMetadataResponse
 
@@ -98,7 +99,7 @@ class AgentsResource(SyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
@@ -186,7 +187,7 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
@@ -464,7 +465,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
@@ -552,7 +553,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,

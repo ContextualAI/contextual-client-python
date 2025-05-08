@@ -50,9 +50,14 @@ Types:
 ```python
 from contextual.types import (
     Agent,
+    AgentConfigs,
     AgentMetadata,
     CreateAgentOutput,
+    FilterAndRerankConfig,
+    GenerateResponseConfig,
+    GlobalConfig,
     ListAgentsResponse,
+    RetrievalConfig,
     AgentUpdateResponse,
     AgentDeleteResponse,
     AgentMetadataResponse,
