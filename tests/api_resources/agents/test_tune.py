@@ -28,7 +28,7 @@ class TestTune:
     def test_method_create_with_all_params(self, client: ContextualAI) -> None:
         tune = client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            hyperparams_learning_rate=1,
+            hyperparams_learning_rate=0.05,
             hyperparams_lora_alpha=8,
             hyperparams_lora_dropout=0,
             hyperparams_lora_rank=8,
@@ -90,7 +90,7 @@ class TestAsyncTune:
     async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
         tune = await async_client.agents.tune.create(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            hyperparams_learning_rate=1,
+            hyperparams_learning_rate=0.05,
             hyperparams_lora_alpha=8,
             hyperparams_lora_dropout=0,
             hyperparams_lora_rank=8,
