@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.7.0 (2025-05-13)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* **api:** update via SDK Studio ([656a0e1](https://github.com/ContextualAI/contextual-client-python/commit/656a0e19d78fe677a1a859bff114511acd58fa87))
+
+
+### Bug Fixes
+
+* **package:** support direct resource imports ([109de24](https://github.com/ContextualAI/contextual-client-python/commit/109de24d9c76aaa1d90fff8dfc816e5cfbfab50a))
+* **tests:** correct number examples ([cb94e10](https://github.com/ContextualAI/contextual-client-python/commit/cb94e101a87b8abec57d46667fecef7a3079765f))
+
+
+### Chores
+
+* **internal:** avoid errors for isinstance checks on proxies ([581e581](https://github.com/ContextualAI/contextual-client-python/commit/581e581480ac98e0fed61eacc36e90a44e3b99fc))
+
 ## 0.6.0 (2025-05-08)
 
 Full Changelog: [v0.5.1...v0.6.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.5.1...v0.6.0)
