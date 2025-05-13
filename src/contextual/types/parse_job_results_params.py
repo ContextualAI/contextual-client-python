@@ -13,9 +13,9 @@ class ParseJobResultsParams(TypedDict, total=False):
     """The desired output format(s) of the parsed file.
 
     Must be `markdown-document`, `markdown-per-page`, and/or `blocks-per-page`.
+    Specify multiple values to get multiple formats in the response.
     `markdown-document` parses the whole document into a single concatenated
     markdown output. `markdown-per-page` provides markdown output per page.
     `blocks-per-page` provides a structured JSON representation of the content
-    blocks on each page, sorted by reading order. Specify multiple values to get
-    multiple formats in the response.
+    blocks on each page, sorted by reading order.
     """
