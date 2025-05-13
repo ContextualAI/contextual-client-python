@@ -65,39 +65,42 @@ class ParseResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ParseCreateResponse:
-        """Parse a file into a structured Markdown representation.
+        """Parse a file into a structured Markdown and/or JSON.
 
-        The file size must be
-        less than 100MB and the number of pages must be less than 400.
+        Files must be less than
+        100MB and 400 pages. We use LibreOffice to convert DOC(X) and PPT(X) files to
+        PDF, which may affect page count.
 
+        See our [blog post](https://contextual.ai/blog/document-parser-for-rag) and
+        [code examples](https://github.com/ContextualAI/examples/blob/main/03-standalone-api/04-parse/parse.ipynb).
         Email [parse-feedback@contextual.ai](mailto:parse-feedback@contextual.ai) with
         any feedback or questions.
 
         Args:
           raw_file: The file to be parsed. The file type must be PDF, DOC / DOCX, PPT / PPTX.
 
-          enable_document_hierarchy: Controls parsing heading levels (e.g. H1, H2, H3) at higher quality. Adds a
-              table of contents to the output with the structure of the entire parsed
-              document. Not permitted in 'basic' parsing_mode, or if page_range is not
-              continuous and/or does not start from page zero.
+          enable_document_hierarchy: Adds a table of contents to the output with the structure of the entire parsed
+              document. This feature is in beta. Controls parsing heading levels (e.g. H1, H2,
+              H3) at higher quality. Not permitted in `basic` parsing_mode, or if page_range
+              is not continuous and/or does not start from page zero.
 
           enable_split_tables: Controls whether tables are split into multiple tables by row with the headers
               propagated. Use for improving LLM comprehension of very large tables. Not
-              permitted in 'basic' parsing_mode.
+              permitted in `basic` parsing_mode.
 
-          figure_caption_mode: Controls how thorough figure captions are. 'concise' is short and minimizes
-              chances of hallucinations. 'detailed' is more thorough and can include
-              commentary. Not permitted in 'basic' parsing_mode.
+          figure_caption_mode: Controls how thorough figure captions are. `concise` is short and minimizes
+              chances of hallucinations. `detailed` is more thorough and can include
+              commentary; this mode is in beta. Not permitted in `basic` parsing_mode.
 
           max_split_table_cells: Threshold number of table cells beyond which large tables are split if
-              `enable_split_tables` is True. Not permitted in 'basic' parsing_mode.
+              `enable_split_tables` is True. Not permitted in `basic` parsing_mode.
 
           page_range: Optional string representing page range to be parsed. Format: comma-separated
-              indexes (0-based) e.g. '0,1,2,5,6' or ranges (inclusive of both ends) e.g.
-              '0-2,5,6'
+              indexes (0-based, e.g. `0,1,2,5,6`), or ranges inclusive of both ends (e.g.
+              `0-2,5,6`)
 
-          parse_mode: The settings to use for parsing. 'basic' is for simple, text-only documents.
-              'standard' is for complex documents with images, complex hierarchy, and/or no
+          parse_mode: The settings to use for parsing. `basic` is for simple, text-only documents.
+              `standard` is for complex documents with images, complex hierarchy, and/or no
               natively encoded textual data (e.g. for scanned documents).
 
           extra_headers: Send extra headers
@@ -156,11 +159,11 @@ class ParseResource(SyncAPIResource):
           job_id: Unique ID of the parse job
 
           output_types: The desired output format(s) of the parsed file. Must be `markdown-document`,
-              `markdown-per-page`, and/or `blocks-per-page`. `markdown-document` parses the
-              whole document into a single concatenated markdown output. `markdown-per-page`
-              provides markdown output per page. `blocks-per-page` provides a structured JSON
+              `markdown-per-page`, and/or `blocks-per-page`. Specify multiple values to get
+              multiple formats in the response. `markdown-document` parses the whole document
+              into a single concatenated markdown output. `markdown-per-page` provides
+              markdown output per page. `blocks-per-page` provides a structured JSON
               representation of the content blocks on each page, sorted by reading order.
-              Specify multiple values to get multiple formats in the response.
 
           extra_headers: Send extra headers
 
@@ -298,39 +301,42 @@ class AsyncParseResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ParseCreateResponse:
-        """Parse a file into a structured Markdown representation.
+        """Parse a file into a structured Markdown and/or JSON.
 
-        The file size must be
-        less than 100MB and the number of pages must be less than 400.
+        Files must be less than
+        100MB and 400 pages. We use LibreOffice to convert DOC(X) and PPT(X) files to
+        PDF, which may affect page count.
 
+        See our [blog post](https://contextual.ai/blog/document-parser-for-rag) and
+        [code examples](https://github.com/ContextualAI/examples/blob/main/03-standalone-api/04-parse/parse.ipynb).
         Email [parse-feedback@contextual.ai](mailto:parse-feedback@contextual.ai) with
         any feedback or questions.
 
         Args:
           raw_file: The file to be parsed. The file type must be PDF, DOC / DOCX, PPT / PPTX.
 
-          enable_document_hierarchy: Controls parsing heading levels (e.g. H1, H2, H3) at higher quality. Adds a
-              table of contents to the output with the structure of the entire parsed
-              document. Not permitted in 'basic' parsing_mode, or if page_range is not
-              continuous and/or does not start from page zero.
+          enable_document_hierarchy: Adds a table of contents to the output with the structure of the entire parsed
+              document. This feature is in beta. Controls parsing heading levels (e.g. H1, H2,
+              H3) at higher quality. Not permitted in `basic` parsing_mode, or if page_range
+              is not continuous and/or does not start from page zero.
 
           enable_split_tables: Controls whether tables are split into multiple tables by row with the headers
               propagated. Use for improving LLM comprehension of very large tables. Not
-              permitted in 'basic' parsing_mode.
+              permitted in `basic` parsing_mode.
 
-          figure_caption_mode: Controls how thorough figure captions are. 'concise' is short and minimizes
-              chances of hallucinations. 'detailed' is more thorough and can include
-              commentary. Not permitted in 'basic' parsing_mode.
+          figure_caption_mode: Controls how thorough figure captions are. `concise` is short and minimizes
+              chances of hallucinations. `detailed` is more thorough and can include
+              commentary; this mode is in beta. Not permitted in `basic` parsing_mode.
 
           max_split_table_cells: Threshold number of table cells beyond which large tables are split if
-              `enable_split_tables` is True. Not permitted in 'basic' parsing_mode.
+              `enable_split_tables` is True. Not permitted in `basic` parsing_mode.
 
           page_range: Optional string representing page range to be parsed. Format: comma-separated
-              indexes (0-based) e.g. '0,1,2,5,6' or ranges (inclusive of both ends) e.g.
-              '0-2,5,6'
+              indexes (0-based, e.g. `0,1,2,5,6`), or ranges inclusive of both ends (e.g.
+              `0-2,5,6`)
 
-          parse_mode: The settings to use for parsing. 'basic' is for simple, text-only documents.
-              'standard' is for complex documents with images, complex hierarchy, and/or no
+          parse_mode: The settings to use for parsing. `basic` is for simple, text-only documents.
+              `standard` is for complex documents with images, complex hierarchy, and/or no
               natively encoded textual data (e.g. for scanned documents).
 
           extra_headers: Send extra headers
@@ -389,11 +395,11 @@ class AsyncParseResource(AsyncAPIResource):
           job_id: Unique ID of the parse job
 
           output_types: The desired output format(s) of the parsed file. Must be `markdown-document`,
-              `markdown-per-page`, and/or `blocks-per-page`. `markdown-document` parses the
-              whole document into a single concatenated markdown output. `markdown-per-page`
-              provides markdown output per page. `blocks-per-page` provides a structured JSON
+              `markdown-per-page`, and/or `blocks-per-page`. Specify multiple values to get
+              multiple formats in the response. `markdown-document` parses the whole document
+              into a single concatenated markdown output. `markdown-per-page` provides
+              markdown output per page. `blocks-per-page` provides a structured JSON
               representation of the content blocks on each page, sorted by reading order.
-              Specify multiple values to get multiple formats in the response.
 
           extra_headers: Send extra headers
 
