@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.1 (2025-05-16)
+
+Full Changelog: [v0.7.0...v0.7.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.7.0...v0.7.1)
+
+### Chores
+
+* **ci:** fix installation instructions ([f191464](https://github.com/ContextualAI/contextual-client-python/commit/f191464e75f48395e76d6007712ae8548268b45f))
+* **ci:** upload sdks to package manager ([1f04b9e](https://github.com/ContextualAI/contextual-client-python/commit/1f04b9ecca3a4a3d2235c5cfa21bd9b36a358754))
+
 ## 0.7.0 (2025-05-13)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.6.0...v0.7.0)
