@@ -151,33 +151,7 @@ client = ContextualAI()
 
 create_agent_output = client.agents.create(
     name="xxx",
-    agent_configs={
-        "filter_and_rerank_config": {
-            "rerank_instructions": "rerank_instructions",
-            "reranker_score_filter_threshold": 0,
-            "top_k_reranked_chunks": 0,
-        },
-        "generate_response_config": {
-            "avoid_commentary": True,
-            "calculate_groundedness": True,
-            "frequency_penalty": 0,
-            "max_new_tokens": 0,
-            "seed": 0,
-            "temperature": 0,
-            "top_p": 0,
-        },
-        "global_config": {
-            "enable_filter": True,
-            "enable_multi_turn": True,
-            "enable_rerank": True,
-            "should_check_retrieval_need": True,
-        },
-        "retrieval_config": {
-            "lexical_alpha": 0,
-            "semantic_alpha": 0,
-            "top_k_retrieved_chunks": 0,
-        },
-    },
+    agent_configs={},
 )
 print(create_agent_output.agent_configs)
 ```
