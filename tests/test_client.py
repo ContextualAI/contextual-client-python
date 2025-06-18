@@ -23,9 +23,7 @@ from pydantic import ValidationError
 
 from contextual import ContextualAI, AsyncContextualAI, APIResponseValidationError
 from contextual._types import Omit
-from contextual._utils import maybe_transform
 from contextual._models import BaseModel, FinalRequestOptions
-from contextual._constants import RAW_RESPONSE_HEADER
 from contextual._exceptions import APIStatusError, APITimeoutError, ContextualAIError, APIResponseValidationError
 from contextual._base_client import (
     DEFAULT_TIMEOUT,
@@ -35,7 +33,6 @@ from contextual._base_client import (
     DefaultAsyncHttpxClient,
     make_request_options,
 )
-from contextual.types.agent_create_params import AgentCreateParams
 
 from .utils import update_env
 
@@ -725,32 +722,21 @@ class TestContextualAI:
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         respx_mock.post("/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            self.client.post(
-                "/agents",
-                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
+            client.agents.with_streaming_response.create(name="xxx").__enter__()
 
         assert _get_open_connections(self.client) == 0
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         respx_mock.post("/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            self.client.post(
-                "/agents",
-                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
+            client.agents.with_streaming_response.create(name="xxx").__enter__()
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -1550,32 +1536,25 @@ class TestAsyncContextualAI:
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    async def test_retrying_timeout_errors_doesnt_leak(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
         respx_mock.post("/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await self.client.post(
-                "/agents",
-                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
+            await async_client.agents.with_streaming_response.create(name="xxx").__aenter__()
 
         assert _get_open_connections(self.client) == 0
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    async def test_retrying_status_errors_doesnt_leak(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
         respx_mock.post("/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await self.client.post(
-                "/agents",
-                body=cast(object, maybe_transform(dict(name="Example"), AgentCreateParams)),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
+            await async_client.agents.with_streaming_response.create(name="xxx").__aenter__()
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
