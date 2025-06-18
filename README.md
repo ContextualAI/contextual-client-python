@@ -1,6 +1,6 @@
 # Contextual AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/contextual-client.svg)](https://pypi.org/project/contextual-client/)
+[![PyPI version](<https://img.shields.io/pypi/v/contextual-client.svg?label=pypi%20(stable)>)](https://pypi.org/project/contextual-client/)
 
 The Contextual AI Python library provides convenient access to the Contextual AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
