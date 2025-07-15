@@ -81,7 +81,6 @@ pip install contextual-client[aiohttp]
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
-import os
 import asyncio
 from contextual import DefaultAioHttpClient
 from contextual import AsyncContextualAI
@@ -89,7 +88,7 @@ from contextual import AsyncContextualAI
 
 async def main() -> None:
     async with AsyncContextualAI(
-        api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
+        api_key="My API Key",
         http_client=DefaultAioHttpClient(),
     ) as client:
         create_agent_output = await client.agents.create(
