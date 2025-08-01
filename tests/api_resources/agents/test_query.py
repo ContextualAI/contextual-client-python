@@ -49,13 +49,7 @@ class TestQuery:
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             documents_filters={
-                "filters": [
-                    {
-                        "field": "field1",
-                        "operator": "equals",
-                        "value": "value1",
-                    }
-                ],
+                "filters": [],
                 "operator": "AND",
             },
             llm_model_id="llm_model_id",
@@ -310,13 +304,7 @@ class TestAsyncQuery:
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             documents_filters={
-                "filters": [
-                    {
-                        "field": "field1",
-                        "operator": "equals",
-                        "value": "value1",
-                    }
-                ],
+                "filters": [],
                 "operator": "AND",
             },
             llm_model_id="llm_model_id",
