@@ -1,5 +1,65 @@
 # Changelog
 
+## 0.8.0 (2025-08-26)
+
+Full Changelog: [v0.7.0...v0.8.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.7.0...v0.8.0)
+
+### Features
+
+* **api:** update via SDK Studio ([04fabfd](https://github.com/ContextualAI/contextual-client-python/commit/04fabfd2dd9bc21d5481bbea16148d9300e21196))
+* **api:** update via SDK Studio ([feab9f8](https://github.com/ContextualAI/contextual-client-python/commit/feab9f82b627246dbc5592a7ba6bac5de7afd7e1))
+* clean up environment call outs ([5aacfd7](https://github.com/ContextualAI/contextual-client-python/commit/5aacfd73cd62e9440b927c74e29bd4ee03766334))
+* **client:** add follow_redirects request option ([35e7c78](https://github.com/ContextualAI/contextual-client-python/commit/35e7c78c7d1801a0afe4d73bbff3e7c695f5f19f))
+* **client:** add support for aiohttp ([d54f53c](https://github.com/ContextualAI/contextual-client-python/commit/d54f53cfa0878acbad344622f7aae1b2e939ae1c))
+* **client:** support file upload requests ([44d064d](https://github.com/ContextualAI/contextual-client-python/commit/44d064d3013ef31ec6cb709682ab5fef4d2ed531))
+
+
+### Bug Fixes
+
+* **ci:** correct conditional ([0e1ab57](https://github.com/ContextualAI/contextual-client-python/commit/0e1ab57132d5a038aac790b463166200ae436fc3))
+* **ci:** release-doctor — report correct token name ([ce0af3b](https://github.com/ContextualAI/contextual-client-python/commit/ce0af3be8b2f90af2bc4e38979a801df1e98e989))
+* **client:** correctly parse binary response | stream ([518cbab](https://github.com/ContextualAI/contextual-client-python/commit/518cbabda3ce7f53721c0fc916ae89706899a4ec))
+* **client:** don't send Content-Type header on GET requests ([1ba6bcc](https://github.com/ContextualAI/contextual-client-python/commit/1ba6bcc49090112b3ec0dc9a0b1f5c2b487e378e))
+* **docs/api:** remove references to nonexistent types ([9fd7133](https://github.com/ContextualAI/contextual-client-python/commit/9fd7133c6748ba1b1676a674da35d57f02f01a86))
+* **parsing:** correctly handle nested discriminated unions ([130f4c1](https://github.com/ContextualAI/contextual-client-python/commit/130f4c17f8fbf89a42fa1709d6e4b4a8b36c4036))
+* **parsing:** ignore empty metadata ([a81e190](https://github.com/ContextualAI/contextual-client-python/commit/a81e19084356382c7b709215b1462e099d56f2a6))
+* **parsing:** parse extra field types ([89f10b3](https://github.com/ContextualAI/contextual-client-python/commit/89f10b3a97483b99e0ec06a346286619faec5c12))
+* resolve pydantic violation. ([afcfc1c](https://github.com/ContextualAI/contextual-client-python/commit/afcfc1cb265aa3911164ea727af5de6d965d15a5))
+* **tests:** fix: tests which call HTTP endpoints directly with the example parameters ([d7920f1](https://github.com/ContextualAI/contextual-client-python/commit/d7920f111d6175e6714482918e34992fb51739d9))
+
+
+### Chores
+
+* **ci:** change upload type ([f72dfb7](https://github.com/ContextualAI/contextual-client-python/commit/f72dfb77ff1fcae80efa5b286800ed77af6d0889))
+* **ci:** enable for pull requests ([84fbba4](https://github.com/ContextualAI/contextual-client-python/commit/84fbba4c22dbbf8517841c7961a37dba246126dc))
+* **ci:** fix installation instructions ([f191464](https://github.com/ContextualAI/contextual-client-python/commit/f191464e75f48395e76d6007712ae8548268b45f))
+* **ci:** only run for pushes and fork pull requests ([b9520a0](https://github.com/ContextualAI/contextual-client-python/commit/b9520a0ad9c16d3ad0386ce70a15df4191751364))
+* **ci:** upload sdks to package manager ([1f04b9e](https://github.com/ContextualAI/contextual-client-python/commit/1f04b9ecca3a4a3d2235c5cfa21bd9b36a358754))
+* **docs:** grammar improvements ([01370fb](https://github.com/ContextualAI/contextual-client-python/commit/01370fb62278f1def879352910c2520102c89993))
+* **docs:** remove reference to rye shell ([68f70a8](https://github.com/ContextualAI/contextual-client-python/commit/68f70a88e5b45773140c4b4a02c0506f3d078ad9))
+* **docs:** remove unnecessary param examples ([f603dcd](https://github.com/ContextualAI/contextual-client-python/commit/f603dcdd966c77ce3e8b8dba8e878eb273ef1688))
+* **internal:** bump pinned h11 dep ([f0aca79](https://github.com/ContextualAI/contextual-client-python/commit/f0aca79b109176c6a83b31434ccdbc30e58f059d))
+* **internal:** change ci workflow machines ([9e79111](https://github.com/ContextualAI/contextual-client-python/commit/9e7911165b348e96ad55b6fd7faf8855c009c26f))
+* **internal:** codegen related update ([0310d7c](https://github.com/ContextualAI/contextual-client-python/commit/0310d7ce2bca6a80cd3b0d53a1103b4dc1fa8c32))
+* **internal:** fix ruff target version ([465af9e](https://github.com/ContextualAI/contextual-client-python/commit/465af9ec69d6456078fb4137b39d1dd33a3f60b2))
+* **internal:** update comment in script ([01101c7](https://github.com/ContextualAI/contextual-client-python/commit/01101c7ff8496be98feb71c14eda4b6695cc7331))
+* **internal:** update conftest.py ([b324ed3](https://github.com/ContextualAI/contextual-client-python/commit/b324ed373c9c174a44eb52dc6d2384e82c0af4b8))
+* **internal:** update examples ([40379a3](https://github.com/ContextualAI/contextual-client-python/commit/40379a3d51aef12b1a0264e515ac145c91e41644))
+* **package:** mark python 3.13 as supported ([f37217f](https://github.com/ContextualAI/contextual-client-python/commit/f37217ff20d84d47c9adaf89c14151075e329972))
+* **project:** add settings file for vscode ([77265c1](https://github.com/ContextualAI/contextual-client-python/commit/77265c18261b46255146f4a0fd82e2aae41ae160))
+* **readme:** fix version rendering on pypi ([5857ef3](https://github.com/ContextualAI/contextual-client-python/commit/5857ef3c8252e39ab66b1dea3e035580d0f2f006))
+* **readme:** update badges ([b747f45](https://github.com/ContextualAI/contextual-client-python/commit/b747f452ab31df0805dd07a516fe63c460353c57))
+* **tests:** add tests for httpx client instantiation & proxies ([0c4973f](https://github.com/ContextualAI/contextual-client-python/commit/0c4973fed123a77a16b189439b3f4976fcc91770))
+* **tests:** run tests in parallel ([f75c912](https://github.com/ContextualAI/contextual-client-python/commit/f75c912ff643028317dde5fb0dfd08470b26ac29))
+* **tests:** skip some failing tests on the latest python versions ([dd32830](https://github.com/ContextualAI/contextual-client-python/commit/dd32830a8266dbf736c85285ec611854659511e7))
+* update @stainless-api/prism-cli to v5.15.0 ([82c8bc7](https://github.com/ContextualAI/contextual-client-python/commit/82c8bc7b281e624cff3606c46dea4a00ed99cc05))
+* update github action ([2d36800](https://github.com/ContextualAI/contextual-client-python/commit/2d36800896a198d92225efa540eb4f0faff092aa))
+
+
+### Documentation
+
+* **client:** fix httpx.Timeout documentation reference ([3517a3d](https://github.com/ContextualAI/contextual-client-python/commit/3517a3d02c7447c027bc82baf3a83333eb3c9b55))
+
 ## 0.7.0 (2025-05-13)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.6.0...v0.7.0)
