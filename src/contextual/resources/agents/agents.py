@@ -18,14 +18,6 @@ from ...types import agent_list_params, agent_create_params, agent_update_params
 from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
-from .tune.tune import (
-    TuneResource,
-    AsyncTuneResource,
-    TuneResourceWithRawResponse,
-    AsyncTuneResourceWithRawResponse,
-    TuneResourceWithStreamingResponse,
-    AsyncTuneResourceWithStreamingResponse,
-)
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
     to_raw_response_wrapper,
@@ -36,23 +28,6 @@ from ..._response import (
 from ...pagination import SyncPage, AsyncPage
 from ...types.agent import Agent
 from ..._base_client import AsyncPaginator, make_request_options
-from .datasets.datasets import (
-    DatasetsResource,
-    AsyncDatasetsResource,
-    DatasetsResourceWithRawResponse,
-    AsyncDatasetsResourceWithRawResponse,
-    DatasetsResourceWithStreamingResponse,
-    AsyncDatasetsResourceWithStreamingResponse,
-)
-from .evaluate.evaluate import (
-    EvaluateResource,
-    AsyncEvaluateResource,
-    EvaluateResourceWithRawResponse,
-    AsyncEvaluateResourceWithRawResponse,
-    EvaluateResourceWithStreamingResponse,
-    AsyncEvaluateResourceWithStreamingResponse,
-)
-from ...types.agent_configs_param import AgentConfigsParam
 from ...types.create_agent_output import CreateAgentOutput
 from ...types.agent_metadata_response import AgentMetadataResponse
 
@@ -63,18 +38,6 @@ class AgentsResource(SyncAPIResource):
     @cached_property
     def query(self) -> QueryResource:
         return QueryResource(self._client)
-
-    @cached_property
-    def evaluate(self) -> EvaluateResource:
-        return EvaluateResource(self._client)
-
-    @cached_property
-    def datasets(self) -> DatasetsResource:
-        return DatasetsResource(self._client)
-
-    @cached_property
-    def tune(self) -> TuneResource:
-        return TuneResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AgentsResourceWithRawResponse:
@@ -99,10 +62,11 @@ class AgentsResource(SyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
+        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
+        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
@@ -143,6 +107,8 @@ class AgentsResource(SyncAPIResource):
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
 
@@ -171,6 +137,7 @@ class AgentsResource(SyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "description": description,
                     "filter_prompt": filter_prompt,
+                    "multiturn_system_prompt": multiturn_system_prompt,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -187,10 +154,11 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
+        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
@@ -219,6 +187,8 @@ class AgentsResource(SyncAPIResource):
           llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
               on which they were tuned. If no model is specified, the default model is used.
               Set to `default` to switch from a tuned model to the default model.
+
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
 
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
@@ -249,6 +219,7 @@ class AgentsResource(SyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "filter_prompt": filter_prompt,
                     "llm_model_id": llm_model_id,
+                    "multiturn_system_prompt": multiturn_system_prompt,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -431,18 +402,6 @@ class AsyncAgentsResource(AsyncAPIResource):
         return AsyncQueryResource(self._client)
 
     @cached_property
-    def evaluate(self) -> AsyncEvaluateResource:
-        return AsyncEvaluateResource(self._client)
-
-    @cached_property
-    def datasets(self) -> AsyncDatasetsResource:
-        return AsyncDatasetsResource(self._client)
-
-    @cached_property
-    def tune(self) -> AsyncTuneResource:
-        return AsyncTuneResource(self._client)
-
-    @cached_property
     def with_raw_response(self) -> AsyncAgentsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -465,10 +424,11 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
+        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
+        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
@@ -509,6 +469,8 @@ class AsyncAgentsResource(AsyncAPIResource):
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
 
@@ -537,6 +499,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "description": description,
                     "filter_prompt": filter_prompt,
+                    "multiturn_system_prompt": multiturn_system_prompt,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -553,10 +516,11 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
+        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
         suggested_queries: List[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
@@ -585,6 +549,8 @@ class AsyncAgentsResource(AsyncAPIResource):
           llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
               on which they were tuned. If no model is specified, the default model is used.
               Set to `default` to switch from a tuned model to the default model.
+
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
 
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
@@ -615,6 +581,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                     "datastore_ids": datastore_ids,
                     "filter_prompt": filter_prompt,
                     "llm_model_id": llm_model_id,
+                    "multiturn_system_prompt": multiturn_system_prompt,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -818,18 +785,6 @@ class AgentsResourceWithRawResponse:
     def query(self) -> QueryResourceWithRawResponse:
         return QueryResourceWithRawResponse(self._agents.query)
 
-    @cached_property
-    def evaluate(self) -> EvaluateResourceWithRawResponse:
-        return EvaluateResourceWithRawResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> DatasetsResourceWithRawResponse:
-        return DatasetsResourceWithRawResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> TuneResourceWithRawResponse:
-        return TuneResourceWithRawResponse(self._agents.tune)
-
 
 class AsyncAgentsResourceWithRawResponse:
     def __init__(self, agents: AsyncAgentsResource) -> None:
@@ -857,18 +812,6 @@ class AsyncAgentsResourceWithRawResponse:
     @cached_property
     def query(self) -> AsyncQueryResourceWithRawResponse:
         return AsyncQueryResourceWithRawResponse(self._agents.query)
-
-    @cached_property
-    def evaluate(self) -> AsyncEvaluateResourceWithRawResponse:
-        return AsyncEvaluateResourceWithRawResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> AsyncDatasetsResourceWithRawResponse:
-        return AsyncDatasetsResourceWithRawResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> AsyncTuneResourceWithRawResponse:
-        return AsyncTuneResourceWithRawResponse(self._agents.tune)
 
 
 class AgentsResourceWithStreamingResponse:
@@ -898,18 +841,6 @@ class AgentsResourceWithStreamingResponse:
     def query(self) -> QueryResourceWithStreamingResponse:
         return QueryResourceWithStreamingResponse(self._agents.query)
 
-    @cached_property
-    def evaluate(self) -> EvaluateResourceWithStreamingResponse:
-        return EvaluateResourceWithStreamingResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> DatasetsResourceWithStreamingResponse:
-        return DatasetsResourceWithStreamingResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> TuneResourceWithStreamingResponse:
-        return TuneResourceWithStreamingResponse(self._agents.tune)
-
 
 class AsyncAgentsResourceWithStreamingResponse:
     def __init__(self, agents: AsyncAgentsResource) -> None:
@@ -937,15 +868,3 @@ class AsyncAgentsResourceWithStreamingResponse:
     @cached_property
     def query(self) -> AsyncQueryResourceWithStreamingResponse:
         return AsyncQueryResourceWithStreamingResponse(self._agents.query)
-
-    @cached_property
-    def evaluate(self) -> AsyncEvaluateResourceWithStreamingResponse:
-        return AsyncEvaluateResourceWithStreamingResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> AsyncDatasetsResourceWithStreamingResponse:
-        return AsyncDatasetsResourceWithStreamingResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> AsyncTuneResourceWithStreamingResponse:
-        return AsyncTuneResourceWithStreamingResponse(self._agents.tune)

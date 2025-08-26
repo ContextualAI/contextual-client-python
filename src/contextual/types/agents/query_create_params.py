@@ -2,10 +2,20 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable
+from typing import List, Union, Iterable, Optional
 from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
-__all__ = ["QueryCreateParams", "Message", "DocumentsFilters", "DocumentsFiltersBaseMetadataFilter", "StructuredOutput"]
+__all__ = [
+    "QueryCreateParams",
+    "Message",
+    "DocumentsFilters",
+    "DocumentsFiltersBaseMetadataFilter",
+    "DocumentsFiltersCompositeMetadataFilterInput",
+    "DocumentsFiltersCompositeMetadataFilterInputFilter",
+    "DocumentsFiltersCompositeMetadataFilterInputFilterBaseMetadataFilter",
+    "OverrideConfiguration",
+    "StructuredOutput",
+]
 
 
 class QueryCreateParams(TypedDict, total=False):
@@ -83,6 +93,12 @@ class QueryCreateParams(TypedDict, total=False):
     Defaults to base model if not specified.
     """
 
+    override_configuration: OverrideConfiguration
+    """
+    This will modify select configuration parameters for the agent during the
+    response generation.
+    """
+
     stream: bool
     """Set to `true` to receive a streamed response"""
 
@@ -103,7 +119,19 @@ class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
     """Field name to search for in the metadata"""
 
     operator: Required[
-        Literal["equals", "containsany", "exists", "startswith", "gt", "gte", "lt", "lte", "notequals", "between"]
+        Literal[
+            "equals",
+            "containsany",
+            "exists",
+            "startswith",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "notequals",
+            "between",
+            "wildcard",
+        ]
     ]
     """Operator to be used for the filter."""
 
@@ -114,7 +142,116 @@ class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
     """
 
 
-DocumentsFilters: TypeAlias = Union[DocumentsFiltersBaseMetadataFilter, "CompositeMetadataFilterParam"]
+class DocumentsFiltersCompositeMetadataFilterInputFilterBaseMetadataFilter(TypedDict, total=False):
+    field: Required[str]
+    """Field name to search for in the metadata"""
+
+    operator: Required[
+        Literal[
+            "equals",
+            "containsany",
+            "exists",
+            "startswith",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "notequals",
+            "between",
+            "wildcard",
+        ]
+    ]
+    """Operator to be used for the filter."""
+
+    value: Union[str, float, bool, List[Union[str, float, bool]], None]
+    """The value to be searched for in the field.
+
+    In case of exists operator, it is not needed.
+    """
+
+
+DocumentsFiltersCompositeMetadataFilterInputFilter: TypeAlias = Union[
+    DocumentsFiltersCompositeMetadataFilterInputFilterBaseMetadataFilter, object
+]
+
+
+class DocumentsFiltersCompositeMetadataFilterInput(TypedDict, total=False):
+    filters: Required[Iterable[DocumentsFiltersCompositeMetadataFilterInputFilter]]
+    """Filters added to the query for filtering docs"""
+
+    operator: Optional[Literal["AND", "OR", "AND_NOT"]]
+    """Composite operator to be used to combine filters"""
+
+
+DocumentsFilters: TypeAlias = Union[DocumentsFiltersBaseMetadataFilter, DocumentsFiltersCompositeMetadataFilterInput]
+
+
+class OverrideConfiguration(TypedDict, total=False):
+    enable_filter: bool
+    """Override the filter_retrievals for the query.
+
+    This will override the filter_retrievals for the agent during evaluation.
+    """
+
+    enable_rerank: bool
+    """Override the rerank_retrievals for the agent during evaluation."""
+
+    filter_model: str
+    """Override the filter_model for the query.
+
+    This will override the filter_model for the agent during evaluation.
+    """
+
+    filter_prompt: str
+    """Override the filter prompt for the agent during evaluation."""
+
+    lexical_alpha: float
+    """Override the lexical_alpha for the agent during evaluation."""
+
+    max_new_tokens: int
+    """Override the max new tokens for the agent during evaluation."""
+
+    model: str
+    """Override the model for the agent during evaluation."""
+
+    rerank_instructions: str
+    """Override the rerank_instructions for the agent during evaluation."""
+
+    reranker: str
+    """Override the reranker for the agent during evaluation."""
+
+    reranker_score_filter_threshold: float
+    """Override the reranker_score_filter_threshold for the agent during evaluation."""
+
+    semantic_alpha: float
+    """Override the semantic_alpha for the agent during evaluation."""
+
+    system_prompt: str
+    """Override the system prompt for the agent during evaluation."""
+
+    temperature: float
+    """Override the temperature for the query.
+
+    This will override the temperature for the agent during evaluation.
+    """
+
+    top_k_reranked_chunks: int
+    """Override the rerank_top_k for the query.
+
+    This will override the rerank_top_k for the agent during evaluation.
+    """
+
+    top_k_retrieved_chunks: int
+    """Override the top_k for the query.
+
+    This will override the top_k for the agent during evaluation.
+    """
+
+    top_p: float
+    """Override the top_p for the query.
+
+    This will override the top_p for the agent during evaluation.
+    """
 
 
 class StructuredOutput(TypedDict, total=False):
@@ -123,6 +260,3 @@ class StructuredOutput(TypedDict, total=False):
 
     type: Literal["JSON"]
     """Type of the structured output. The default is JSON"""
-
-
-from ..datastores.composite_metadata_filter_param import CompositeMetadataFilterParam

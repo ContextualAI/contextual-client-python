@@ -51,7 +51,9 @@ class UsersResource(SyncAPIResource):
         self,
         *,
         email: str,
+        agent_level_roles: List[Literal["AGENT_LEVEL_USER"]] | NotGiven = NOT_GIVEN,
         is_tenant_admin: bool | NotGiven = NOT_GIVEN,
+        per_agent_roles: Iterable[user_update_params.PerAgentRole] | NotGiven = NOT_GIVEN,
         roles: List[
             Literal[
                 "VISITOR",
@@ -62,6 +64,7 @@ class UsersResource(SyncAPIResource):
                 "CONTEXTUAL_INTERNAL_STAFF_USER",
                 "TENANT_ADMIN",
                 "SUPER_ADMIN",
+                "SERVICE_ACCOUNT",
             ]
         ]
         | NotGiven = NOT_GIVEN,
@@ -80,7 +83,13 @@ class UsersResource(SyncAPIResource):
         Args:
           email: The email of the user
 
+          agent_level_roles: The user level roles of the user for agent level roles.
+
           is_tenant_admin: Flag indicating if the user is a tenant admin
+
+          per_agent_roles: Per agent level roles for the user. If a user is granted any role under
+              `agent_level_roles`, then the user has that role for all the agents. Only the
+              roles that need to be updated should be part of this.
 
           roles: The user level roles of the user.
 
@@ -97,7 +106,9 @@ class UsersResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "email": email,
+                    "agent_level_roles": agent_level_roles,
                     "is_tenant_admin": is_tenant_admin,
+                    "per_agent_roles": per_agent_roles,
                     "roles": roles,
                 },
                 user_update_params.UserUpdateParams,
@@ -268,7 +279,9 @@ class AsyncUsersResource(AsyncAPIResource):
         self,
         *,
         email: str,
+        agent_level_roles: List[Literal["AGENT_LEVEL_USER"]] | NotGiven = NOT_GIVEN,
         is_tenant_admin: bool | NotGiven = NOT_GIVEN,
+        per_agent_roles: Iterable[user_update_params.PerAgentRole] | NotGiven = NOT_GIVEN,
         roles: List[
             Literal[
                 "VISITOR",
@@ -279,6 +292,7 @@ class AsyncUsersResource(AsyncAPIResource):
                 "CONTEXTUAL_INTERNAL_STAFF_USER",
                 "TENANT_ADMIN",
                 "SUPER_ADMIN",
+                "SERVICE_ACCOUNT",
             ]
         ]
         | NotGiven = NOT_GIVEN,
@@ -297,7 +311,13 @@ class AsyncUsersResource(AsyncAPIResource):
         Args:
           email: The email of the user
 
+          agent_level_roles: The user level roles of the user for agent level roles.
+
           is_tenant_admin: Flag indicating if the user is a tenant admin
+
+          per_agent_roles: Per agent level roles for the user. If a user is granted any role under
+              `agent_level_roles`, then the user has that role for all the agents. Only the
+              roles that need to be updated should be part of this.
 
           roles: The user level roles of the user.
 
@@ -314,7 +334,9 @@ class AsyncUsersResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "email": email,
+                    "agent_level_roles": agent_level_roles,
                     "is_tenant_admin": is_tenant_admin,
+                    "per_agent_roles": per_agent_roles,
                     "roles": roles,
                 },
                 user_update_params.UserUpdateParams,

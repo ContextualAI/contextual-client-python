@@ -62,6 +62,7 @@ class QueryResource(SyncAPIResource):
         conversation_id: str | NotGiven = NOT_GIVEN,
         documents_filters: query_create_params.DocumentsFilters | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        override_configuration: query_create_params.OverrideConfiguration | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
         structured_output: query_create_params.StructuredOutput | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -134,6 +135,9 @@ class QueryResource(SyncAPIResource):
           llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
               base model if not specified.
 
+          override_configuration: This will modify select configuration parameters for the agent during the
+              response generation.
+
           stream: Set to `true` to receive a streamed response
 
           structured_output: Custom output structure format.
@@ -156,6 +160,7 @@ class QueryResource(SyncAPIResource):
                     "conversation_id": conversation_id,
                     "documents_filters": documents_filters,
                     "llm_model_id": llm_model_id,
+                    "override_configuration": override_configuration,
                     "stream": stream,
                     "structured_output": structured_output,
                 },
@@ -394,6 +399,7 @@ class AsyncQueryResource(AsyncAPIResource):
         conversation_id: str | NotGiven = NOT_GIVEN,
         documents_filters: query_create_params.DocumentsFilters | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
+        override_configuration: query_create_params.OverrideConfiguration | NotGiven = NOT_GIVEN,
         stream: bool | NotGiven = NOT_GIVEN,
         structured_output: query_create_params.StructuredOutput | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -466,6 +472,9 @@ class AsyncQueryResource(AsyncAPIResource):
           llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
               base model if not specified.
 
+          override_configuration: This will modify select configuration parameters for the agent during the
+              response generation.
+
           stream: Set to `true` to receive a streamed response
 
           structured_output: Custom output structure format.
@@ -488,6 +497,7 @@ class AsyncQueryResource(AsyncAPIResource):
                     "conversation_id": conversation_id,
                     "documents_filters": documents_filters,
                     "llm_model_id": llm_model_id,
+                    "override_configuration": override_configuration,
                     "stream": stream,
                     "structured_output": structured_output,
                 },

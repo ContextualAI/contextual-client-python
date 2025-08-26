@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List
+from typing import List, Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
@@ -25,3 +25,9 @@ class ParseJobsResponse(BaseModel):
 
     total_jobs: int
     """Total number of parse jobs"""
+
+    next_cursor: Optional[str] = None
+    """Next cursor to continue pagination.
+
+    Omitted if there are no more parse jobs after these ones.
+    """

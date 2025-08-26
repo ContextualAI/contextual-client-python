@@ -93,7 +93,7 @@ class ParseResource(SyncAPIResource):
               commentary; this mode is in beta. Not permitted in `basic` parsing_mode.
 
           max_split_table_cells: Threshold number of table cells beyond which large tables are split if
-              `enable_split_tables` is True. Not permitted in `basic` parsing_mode.
+              `enable_split_tables` is True. Must be null if `enable_split_tables` is False.
 
           page_range: Optional string representing page range to be parsed. Format: comma-separated
               indexes (0-based, e.g. `0,1,2,5,6`), or ranges inclusive of both ends (e.g.
@@ -228,6 +228,8 @@ class ParseResource(SyncAPIResource):
     def jobs(
         self,
         *,
+        cursor: str | NotGiven = NOT_GIVEN,
+        limit: int | NotGiven = NOT_GIVEN,
         uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -243,6 +245,16 @@ class ParseResource(SyncAPIResource):
         timestamp.
 
         Args:
+          cursor: Cursor from the previous call to list parse jobs, used to retrieve the next set
+              of results
+
+          limit: Maximum number of parse jobs to return
+
+          uploaded_after: Filters to only documents uploaded to `/parse` at or after specified UTC
+              timestamp. If not provided, or if the provided timestamp is before the maximum
+              parse job retention period (30 days), the maximum retention period will be used
+              instead.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -258,7 +270,14 @@ class ParseResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"uploaded_after": uploaded_after}, parse_jobs_params.ParseJobsParams),
+                query=maybe_transform(
+                    {
+                        "cursor": cursor,
+                        "limit": limit,
+                        "uploaded_after": uploaded_after,
+                    },
+                    parse_jobs_params.ParseJobsParams,
+                ),
             ),
             cast_to=ParseJobsResponse,
         )
@@ -329,7 +348,7 @@ class AsyncParseResource(AsyncAPIResource):
               commentary; this mode is in beta. Not permitted in `basic` parsing_mode.
 
           max_split_table_cells: Threshold number of table cells beyond which large tables are split if
-              `enable_split_tables` is True. Not permitted in `basic` parsing_mode.
+              `enable_split_tables` is True. Must be null if `enable_split_tables` is False.
 
           page_range: Optional string representing page range to be parsed. Format: comma-separated
               indexes (0-based, e.g. `0,1,2,5,6`), or ranges inclusive of both ends (e.g.
@@ -466,6 +485,8 @@ class AsyncParseResource(AsyncAPIResource):
     async def jobs(
         self,
         *,
+        cursor: str | NotGiven = NOT_GIVEN,
+        limit: int | NotGiven = NOT_GIVEN,
         uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -481,6 +502,16 @@ class AsyncParseResource(AsyncAPIResource):
         timestamp.
 
         Args:
+          cursor: Cursor from the previous call to list parse jobs, used to retrieve the next set
+              of results
+
+          limit: Maximum number of parse jobs to return
+
+          uploaded_after: Filters to only documents uploaded to `/parse` at or after specified UTC
+              timestamp. If not provided, or if the provided timestamp is before the maximum
+              parse job retention period (30 days), the maximum retention period will be used
+              instead.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -497,7 +528,12 @@ class AsyncParseResource(AsyncAPIResource):
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {"uploaded_after": uploaded_after}, parse_jobs_params.ParseJobsParams
+                    {
+                        "cursor": cursor,
+                        "limit": limit,
+                        "uploaded_after": uploaded_after,
+                    },
+                    parse_jobs_params.ParseJobsParams,
                 ),
             ),
             cast_to=ParseJobsResponse,

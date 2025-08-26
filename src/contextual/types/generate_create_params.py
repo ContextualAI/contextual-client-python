@@ -19,7 +19,7 @@ class GenerateCreateParams(TypedDict, total=False):
     """
 
     model: Required[str]
-    """The version of the Contextual's GLM to use. Currently, we just have "v1"."""
+    """The version of the Contextual's GLM to use. Currently, we have `v1` and `v2`."""
 
     avoid_commentary: bool
     """

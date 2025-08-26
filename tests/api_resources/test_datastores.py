@@ -30,6 +30,28 @@ class TestDatastores:
         assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
     @parametrize
+    def test_method_create_with_all_params(self, client: ContextualAI) -> None:
+        datastore = client.datastores.create(
+            name="name",
+            configuration={
+                "chunking": {
+                    "chunking_mode": "hierarchy_depth",
+                    "enable_hierarchy_based_contextualization": True,
+                    "max_chunk_length_tokens": 512,
+                    "min_chunk_length_tokens": 128,
+                },
+                "html_config": {"max_chunk_length_tokens": 512},
+                "parsing": {
+                    "enable_split_tables": True,
+                    "figure_caption_mode": "default",
+                    "figure_captioning_prompt": "figure_captioning_prompt",
+                    "max_split_table_cells": 0,
+                },
+            },
+        )
+        assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
+
+    @parametrize
     def test_raw_response_create(self, client: ContextualAI) -> None:
         response = client.datastores.with_raw_response.create(
             name="name",
@@ -211,6 +233,28 @@ class TestAsyncDatastores:
     async def test_method_create(self, async_client: AsyncContextualAI) -> None:
         datastore = await async_client.datastores.create(
             name="name",
+        )
+        assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
+
+    @parametrize
+    async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
+        datastore = await async_client.datastores.create(
+            name="name",
+            configuration={
+                "chunking": {
+                    "chunking_mode": "hierarchy_depth",
+                    "enable_hierarchy_based_contextualization": True,
+                    "max_chunk_length_tokens": 512,
+                    "min_chunk_length_tokens": 128,
+                },
+                "html_config": {"max_chunk_length_tokens": 512},
+                "parsing": {
+                    "enable_split_tables": True,
+                    "figure_caption_mode": "default",
+                    "figure_captioning_prompt": "figure_captioning_prompt",
+                    "max_split_table_cells": 0,
+                },
+            },
         )
         assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
