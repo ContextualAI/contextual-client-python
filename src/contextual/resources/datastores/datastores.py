@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ...types import datastore_list_params, datastore_create_params
+from ...types import datastore_list_params, datastore_create_params, datastore_update_params
 from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
@@ -28,6 +28,7 @@ from ..._base_client import AsyncPaginator, make_request_options
 from ...types.datastore import Datastore
 from ...types.datastore_metadata import DatastoreMetadata
 from ...types.create_datastore_response import CreateDatastoreResponse
+from ...types.datastore_update_response import DatastoreUpdateResponse
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
 
@@ -112,6 +113,55 @@ class DatastoresResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=CreateDatastoreResponse,
+        )
+
+    def update(
+        self,
+        datastore_id: str,
+        *,
+        configuration: datastore_update_params.Configuration | NotGiven = NOT_GIVEN,
+        name: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DatastoreUpdateResponse:
+        """
+        Edit Datastore Configuration
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          configuration: Configuration of the datastore. If not provided, current configuration is
+              retained.
+
+          name: Name of the datastore
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return self._put(
+            f"/datastores/{datastore_id}",
+            body=maybe_transform(
+                {
+                    "configuration": configuration,
+                    "name": name,
+                },
+                datastore_update_params.DatastoreUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreUpdateResponse,
         )
 
     def list(
@@ -367,6 +417,55 @@ class AsyncDatastoresResource(AsyncAPIResource):
             cast_to=CreateDatastoreResponse,
         )
 
+    async def update(
+        self,
+        datastore_id: str,
+        *,
+        configuration: datastore_update_params.Configuration | NotGiven = NOT_GIVEN,
+        name: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DatastoreUpdateResponse:
+        """
+        Edit Datastore Configuration
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          configuration: Configuration of the datastore. If not provided, current configuration is
+              retained.
+
+          name: Name of the datastore
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return await self._put(
+            f"/datastores/{datastore_id}",
+            body=await async_maybe_transform(
+                {
+                    "configuration": configuration,
+                    "name": name,
+                },
+                datastore_update_params.DatastoreUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreUpdateResponse,
+        )
+
     def list(
         self,
         *,
@@ -545,6 +644,9 @@ class DatastoresResourceWithRawResponse:
         self.create = to_raw_response_wrapper(
             datastores.create,
         )
+        self.update = to_raw_response_wrapper(
+            datastores.update,
+        )
         self.list = to_raw_response_wrapper(
             datastores.list,
         )
@@ -569,6 +671,9 @@ class AsyncDatastoresResourceWithRawResponse:
 
         self.create = async_to_raw_response_wrapper(
             datastores.create,
+        )
+        self.update = async_to_raw_response_wrapper(
+            datastores.update,
         )
         self.list = async_to_raw_response_wrapper(
             datastores.list,
@@ -595,6 +700,9 @@ class DatastoresResourceWithStreamingResponse:
         self.create = to_streamed_response_wrapper(
             datastores.create,
         )
+        self.update = to_streamed_response_wrapper(
+            datastores.update,
+        )
         self.list = to_streamed_response_wrapper(
             datastores.list,
         )
@@ -619,6 +727,9 @@ class AsyncDatastoresResourceWithStreamingResponse:
 
         self.create = async_to_streamed_response_wrapper(
             datastores.create,
+        )
+        self.update = async_to_streamed_response_wrapper(
+            datastores.update,
         )
         self.list = async_to_streamed_response_wrapper(
             datastores.list,
