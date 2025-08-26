@@ -2,34 +2,18 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Union, Iterable, Optional
+from typing import TYPE_CHECKING, Union, Iterable, Optional
 from typing_extensions import Literal, Required, TypeAlias, TypedDict, TypeAliasType
 
 from ..._compat import PYDANTIC_V2
+from .base_metadata_filter_param import BaseMetadataFilterParam
 
-__all__ = ["CompositeMetadataFilterParam", "Filter", "FilterBaseMetadataFilter"]
-
-
-class FilterBaseMetadataFilter(TypedDict, total=False):
-    field: Required[str]
-    """Field name to search for in the metadata"""
-
-    operator: Required[
-        Literal["equals", "containsany", "exists", "startswith", "gt", "gte", "lt", "lte", "notequals", "between"]
-    ]
-    """Operator to be used for the filter."""
-
-    value: Union[str, float, bool, List[Union[str, float, bool]], None]
-    """The value to be searched for in the field.
-
-    In case of exists operator, it is not needed.
-    """
-
+__all__ = ["CompositeMetadataFilterParam", "Filter"]
 
 if TYPE_CHECKING or PYDANTIC_V2:
-    Filter = TypeAliasType("Filter", Union[FilterBaseMetadataFilter, "CompositeMetadataFilterParam"])
+    Filter = TypeAliasType("Filter", Union[BaseMetadataFilterParam, "CompositeMetadataFilterParam"])
 else:
-    Filter: TypeAlias = Union[FilterBaseMetadataFilter, "CompositeMetadataFilterParam"]
+    Filter: TypeAlias = Union[BaseMetadataFilterParam, "CompositeMetadataFilterParam"]
 
 
 class CompositeMetadataFilterParam(TypedDict, total=False):

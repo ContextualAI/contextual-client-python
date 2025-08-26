@@ -32,7 +32,15 @@ class TestUsers:
     def test_method_update_with_all_params(self, client: ContextualAI) -> None:
         user = client.users.update(
             email="email",
+            agent_level_roles=["AGENT_LEVEL_USER"],
             is_tenant_admin=True,
+            per_agent_roles=[
+                {
+                    "agent_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                    "grant": True,
+                    "roles": ["AGENT_LEVEL_USER"],
+                }
+            ],
             roles=["VISITOR"],
         )
         assert_matches_type(object, user, path=["response"])
@@ -163,7 +171,9 @@ class TestUsers:
 
 
 class TestAsyncUsers:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
     @parametrize
     async def test_method_update(self, async_client: AsyncContextualAI) -> None:
@@ -176,7 +186,15 @@ class TestAsyncUsers:
     async def test_method_update_with_all_params(self, async_client: AsyncContextualAI) -> None:
         user = await async_client.users.update(
             email="email",
+            agent_level_roles=["AGENT_LEVEL_USER"],
             is_tenant_admin=True,
+            per_agent_roles=[
+                {
+                    "agent_id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                    "grant": True,
+                    "roles": ["AGENT_LEVEL_USER"],
+                }
+            ],
             roles=["VISITOR"],
         )
         assert_matches_type(object, user, path=["response"])

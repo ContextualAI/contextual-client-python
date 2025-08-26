@@ -39,7 +39,7 @@ class ParseCreateParams(TypedDict, total=False):
     max_split_table_cells: int
     """
     Threshold number of table cells beyond which large tables are split if
-    `enable_split_tables` is True. Not permitted in `basic` parsing_mode.
+    `enable_split_tables` is True. Must be null if `enable_split_tables` is False.
     """
 
     page_range: str

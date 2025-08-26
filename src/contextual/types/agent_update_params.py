@@ -5,13 +5,11 @@ from __future__ import annotations
 from typing import List
 from typing_extensions import TypedDict
 
-from .agent_configs_param import AgentConfigsParam
-
 __all__ = ["AgentUpdateParams"]
 
 
 class AgentUpdateParams(TypedDict, total=False):
-    agent_configs: AgentConfigsParam
+    agent_configs: "AgentConfigsParam"
     """The following advanced parameters are experimental and subject to change."""
 
     datastore_ids: List[str]
@@ -30,6 +28,9 @@ class AgentUpdateParams(TypedDict, total=False):
     model is specified, the default model is used. Set to `default` to switch from a
     tuned model to the default model.
     """
+
+    multiturn_system_prompt: str
+    """Instructions on how the agent should handle multi-turn conversations."""
 
     no_retrieval_system_prompt: str
     """
@@ -51,3 +52,6 @@ class AgentUpdateParams(TypedDict, total=False):
     Note that we do not guarantee that the system will follow these instructions
     exactly.
     """
+
+
+from .agent_configs_param import AgentConfigsParam

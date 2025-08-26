@@ -1,6 +1,6 @@
 [project]
 name = "contextual-client"
-version = "0.7.0"
+version = "0.8.0"
 description = "The official Python library for the Contextual AI API"
 dynamic = ["readme"]
 license = "Apache-2.0"
@@ -24,6 +24,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Operating System :: OS Independent",
   "Operating System :: POSIX",
   "Operating System :: MacOS",
@@ -37,6 +38,8 @@ classifiers = [
 Homepage = "https://github.com/ContextualAI/contextual-client-python"
 Repository = "https://github.com/ContextualAI/contextual-client-python"
 
+[project.optional-dependencies]
+aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.8"]
 
 [tool.rye]
 managed = true
@@ -54,6 +57,7 @@ dev-dependencies = [
     "importlib-metadata>=6.7.0",
     "rich>=13.7.1",
     "nest_asyncio==1.6.0",
+    "pytest-xdist>=3.6.1",
 ]
 
 [tool.rye.scripts]
@@ -125,7 +129,7 @@ replacement = '[\1](https://github.com/ContextualAI/contextual-client-python/tre
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--tb=short"
+addopts = "--tb=short -n auto"
 xfail_strict = true
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
@@ -155,7 +159,7 @@ reportPrivateUsage = false
 [tool.ruff]
 line-length = 120
 output-format = "grouped"
-target-version = "py37"
+target-version = "py38"
 
 [tool.ruff.format]
 docstring-code-format = true

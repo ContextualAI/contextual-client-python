@@ -5,8 +5,6 @@ from __future__ import annotations
 from typing import List
 from typing_extensions import Required, TypedDict
 
-from .agent_configs_param import AgentConfigsParam
-
 __all__ = ["AgentCreateParams"]
 
 
@@ -14,7 +12,7 @@ class AgentCreateParams(TypedDict, total=False):
     name: Required[str]
     """Name of the agent"""
 
-    agent_configs: AgentConfigsParam
+    agent_configs: "AgentConfigsParam"
     """The following advanced parameters are experimental and subject to change."""
 
     datastore_ids: List[str]
@@ -28,6 +26,9 @@ class AgentCreateParams(TypedDict, total=False):
     The prompt to an LLM which determines whether retrieved chunks are relevant to a
     given query and filters out irrelevant chunks.
     """
+
+    multiturn_system_prompt: str
+    """Instructions on how the agent should handle multi-turn conversations."""
 
     no_retrieval_system_prompt: str
     """
@@ -49,3 +50,6 @@ class AgentCreateParams(TypedDict, total=False):
     Note that we do not guarantee that the system will follow these instructions
     exactly.
     """
+
+
+from .agent_configs_param import AgentConfigsParam

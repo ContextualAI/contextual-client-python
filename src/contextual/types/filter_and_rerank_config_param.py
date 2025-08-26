@@ -2,12 +2,32 @@
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict
+from typing import Dict, Union
+from typing_extensions import TypeAlias, TypedDict
 
-__all__ = ["FilterAndRerankConfigParam"]
+from .datastores.base_metadata_filter_param import BaseMetadataFilterParam
+
+__all__ = ["FilterAndRerankConfigParam", "DefaultMetadataFilters"]
+
+DefaultMetadataFilters: TypeAlias = Union[BaseMetadataFilterParam, "CompositeMetadataFilterParam"]
 
 
 class FilterAndRerankConfigParam(TypedDict, total=False):
+    default_metadata_filters: DefaultMetadataFilters
+    """
+    Optional metadata filter which is applied while retrieving from every datastore
+    linked to this agent.
+    """
+
+    per_datastore_metadata_filters: Dict[str, "CompositeMetadataFilterParam"]
+    """Defines an optional custom metadata filter per datastore ID.
+
+    Each entry in the dictionary should have a datastore UUID as the key, and the
+    value should be a metadata filter definition. The filter will be applied in
+    addition to filter(s) specified in `default_metadata_filters` and in the
+    `documents_filters` field in the `/query` request during retrieval.
+    """
+
     rerank_instructions: str
     """Instructions that the reranker references when ranking retrievals.
 
@@ -29,3 +49,6 @@ class FilterAndRerankConfigParam(TypedDict, total=False):
 
     top_k_reranked_chunks: int
     """The number of highest ranked chunks after reranking to be used"""
+
+
+from .datastores.composite_metadata_filter_param import CompositeMetadataFilterParam

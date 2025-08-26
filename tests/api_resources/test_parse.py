@@ -35,7 +35,7 @@ class TestParse:
         parse = client.parse.create(
             raw_file=b"raw file contents",
             enable_document_hierarchy=True,
-            enable_split_tables=True,
+            enable_split_tables=False,
             figure_caption_mode="concise",
             max_split_table_cells=0,
             page_range="page_range",
@@ -159,6 +159,8 @@ class TestParse:
     @parametrize
     def test_method_jobs_with_all_params(self, client: ContextualAI) -> None:
         parse = client.parse.jobs(
+            cursor="cursor",
+            limit=1,
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
         )
         assert_matches_type(ParseJobsResponse, parse, path=["response"])
@@ -185,7 +187,9 @@ class TestParse:
 
 
 class TestAsyncParse:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
     @parametrize
     async def test_method_create(self, async_client: AsyncContextualAI) -> None:
@@ -199,7 +203,7 @@ class TestAsyncParse:
         parse = await async_client.parse.create(
             raw_file=b"raw file contents",
             enable_document_hierarchy=True,
-            enable_split_tables=True,
+            enable_split_tables=False,
             figure_caption_mode="concise",
             max_split_table_cells=0,
             page_range="page_range",
@@ -323,6 +327,8 @@ class TestAsyncParse:
     @parametrize
     async def test_method_jobs_with_all_params(self, async_client: AsyncContextualAI) -> None:
         parse = await async_client.parse.jobs(
+            cursor="cursor",
+            limit=1,
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
         )
         assert_matches_type(ParseJobsResponse, parse, path=["response"])

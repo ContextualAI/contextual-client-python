@@ -20,9 +20,15 @@ from ..._response import (
 )
 from ...pagination import SyncDocumentsPage, AsyncDocumentsPage
 from ..._base_client import AsyncPaginator, make_request_options
-from ...types.datastores import document_list_params, document_ingest_params, document_set_metadata_params
+from ...types.datastores import (
+    document_list_params,
+    document_ingest_params,
+    document_set_metadata_params,
+    document_get_parse_result_params,
+)
 from ...types.datastores.document_metadata import DocumentMetadata
 from ...types.datastores.ingestion_response import IngestionResponse
+from ...types.datastores.document_get_parse_result_response import DocumentGetParseResultResponse
 
 __all__ = ["DocumentsResource", "AsyncDocumentsResource"]
 
@@ -52,21 +58,8 @@ class DocumentsResource(SyncAPIResource):
         datastore_id: str,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
-        ingestion_job_status: List[
-            Literal[
-                "pending",
-                "processing",
-                "retrying",
-                "completed",
-                "failed",
-                "cancelled",
-                "failed_to_provision",
-                "generating_data",
-                "training_in_progress",
-                "failed_to_generate_data",
-                "provisioning",
-            ]
-        ]
+        document_name_prefix: str | NotGiven = NOT_GIVEN,
+        ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
         | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
@@ -92,6 +85,8 @@ class DocumentsResource(SyncAPIResource):
 
           cursor: Cursor from the previous call to list documents, used to retrieve the next set
               of results
+
+          document_name_prefix: Filters documents with the given prefix.
 
           ingestion_job_status: Filters documents whose ingestion job status matches (one of) the provided
               status(es).
@@ -123,6 +118,7 @@ class DocumentsResource(SyncAPIResource):
                 query=maybe_transform(
                     {
                         "cursor": cursor,
+                        "document_name_prefix": document_name_prefix,
                         "ingestion_job_status": ingestion_job_status,
                         "limit": limit,
                         "uploaded_after": uploaded_after,
@@ -175,6 +171,62 @@ class DocumentsResource(SyncAPIResource):
             cast_to=object,
         )
 
+    def get_parse_result(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentGetParseResultResponse:
+        """
+        Get the parse results that are generated during ingestion for a given document.
+        Retrieving parse results for existing documents ingested before the release of
+        this endpoint is not supported and will return a 404 error.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          output_types: The desired output format(s) of the parsed file. Must be `markdown-document`,
+              `markdown-per-page`, and/or `blocks-per-page`. Specify multiple values to get
+              multiple formats in the response. `markdown-document` parses the whole document
+              into a single concatenated markdown output. `markdown-per-page` provides
+              markdown output per page. `blocks-per-page` provides a structured JSON
+              representation of the content blocks on each page, sorted by reading order.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return self._get(
+            f"/datastores/{datastore_id}/documents/{document_id}/parse",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {"output_types": output_types}, document_get_parse_result_params.DocumentGetParseResultParams
+                ),
+            ),
+            cast_to=DocumentGetParseResultResponse,
+        )
+
     def ingest(
         self,
         datastore_id: str,
@@ -208,21 +260,23 @@ class DocumentsResource(SyncAPIResource):
 
           file: File to ingest.
 
-          metadata: Metadata in `JSON` format. Metadata should be passed as a nested dictionary
-              structure where:
+          metadata: Metadata request in JSON format. `custom_metadata` is a flat dictionary
+              containing one or more key-value pairs, where each value must be a primitive
+              type (`str`, `bool`, `float`, or `int`). The default maximum metadata fields
+              that can be used is 15, contact support if more is needed.The combined size of
+              the metadata must not exceed **2 KB** when encoded as JSON.The strings with date
+              format must stay in date format or be avoided if not in date format.The
+              `custom_metadata.url` field is automatically included in returned attributions
+              during query time, if provided.
 
-              - The **metadata type** `custom_metadata` is mapped to a dictionary. - The
-                **dictionary keys** represent metadata attributes. - The **values** can be of
-                type `str`, `bool`, `float`, or `int`.
-
-              **Example Metadata JSON:**
+              **Example Request Body:**
 
               ```json
-              metadata = {
-                  "custom_metadata": {
-                      "field1": "value1",
-                      "field2": "value2"
-                   }
+              {
+                "custom_metadata": {
+                  "topic": "science",
+                  "difficulty": 3
+                }
               }
               ```
 
@@ -304,6 +358,7 @@ class DocumentsResource(SyncAPIResource):
         *,
         datastore_id: str,
         custom_metadata: Dict[str, Union[bool, float, str]] | NotGiven = NOT_GIVEN,
+        custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -321,6 +376,27 @@ class DocumentsResource(SyncAPIResource):
 
           document_id: Document ID of the document to retrieve details for
 
+          custom_metadata: Custom metadata for the document, provided by the user at ingestion time.Must be
+              a JSON-serializable dictionary with string keys and simple primitive values
+              (str, int, float, bool). The total size must not exceed 2 KB.The strings with
+              date format must stay in date format or be avodied if not in date format.The
+              'custom_metadata.url' field is automatically included in returned attributions
+              during query time, if provided.The default maximum metadata fields that can be
+              used is 15, contact support if more is needed.
+
+          custom_metadata_config: A dictionary mapping metadata field names to the configuration to use for each
+              field.
+
+                      - If a metadata field is not present in the dictionary, the default configuration will be used.
+
+                      - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
+
+                      Limits: - Maximum characters per metadata field (for prompt or rerank): 400
+
+                      - Maximum number of metadata fields (for prompt or retrieval): 10
+
+                      Contact support@contextual.ai to request quota increases.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -336,7 +412,11 @@ class DocumentsResource(SyncAPIResource):
         return self._post(
             f"/datastores/{datastore_id}/documents/{document_id}/metadata",
             body=maybe_transform(
-                {"custom_metadata": custom_metadata}, document_set_metadata_params.DocumentSetMetadataParams
+                {
+                    "custom_metadata": custom_metadata,
+                    "custom_metadata_config": custom_metadata_config,
+                },
+                document_set_metadata_params.DocumentSetMetadataParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -370,21 +450,8 @@ class AsyncDocumentsResource(AsyncAPIResource):
         datastore_id: str,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
-        ingestion_job_status: List[
-            Literal[
-                "pending",
-                "processing",
-                "retrying",
-                "completed",
-                "failed",
-                "cancelled",
-                "failed_to_provision",
-                "generating_data",
-                "training_in_progress",
-                "failed_to_generate_data",
-                "provisioning",
-            ]
-        ]
+        document_name_prefix: str | NotGiven = NOT_GIVEN,
+        ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
         | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
@@ -410,6 +477,8 @@ class AsyncDocumentsResource(AsyncAPIResource):
 
           cursor: Cursor from the previous call to list documents, used to retrieve the next set
               of results
+
+          document_name_prefix: Filters documents with the given prefix.
 
           ingestion_job_status: Filters documents whose ingestion job status matches (one of) the provided
               status(es).
@@ -441,6 +510,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
                 query=maybe_transform(
                     {
                         "cursor": cursor,
+                        "document_name_prefix": document_name_prefix,
                         "ingestion_job_status": ingestion_job_status,
                         "limit": limit,
                         "uploaded_after": uploaded_after,
@@ -493,6 +563,62 @@ class AsyncDocumentsResource(AsyncAPIResource):
             cast_to=object,
         )
 
+    async def get_parse_result(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentGetParseResultResponse:
+        """
+        Get the parse results that are generated during ingestion for a given document.
+        Retrieving parse results for existing documents ingested before the release of
+        this endpoint is not supported and will return a 404 error.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          output_types: The desired output format(s) of the parsed file. Must be `markdown-document`,
+              `markdown-per-page`, and/or `blocks-per-page`. Specify multiple values to get
+              multiple formats in the response. `markdown-document` parses the whole document
+              into a single concatenated markdown output. `markdown-per-page` provides
+              markdown output per page. `blocks-per-page` provides a structured JSON
+              representation of the content blocks on each page, sorted by reading order.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return await self._get(
+            f"/datastores/{datastore_id}/documents/{document_id}/parse",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"output_types": output_types}, document_get_parse_result_params.DocumentGetParseResultParams
+                ),
+            ),
+            cast_to=DocumentGetParseResultResponse,
+        )
+
     async def ingest(
         self,
         datastore_id: str,
@@ -526,21 +652,23 @@ class AsyncDocumentsResource(AsyncAPIResource):
 
           file: File to ingest.
 
-          metadata: Metadata in `JSON` format. Metadata should be passed as a nested dictionary
-              structure where:
+          metadata: Metadata request in JSON format. `custom_metadata` is a flat dictionary
+              containing one or more key-value pairs, where each value must be a primitive
+              type (`str`, `bool`, `float`, or `int`). The default maximum metadata fields
+              that can be used is 15, contact support if more is needed.The combined size of
+              the metadata must not exceed **2 KB** when encoded as JSON.The strings with date
+              format must stay in date format or be avoided if not in date format.The
+              `custom_metadata.url` field is automatically included in returned attributions
+              during query time, if provided.
 
-              - The **metadata type** `custom_metadata` is mapped to a dictionary. - The
-                **dictionary keys** represent metadata attributes. - The **values** can be of
-                type `str`, `bool`, `float`, or `int`.
-
-              **Example Metadata JSON:**
+              **Example Request Body:**
 
               ```json
-              metadata = {
-                  "custom_metadata": {
-                      "field1": "value1",
-                      "field2": "value2"
-                   }
+              {
+                "custom_metadata": {
+                  "topic": "science",
+                  "difficulty": 3
+                }
               }
               ```
 
@@ -622,6 +750,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         *,
         datastore_id: str,
         custom_metadata: Dict[str, Union[bool, float, str]] | NotGiven = NOT_GIVEN,
+        custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -639,6 +768,27 @@ class AsyncDocumentsResource(AsyncAPIResource):
 
           document_id: Document ID of the document to retrieve details for
 
+          custom_metadata: Custom metadata for the document, provided by the user at ingestion time.Must be
+              a JSON-serializable dictionary with string keys and simple primitive values
+              (str, int, float, bool). The total size must not exceed 2 KB.The strings with
+              date format must stay in date format or be avodied if not in date format.The
+              'custom_metadata.url' field is automatically included in returned attributions
+              during query time, if provided.The default maximum metadata fields that can be
+              used is 15, contact support if more is needed.
+
+          custom_metadata_config: A dictionary mapping metadata field names to the configuration to use for each
+              field.
+
+                      - If a metadata field is not present in the dictionary, the default configuration will be used.
+
+                      - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
+
+                      Limits: - Maximum characters per metadata field (for prompt or rerank): 400
+
+                      - Maximum number of metadata fields (for prompt or retrieval): 10
+
+                      Contact support@contextual.ai to request quota increases.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -654,7 +804,11 @@ class AsyncDocumentsResource(AsyncAPIResource):
         return await self._post(
             f"/datastores/{datastore_id}/documents/{document_id}/metadata",
             body=await async_maybe_transform(
-                {"custom_metadata": custom_metadata}, document_set_metadata_params.DocumentSetMetadataParams
+                {
+                    "custom_metadata": custom_metadata,
+                    "custom_metadata_config": custom_metadata_config,
+                },
+                document_set_metadata_params.DocumentSetMetadataParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -672,6 +826,9 @@ class DocumentsResourceWithRawResponse:
         )
         self.delete = to_raw_response_wrapper(
             documents.delete,
+        )
+        self.get_parse_result = to_raw_response_wrapper(
+            documents.get_parse_result,
         )
         self.ingest = to_raw_response_wrapper(
             documents.ingest,
@@ -694,6 +851,9 @@ class AsyncDocumentsResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             documents.delete,
         )
+        self.get_parse_result = async_to_raw_response_wrapper(
+            documents.get_parse_result,
+        )
         self.ingest = async_to_raw_response_wrapper(
             documents.ingest,
         )
@@ -715,6 +875,9 @@ class DocumentsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             documents.delete,
         )
+        self.get_parse_result = to_streamed_response_wrapper(
+            documents.get_parse_result,
+        )
         self.ingest = to_streamed_response_wrapper(
             documents.ingest,
         )
@@ -735,6 +898,9 @@ class AsyncDocumentsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             documents.delete,
+        )
+        self.get_parse_result = async_to_streamed_response_wrapper(
+            documents.get_parse_result,
         )
         self.ingest = async_to_streamed_response_wrapper(
             documents.ingest,

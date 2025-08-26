@@ -18,7 +18,8 @@ class RerankCreateParams(TypedDict, total=False):
     model: Required[str]
     """The version of the reranker to use.
 
-    Currently, we just have "ctxl-rerank-en-v1-instruct".
+    Currently, we have: "ctxl-rerank-v2-instruct-multilingual",
+    "ctxl-rerank-v2-instruct-multilingual-mini", "ctxl-rerank-v1-instruct".
     """
 
     query: Required[str]

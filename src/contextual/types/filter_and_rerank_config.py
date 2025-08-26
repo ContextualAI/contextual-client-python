@@ -1,13 +1,34 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from __future__ import annotations
+
+from typing import Dict, Union, Optional
+from typing_extensions import TypeAlias
 
 from .._models import BaseModel
+from .datastores.base_metadata_filter import BaseMetadataFilter
 
-__all__ = ["FilterAndRerankConfig"]
+__all__ = ["FilterAndRerankConfig", "DefaultMetadataFilters"]
+
+DefaultMetadataFilters: TypeAlias = Union[BaseMetadataFilter, "CompositeMetadataFilter"]
 
 
 class FilterAndRerankConfig(BaseModel):
+    default_metadata_filters: Optional[DefaultMetadataFilters] = None
+    """
+    Optional metadata filter which is applied while retrieving from every datastore
+    linked to this agent.
+    """
+
+    per_datastore_metadata_filters: Optional[Dict[str, "CompositeMetadataFilter"]] = None
+    """Defines an optional custom metadata filter per datastore ID.
+
+    Each entry in the dictionary should have a datastore UUID as the key, and the
+    value should be a metadata filter definition. The filter will be applied in
+    addition to filter(s) specified in `default_metadata_filters` and in the
+    `documents_filters` field in the `/query` request during retrieval.
+    """
+
     rerank_instructions: Optional[str] = None
     """Instructions that the reranker references when ranking retrievals.
 
@@ -29,3 +50,6 @@ class FilterAndRerankConfig(BaseModel):
 
     top_k_reranked_chunks: Optional[int] = None
     """The number of highest ranked chunks after reranking to be used"""
+
+
+from .datastores.composite_metadata_filter import CompositeMetadataFilter

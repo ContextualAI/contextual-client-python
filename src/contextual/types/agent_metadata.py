@@ -1,9 +1,10 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from __future__ import annotations
+
 from typing import List, Optional
 
 from .._models import BaseModel
-from .agent_configs import AgentConfigs
 
 __all__ = ["AgentMetadata", "AgentUsages"]
 
@@ -26,7 +27,10 @@ class AgentMetadata(BaseModel):
     name: str
     """Name of the agent"""
 
-    agent_configs: Optional[AgentConfigs] = None
+    template_name: str
+    """The template used to create this agent."""
+
+    agent_configs: Optional["AgentConfigs"] = None
     """The following advanced parameters are experimental and subject to change."""
 
     agent_usages: Optional[AgentUsages] = None
@@ -49,6 +53,9 @@ class AgentMetadata(BaseModel):
     tuned model to the default model.
     """
 
+    multiturn_system_prompt: Optional[str] = None
+    """Instructions on how the agent should handle multi-turn conversations."""
+
     no_retrieval_system_prompt: Optional[str] = None
     """
     Instructions on how the agent should respond when there are no relevant
@@ -69,3 +76,6 @@ class AgentMetadata(BaseModel):
     Note that we do not guarantee that the system will follow these instructions
     exactly.
     """
+
+
+from .agent_configs import AgentConfigs

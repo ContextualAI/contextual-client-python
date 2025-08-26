@@ -14,22 +14,24 @@ class DocumentIngestParams(TypedDict, total=False):
     """File to ingest."""
 
     metadata: str
-    """Metadata in `JSON` format.
+    """Metadata request in JSON format.
 
-    Metadata should be passed as a nested dictionary structure where:
+    `custom_metadata` is a flat dictionary containing one or more key-value pairs,
+    where each value must be a primitive type (`str`, `bool`, `float`, or `int`).
+    The default maximum metadata fields that can be used is 15, contact support if
+    more is needed.The combined size of the metadata must not exceed **2 KB** when
+    encoded as JSON.The strings with date format must stay in date format or be
+    avoided if not in date format.The `custom_metadata.url` field is automatically
+    included in returned attributions during query time, if provided.
 
-    - The **metadata type** `custom_metadata` is mapped to a dictionary. - The
-      **dictionary keys** represent metadata attributes. - The **values** can be of
-      type `str`, `bool`, `float`, or `int`.
-
-    **Example Metadata JSON:**
+    **Example Request Body:**
 
     ```json
-    metadata = {
-        "custom_metadata": {
-            "field1": "value1",
-            "field2": "value2"
-         }
+    {
+      "custom_metadata": {
+        "topic": "science",
+        "difficulty": 3
+      }
     }
     ```
     """

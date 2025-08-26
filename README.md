@@ -1,6 +1,7 @@
 # Contextual AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/contextual-client.svg)](https://pypi.org/project/contextual-client/)
+<!-- prettier-ignore -->
+[![PyPI version](https://img.shields.io/pypi/v/contextual-client.svg?label=pypi%20(stable))](https://pypi.org/project/contextual-client/)
 
 The Contextual AI Python library provides convenient access to the Contextual AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -65,6 +66,39 @@ asyncio.run(main())
 ```
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
+
+### With aiohttp
+
+By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+
+You can enable this by installing `aiohttp`:
+
+```sh
+# install from PyPI
+pip install contextual-client[aiohttp]
+```
+
+Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+
+```python
+import asyncio
+from contextual import DefaultAioHttpClient
+from contextual import AsyncContextualAI
+
+
+async def main() -> None:
+    async with AsyncContextualAI(
+        api_key="My API Key",
+        http_client=DefaultAioHttpClient(),
+    ) as client:
+        create_agent_output = await client.agents.create(
+            name="Example",
+        )
+        print(create_agent_output.id)
+
+
+asyncio.run(main())
+```
 
 ## Using types
 
@@ -149,33 +183,7 @@ client = ContextualAI()
 
 create_agent_output = client.agents.create(
     name="xxx",
-    agent_configs={
-        "filter_and_rerank_config": {
-            "rerank_instructions": "rerank_instructions",
-            "reranker_score_filter_threshold": 0,
-            "top_k_reranked_chunks": 0,
-        },
-        "generate_response_config": {
-            "avoid_commentary": True,
-            "calculate_groundedness": True,
-            "frequency_penalty": 0,
-            "max_new_tokens": 0,
-            "seed": 0,
-            "temperature": 0,
-            "top_p": 0,
-        },
-        "global_config": {
-            "enable_filter": True,
-            "enable_multi_turn": True,
-            "enable_rerank": True,
-            "should_check_retrieval_need": True,
-        },
-        "retrieval_config": {
-            "lexical_alpha": 0,
-            "semantic_alpha": 0,
-            "top_k_retrieved_chunks": 0,
-        },
-    },
+    agent_configs={},
 )
 print(create_agent_output.agent_configs)
 ```
@@ -267,7 +275,7 @@ client.with_options(max_retries=5).agents.create(
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
 from contextual import ContextualAI

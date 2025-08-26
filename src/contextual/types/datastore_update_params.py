@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal, Required, TypedDict
+from typing_extensions import Literal, TypedDict
 
 __all__ = [
-    "DatastoreCreateParams",
+    "DatastoreUpdateParams",
     "Configuration",
     "ConfigurationChunking",
     "ConfigurationHTMLConfig",
@@ -13,12 +13,15 @@ __all__ = [
 ]
 
 
-class DatastoreCreateParams(TypedDict, total=False):
-    name: Required[str]
-    """Name of the datastore"""
-
+class DatastoreUpdateParams(TypedDict, total=False):
     configuration: Configuration
-    """Configuration of the datastore. If not provided, default configuration is used."""
+    """Configuration of the datastore.
+
+    If not provided, current configuration is retained.
+    """
+
+    name: str
+    """Name of the datastore"""
 
 
 class ConfigurationChunking(TypedDict, total=False):
