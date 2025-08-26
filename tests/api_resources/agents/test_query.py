@@ -49,10 +49,34 @@ class TestQuery:
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             documents_filters={
-                "filters": [],
+                "filters": [
+                    {
+                        "field": "field1",
+                        "operator": "equals",
+                        "value": "value1",
+                    }
+                ],
                 "operator": "AND",
             },
             llm_model_id="llm_model_id",
+            override_configuration={
+                "enable_filter": True,
+                "enable_rerank": True,
+                "filter_model": "filter_model",
+                "filter_prompt": "filter_prompt",
+                "lexical_alpha": 0,
+                "max_new_tokens": 0,
+                "model": "model",
+                "rerank_instructions": "rerank_instructions",
+                "reranker": "reranker",
+                "reranker_score_filter_threshold": 0,
+                "semantic_alpha": 0,
+                "system_prompt": "system_prompt",
+                "temperature": 0,
+                "top_k_reranked_chunks": 0,
+                "top_k_retrieved_chunks": 0,
+                "top_p": 0,
+            },
             stream=True,
             structured_output={
                 "json_schema": {},
@@ -304,10 +328,34 @@ class TestAsyncQuery:
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             documents_filters={
-                "filters": [],
+                "filters": [
+                    {
+                        "field": "field1",
+                        "operator": "equals",
+                        "value": "value1",
+                    }
+                ],
                 "operator": "AND",
             },
             llm_model_id="llm_model_id",
+            override_configuration={
+                "enable_filter": True,
+                "enable_rerank": True,
+                "filter_model": "filter_model",
+                "filter_prompt": "filter_prompt",
+                "lexical_alpha": 0,
+                "max_new_tokens": 0,
+                "model": "model",
+                "rerank_instructions": "rerank_instructions",
+                "reranker": "reranker",
+                "reranker_score_filter_threshold": 0,
+                "semantic_alpha": 0,
+                "system_prompt": "system_prompt",
+                "temperature": 0,
+                "top_k_reranked_chunks": 0,
+                "top_k_retrieved_chunks": 0,
+                "top_p": 0,
+            },
             stream=True,
             structured_output={
                 "json_schema": {},

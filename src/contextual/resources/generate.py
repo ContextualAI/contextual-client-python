@@ -81,7 +81,7 @@ class GenerateResource(SyncAPIResource):
           messages: List of messages in the conversation so far. The last message must be from the
               user.
 
-          model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+          model: The version of the Contextual's GLM to use. Currently, we have `v1` and `v2`.
 
           avoid_commentary: Flag to indicate whether the model should avoid providing additional commentary
               in responses. Commentary is conversational in nature and does not contain
@@ -189,7 +189,7 @@ class AsyncGenerateResource(AsyncAPIResource):
           messages: List of messages in the conversation so far. The last message must be from the
               user.
 
-          model: The version of the Contextual's GLM to use. Currently, we just have "v1".
+          model: The version of the Contextual's GLM to use. Currently, we have `v1` and `v2`.
 
           avoid_commentary: Flag to indicate whether the model should avoid providing additional commentary
               in responses. Commentary is conversational in nature and does not contain

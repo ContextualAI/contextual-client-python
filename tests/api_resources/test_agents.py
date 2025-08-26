@@ -35,6 +35,28 @@ class TestAgents:
             name="xxx",
             agent_configs={
                 "filter_and_rerank_config": {
+                    "default_metadata_filters": {
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
+                        "operator": "AND",
+                    },
+                    "per_datastore_metadata_filters": {
+                        "d49609d9-61c3-4a67-b3bd-5196b10da560": {
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
+                            "operator": "AND",
+                        }
+                    },
                     "rerank_instructions": "rerank_instructions",
                     "reranker_score_filter_threshold": 0,
                     "top_k_reranked_chunks": 0,
@@ -54,6 +76,12 @@ class TestAgents:
                     "enable_rerank": True,
                     "should_check_retrieval_need": True,
                 },
+                "reformulation_config": {
+                    "enable_query_decomposition": True,
+                    "enable_query_expansion": True,
+                    "query_decomposition_prompt": "query_decomposition_prompt",
+                    "query_expansion_prompt": "query_expansion_prompt",
+                },
                 "retrieval_config": {
                     "lexical_alpha": 0,
                     "semantic_alpha": 0,
@@ -63,6 +91,7 @@ class TestAgents:
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="description",
             filter_prompt="filter_prompt",
+            multiturn_system_prompt="multiturn_system_prompt",
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
@@ -106,6 +135,28 @@ class TestAgents:
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             agent_configs={
                 "filter_and_rerank_config": {
+                    "default_metadata_filters": {
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
+                        "operator": "AND",
+                    },
+                    "per_datastore_metadata_filters": {
+                        "d49609d9-61c3-4a67-b3bd-5196b10da560": {
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
+                            "operator": "AND",
+                        }
+                    },
                     "rerank_instructions": "rerank_instructions",
                     "reranker_score_filter_threshold": 0,
                     "top_k_reranked_chunks": 0,
@@ -125,6 +176,12 @@ class TestAgents:
                     "enable_rerank": True,
                     "should_check_retrieval_need": True,
                 },
+                "reformulation_config": {
+                    "enable_query_decomposition": True,
+                    "enable_query_expansion": True,
+                    "query_decomposition_prompt": "query_decomposition_prompt",
+                    "query_expansion_prompt": "query_expansion_prompt",
+                },
                 "retrieval_config": {
                     "lexical_alpha": 0,
                     "semantic_alpha": 0,
@@ -134,6 +191,7 @@ class TestAgents:
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             filter_prompt="filter_prompt",
             llm_model_id="llm_model_id",
+            multiturn_system_prompt="multiturn_system_prompt",
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
@@ -337,6 +395,28 @@ class TestAsyncAgents:
             name="xxx",
             agent_configs={
                 "filter_and_rerank_config": {
+                    "default_metadata_filters": {
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
+                        "operator": "AND",
+                    },
+                    "per_datastore_metadata_filters": {
+                        "d49609d9-61c3-4a67-b3bd-5196b10da560": {
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
+                            "operator": "AND",
+                        }
+                    },
                     "rerank_instructions": "rerank_instructions",
                     "reranker_score_filter_threshold": 0,
                     "top_k_reranked_chunks": 0,
@@ -356,6 +436,12 @@ class TestAsyncAgents:
                     "enable_rerank": True,
                     "should_check_retrieval_need": True,
                 },
+                "reformulation_config": {
+                    "enable_query_decomposition": True,
+                    "enable_query_expansion": True,
+                    "query_decomposition_prompt": "query_decomposition_prompt",
+                    "query_expansion_prompt": "query_expansion_prompt",
+                },
                 "retrieval_config": {
                     "lexical_alpha": 0,
                     "semantic_alpha": 0,
@@ -365,6 +451,7 @@ class TestAsyncAgents:
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="description",
             filter_prompt="filter_prompt",
+            multiturn_system_prompt="multiturn_system_prompt",
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
@@ -408,6 +495,28 @@ class TestAsyncAgents:
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             agent_configs={
                 "filter_and_rerank_config": {
+                    "default_metadata_filters": {
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
+                        "operator": "AND",
+                    },
+                    "per_datastore_metadata_filters": {
+                        "d49609d9-61c3-4a67-b3bd-5196b10da560": {
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
+                            "operator": "AND",
+                        }
+                    },
                     "rerank_instructions": "rerank_instructions",
                     "reranker_score_filter_threshold": 0,
                     "top_k_reranked_chunks": 0,
@@ -427,6 +536,12 @@ class TestAsyncAgents:
                     "enable_rerank": True,
                     "should_check_retrieval_need": True,
                 },
+                "reformulation_config": {
+                    "enable_query_decomposition": True,
+                    "enable_query_expansion": True,
+                    "query_decomposition_prompt": "query_decomposition_prompt",
+                    "query_expansion_prompt": "query_expansion_prompt",
+                },
                 "retrieval_config": {
                     "lexical_alpha": 0,
                     "semantic_alpha": 0,
@@ -436,6 +551,7 @@ class TestAsyncAgents:
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             filter_prompt="filter_prompt",
             llm_model_id="llm_model_id",
+            multiturn_system_prompt="multiturn_system_prompt",
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",

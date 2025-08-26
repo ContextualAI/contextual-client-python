@@ -27,6 +27,8 @@ class GetTwilightAgentResponse(BaseModel):
     name: str
     """Name of the agent"""
 
+    template_name: str
+
     agent_configs: Optional[object] = None
     """The following advanced parameters are experimental and subject to change."""
 

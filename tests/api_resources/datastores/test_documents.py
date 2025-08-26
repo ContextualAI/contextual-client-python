@@ -34,6 +34,7 @@ class TestDocuments:
         document = client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
+            document_name_prefix="document_name_prefix",
             ingestion_job_status=["pending"],
             limit=1,
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
@@ -133,7 +134,7 @@ class TestDocuments:
         document = client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
-            metadata='{"field1": "value1", "field2": "value2"}}',
+            metadata="metadata",
         )
         assert_matches_type(IngestionResponse, document, path=["response"])
 
@@ -233,6 +234,13 @@ class TestDocuments:
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             custom_metadata={"foo": True},
+            custom_metadata_config={
+                "foo": {
+                    "filterable": True,
+                    "in_chunks": True,
+                    "returned_in_response": True,
+                }
+            },
         )
         assert_matches_type(DocumentMetadata, document, path=["response"])
 
@@ -294,6 +302,7 @@ class TestAsyncDocuments:
         document = await async_client.datastores.documents.list(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             cursor="cursor",
+            document_name_prefix="document_name_prefix",
             ingestion_job_status=["pending"],
             limit=1,
             uploaded_after=parse_datetime("2019-12-27T18:11:19.117Z"),
@@ -393,7 +402,7 @@ class TestAsyncDocuments:
         document = await async_client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             file=b"raw file contents",
-            metadata='{"field1": "value1", "field2": "value2"}}',
+            metadata="metadata",
         )
         assert_matches_type(IngestionResponse, document, path=["response"])
 
@@ -493,6 +502,13 @@ class TestAsyncDocuments:
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             custom_metadata={"foo": True},
+            custom_metadata_config={
+                "foo": {
+                    "filterable": True,
+                    "in_chunks": True,
+                    "returned_in_response": True,
+                }
+            },
         )
         assert_matches_type(DocumentMetadata, document, path=["response"])
 

@@ -60,6 +60,7 @@ class DatastoresResource(SyncAPIResource):
         self,
         *,
         name: str,
+        configuration: datastore_create_params.Configuration | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -88,6 +89,8 @@ class DatastoresResource(SyncAPIResource):
         Args:
           name: Name of the datastore
 
+          configuration: Configuration of the datastore. If not provided, default configuration is used.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -98,7 +101,13 @@ class DatastoresResource(SyncAPIResource):
         """
         return self._post(
             "/datastores",
-            body=maybe_transform({"name": name}, datastore_create_params.DatastoreCreateParams),
+            body=maybe_transform(
+                {
+                    "name": name,
+                    "configuration": configuration,
+                },
+                datastore_create_params.DatastoreCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -304,6 +313,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         self,
         *,
         name: str,
+        configuration: datastore_create_params.Configuration | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -332,6 +342,8 @@ class AsyncDatastoresResource(AsyncAPIResource):
         Args:
           name: Name of the datastore
 
+          configuration: Configuration of the datastore. If not provided, default configuration is used.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -342,7 +354,13 @@ class AsyncDatastoresResource(AsyncAPIResource):
         """
         return await self._post(
             "/datastores",
-            body=await async_maybe_transform({"name": name}, datastore_create_params.DatastoreCreateParams),
+            body=await async_maybe_transform(
+                {
+                    "name": name,
+                    "configuration": configuration,
+                },
+                datastore_create_params.DatastoreCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

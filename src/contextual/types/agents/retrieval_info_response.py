@@ -21,6 +21,9 @@ class ContentMetadataUnstructuredContentMetadata(BaseModel):
     content_text: str
     """Text of the content."""
 
+    document_id: str
+    """Id of the document which the content belongs to."""
+
     height: float
     """Height of the image."""
 
