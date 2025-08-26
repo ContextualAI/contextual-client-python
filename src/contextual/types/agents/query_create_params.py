@@ -2,20 +2,12 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable, Optional
+from typing import Union, Iterable
 from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
-__all__ = [
-    "QueryCreateParams",
-    "Message",
-    "DocumentsFilters",
-    "DocumentsFiltersBaseMetadataFilter",
-    "DocumentsFiltersCompositeMetadataFilterInput",
-    "DocumentsFiltersCompositeMetadataFilterInputFilter",
-    "DocumentsFiltersCompositeMetadataFilterInputFilterBaseMetadataFilter",
-    "OverrideConfiguration",
-    "StructuredOutput",
-]
+from ..datastores.base_metadata_filter_param import BaseMetadataFilterParam
+
+__all__ = ["QueryCreateParams", "Message", "DocumentsFilters", "OverrideConfiguration", "StructuredOutput"]
 
 
 class QueryCreateParams(TypedDict, total=False):
@@ -114,76 +106,7 @@ class Message(TypedDict, total=False):
     """Role of the sender"""
 
 
-class DocumentsFiltersBaseMetadataFilter(TypedDict, total=False):
-    field: Required[str]
-    """Field name to search for in the metadata"""
-
-    operator: Required[
-        Literal[
-            "equals",
-            "containsany",
-            "exists",
-            "startswith",
-            "gt",
-            "gte",
-            "lt",
-            "lte",
-            "notequals",
-            "between",
-            "wildcard",
-        ]
-    ]
-    """Operator to be used for the filter."""
-
-    value: Union[str, float, bool, List[Union[str, float, bool]], None]
-    """The value to be searched for in the field.
-
-    In case of exists operator, it is not needed.
-    """
-
-
-class DocumentsFiltersCompositeMetadataFilterInputFilterBaseMetadataFilter(TypedDict, total=False):
-    field: Required[str]
-    """Field name to search for in the metadata"""
-
-    operator: Required[
-        Literal[
-            "equals",
-            "containsany",
-            "exists",
-            "startswith",
-            "gt",
-            "gte",
-            "lt",
-            "lte",
-            "notequals",
-            "between",
-            "wildcard",
-        ]
-    ]
-    """Operator to be used for the filter."""
-
-    value: Union[str, float, bool, List[Union[str, float, bool]], None]
-    """The value to be searched for in the field.
-
-    In case of exists operator, it is not needed.
-    """
-
-
-DocumentsFiltersCompositeMetadataFilterInputFilter: TypeAlias = Union[
-    DocumentsFiltersCompositeMetadataFilterInputFilterBaseMetadataFilter, object
-]
-
-
-class DocumentsFiltersCompositeMetadataFilterInput(TypedDict, total=False):
-    filters: Required[Iterable[DocumentsFiltersCompositeMetadataFilterInputFilter]]
-    """Filters added to the query for filtering docs"""
-
-    operator: Optional[Literal["AND", "OR", "AND_NOT"]]
-    """Composite operator to be used to combine filters"""
-
-
-DocumentsFilters: TypeAlias = Union[DocumentsFiltersBaseMetadataFilter, DocumentsFiltersCompositeMetadataFilterInput]
+DocumentsFilters: TypeAlias = Union[BaseMetadataFilterParam, "CompositeMetadataFilterParam"]
 
 
 class OverrideConfiguration(TypedDict, total=False):
@@ -260,3 +183,6 @@ class StructuredOutput(TypedDict, total=False):
 
     type: Literal["JSON"]
     """Type of the structured output. The default is JSON"""
+
+
+from ..datastores.composite_metadata_filter_param import CompositeMetadataFilterParam

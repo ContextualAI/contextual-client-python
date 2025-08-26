@@ -20,9 +20,15 @@ from ..._response import (
 )
 from ...pagination import SyncDocumentsPage, AsyncDocumentsPage
 from ..._base_client import AsyncPaginator, make_request_options
-from ...types.datastores import document_list_params, document_ingest_params, document_set_metadata_params
+from ...types.datastores import (
+    document_list_params,
+    document_ingest_params,
+    document_set_metadata_params,
+    document_get_parse_result_params,
+)
 from ...types.datastores.document_metadata import DocumentMetadata
 from ...types.datastores.ingestion_response import IngestionResponse
+from ...types.datastores.document_get_parse_result_response import DocumentGetParseResultResponse
 
 __all__ = ["DocumentsResource", "AsyncDocumentsResource"]
 
@@ -163,6 +169,62 @@ class DocumentsResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=object,
+        )
+
+    def get_parse_result(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentGetParseResultResponse:
+        """
+        Get the parse results that are generated during ingestion for a given document.
+        Retrieving parse results for existing documents ingested before the release of
+        this endpoint is not supported and will return a 404 error.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          output_types: The desired output format(s) of the parsed file. Must be `markdown-document`,
+              `markdown-per-page`, and/or `blocks-per-page`. Specify multiple values to get
+              multiple formats in the response. `markdown-document` parses the whole document
+              into a single concatenated markdown output. `markdown-per-page` provides
+              markdown output per page. `blocks-per-page` provides a structured JSON
+              representation of the content blocks on each page, sorted by reading order.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return self._get(
+            f"/datastores/{datastore_id}/documents/{document_id}/parse",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {"output_types": output_types}, document_get_parse_result_params.DocumentGetParseResultParams
+                ),
+            ),
+            cast_to=DocumentGetParseResultResponse,
         )
 
     def ingest(
@@ -501,6 +563,62 @@ class AsyncDocumentsResource(AsyncAPIResource):
             cast_to=object,
         )
 
+    async def get_parse_result(
+        self,
+        document_id: str,
+        *,
+        datastore_id: str,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> DocumentGetParseResultResponse:
+        """
+        Get the parse results that are generated during ingestion for a given document.
+        Retrieving parse results for existing documents ingested before the release of
+        this endpoint is not supported and will return a 404 error.
+
+        Args:
+          datastore_id: Datastore ID of the datastore from which to retrieve the document
+
+          document_id: Document ID of the document to retrieve details for
+
+          output_types: The desired output format(s) of the parsed file. Must be `markdown-document`,
+              `markdown-per-page`, and/or `blocks-per-page`. Specify multiple values to get
+              multiple formats in the response. `markdown-document` parses the whole document
+              into a single concatenated markdown output. `markdown-per-page` provides
+              markdown output per page. `blocks-per-page` provides a structured JSON
+              representation of the content blocks on each page, sorted by reading order.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        if not document_id:
+            raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
+        return await self._get(
+            f"/datastores/{datastore_id}/documents/{document_id}/parse",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"output_types": output_types}, document_get_parse_result_params.DocumentGetParseResultParams
+                ),
+            ),
+            cast_to=DocumentGetParseResultResponse,
+        )
+
     async def ingest(
         self,
         datastore_id: str,
@@ -709,6 +827,9 @@ class DocumentsResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             documents.delete,
         )
+        self.get_parse_result = to_raw_response_wrapper(
+            documents.get_parse_result,
+        )
         self.ingest = to_raw_response_wrapper(
             documents.ingest,
         )
@@ -729,6 +850,9 @@ class AsyncDocumentsResourceWithRawResponse:
         )
         self.delete = async_to_raw_response_wrapper(
             documents.delete,
+        )
+        self.get_parse_result = async_to_raw_response_wrapper(
+            documents.get_parse_result,
         )
         self.ingest = async_to_raw_response_wrapper(
             documents.ingest,
@@ -751,6 +875,9 @@ class DocumentsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             documents.delete,
         )
+        self.get_parse_result = to_streamed_response_wrapper(
+            documents.get_parse_result,
+        )
         self.ingest = to_streamed_response_wrapper(
             documents.ingest,
         )
@@ -771,6 +898,9 @@ class AsyncDocumentsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             documents.delete,
+        )
+        self.get_parse_result = async_to_streamed_response_wrapper(
+            documents.get_parse_result,
         )
         self.ingest = async_to_streamed_response_wrapper(
             documents.ingest,

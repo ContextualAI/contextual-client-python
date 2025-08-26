@@ -28,6 +28,7 @@ from ..._response import (
 from ...pagination import SyncPage, AsyncPage
 from ...types.agent import Agent
 from ..._base_client import AsyncPaginator, make_request_options
+from ...types.agent_configs_param import AgentConfigsParam
 from ...types.create_agent_output import CreateAgentOutput
 from ...types.agent_metadata_response import AgentMetadataResponse
 
@@ -62,7 +63,7 @@ class AgentsResource(SyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
@@ -154,7 +155,7 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
@@ -320,6 +321,42 @@ class AgentsResource(SyncAPIResource):
             cast_to=object,
         )
 
+    def copy(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> CreateAgentOutput:
+        """
+        Copy an existing agent with all its configurations and datastore associations.
+        The copied agent will have "[COPY]" appended to its name.
+
+        Args:
+          agent_id: ID of the agent to copy
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return self._post(
+            f"/agents/{agent_id}/copy",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CreateAgentOutput,
+        )
+
     def metadata(
         self,
         agent_id: str,
@@ -424,7 +461,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: agent_create_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
@@ -516,7 +553,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: agent_update_params.AgentConfigs | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
         datastore_ids: List[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
@@ -682,6 +719,42 @@ class AsyncAgentsResource(AsyncAPIResource):
             cast_to=object,
         )
 
+    async def copy(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> CreateAgentOutput:
+        """
+        Copy an existing agent with all its configurations and datastore associations.
+        The copied agent will have "[COPY]" appended to its name.
+
+        Args:
+          agent_id: ID of the agent to copy
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return await self._post(
+            f"/agents/{agent_id}/copy",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CreateAgentOutput,
+        )
+
     async def metadata(
         self,
         agent_id: str,
@@ -774,6 +847,9 @@ class AgentsResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             agents.delete,
         )
+        self.copy = to_raw_response_wrapper(
+            agents.copy,
+        )
         self.metadata = to_raw_response_wrapper(
             agents.metadata,
         )
@@ -801,6 +877,9 @@ class AsyncAgentsResourceWithRawResponse:
         )
         self.delete = async_to_raw_response_wrapper(
             agents.delete,
+        )
+        self.copy = async_to_raw_response_wrapper(
+            agents.copy,
         )
         self.metadata = async_to_raw_response_wrapper(
             agents.metadata,
@@ -830,6 +909,9 @@ class AgentsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             agents.delete,
         )
+        self.copy = to_streamed_response_wrapper(
+            agents.copy,
+        )
         self.metadata = to_streamed_response_wrapper(
             agents.metadata,
         )
@@ -857,6 +939,9 @@ class AsyncAgentsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             agents.delete,
+        )
+        self.copy = async_to_streamed_response_wrapper(
+            agents.copy,
         )
         self.metadata = async_to_streamed_response_wrapper(
             agents.metadata,

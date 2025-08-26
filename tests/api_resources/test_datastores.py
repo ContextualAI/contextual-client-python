@@ -13,6 +13,7 @@ from contextual.types import (
     Datastore,
     DatastoreMetadata,
     CreateDatastoreResponse,
+    DatastoreUpdateResponse,
 )
 from contextual.pagination import SyncDatastoresPage, AsyncDatastoresPage
 
@@ -74,6 +75,67 @@ class TestDatastores:
             assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_method_update(self, client: ContextualAI) -> None:
+        datastore = client.datastores.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+    @parametrize
+    def test_method_update_with_all_params(self, client: ContextualAI) -> None:
+        datastore = client.datastores.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            configuration={
+                "chunking": {
+                    "chunking_mode": "hierarchy_depth",
+                    "enable_hierarchy_based_contextualization": True,
+                    "max_chunk_length_tokens": 512,
+                    "min_chunk_length_tokens": 128,
+                },
+                "html_config": {"max_chunk_length_tokens": 512},
+                "parsing": {
+                    "enable_split_tables": True,
+                    "figure_caption_mode": "default",
+                    "figure_captioning_prompt": "figure_captioning_prompt",
+                    "max_split_table_cells": 0,
+                },
+            },
+            name="name",
+        )
+        assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+    @parametrize
+    def test_raw_response_update(self, client: ContextualAI) -> None:
+        response = client.datastores.with_raw_response.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        datastore = response.parse()
+        assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+    @parametrize
+    def test_streaming_response_update(self, client: ContextualAI) -> None:
+        with client.datastores.with_streaming_response.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            datastore = response.parse()
+            assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_update(self, client: ContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
+            client.datastores.with_raw_response.update(
+                datastore_id="",
+            )
 
     @parametrize
     def test_method_list(self, client: ContextualAI) -> None:
@@ -281,6 +343,67 @@ class TestAsyncDatastores:
             assert_matches_type(CreateDatastoreResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_method_update(self, async_client: AsyncContextualAI) -> None:
+        datastore = await async_client.datastores.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+    @parametrize
+    async def test_method_update_with_all_params(self, async_client: AsyncContextualAI) -> None:
+        datastore = await async_client.datastores.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            configuration={
+                "chunking": {
+                    "chunking_mode": "hierarchy_depth",
+                    "enable_hierarchy_based_contextualization": True,
+                    "max_chunk_length_tokens": 512,
+                    "min_chunk_length_tokens": 128,
+                },
+                "html_config": {"max_chunk_length_tokens": 512},
+                "parsing": {
+                    "enable_split_tables": True,
+                    "figure_caption_mode": "default",
+                    "figure_captioning_prompt": "figure_captioning_prompt",
+                    "max_split_table_cells": 0,
+                },
+            },
+            name="name",
+        )
+        assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+    @parametrize
+    async def test_raw_response_update(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.datastores.with_raw_response.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        datastore = await response.parse()
+        assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_update(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.datastores.with_streaming_response.update(
+            datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            datastore = await response.parse()
+            assert_matches_type(DatastoreUpdateResponse, datastore, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_update(self, async_client: AsyncContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
+            await async_client.datastores.with_raw_response.update(
+                datastore_id="",
+            )
 
     @parametrize
     async def test_method_list(self, async_client: AsyncContextualAI) -> None:

@@ -1,10 +1,11 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from __future__ import annotations
+
 from typing import List, Union, Optional
 from typing_extensions import TypeAlias
 
 from .._models import BaseModel
-from .agent_metadata import AgentMetadata
 
 __all__ = ["AgentMetadataResponse", "GetTwilightAgentResponse", "GetTwilightAgentResponseAgentUsages"]
 
@@ -39,4 +40,6 @@ class GetTwilightAgentResponse(BaseModel):
     """Description of the agent"""
 
 
-AgentMetadataResponse: TypeAlias = Union[AgentMetadata, GetTwilightAgentResponse]
+AgentMetadataResponse: TypeAlias = Union["AgentMetadata", GetTwilightAgentResponse]
+
+from .agent_metadata import AgentMetadata

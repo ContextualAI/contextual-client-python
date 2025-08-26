@@ -1,16 +1,31 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
-from datetime import datetime
-from typing_extensions import Literal
+from __future__ import annotations
 
-from .._models import BaseModel
+from typing_extensions import Literal, TypedDict
 
-__all__ = ["Datastore", "Configuration", "ConfigurationChunking", "ConfigurationHTMLConfig", "ConfigurationParsing"]
+__all__ = [
+    "DatastoreUpdateParams",
+    "Configuration",
+    "ConfigurationChunking",
+    "ConfigurationHTMLConfig",
+    "ConfigurationParsing",
+]
 
 
-class ConfigurationChunking(BaseModel):
-    chunking_mode: Optional[Literal["hierarchy_depth", "hierarchy_heading", "static_length", "page_level"]] = None
+class DatastoreUpdateParams(TypedDict, total=False):
+    configuration: Configuration
+    """Configuration of the datastore.
+
+    If not provided, current configuration is retained.
+    """
+
+    name: str
+    """Name of the datastore"""
+
+
+class ConfigurationChunking(TypedDict, total=False):
+    chunking_mode: Literal["hierarchy_depth", "hierarchy_heading", "static_length", "page_level"]
     """Chunking mode to use.
 
     Options are: `hierarchy_depth`, `hierarchy_heading`, `static_length`,
@@ -22,16 +37,16 @@ class ConfigurationChunking(BaseModel):
     over page boundaries.
     """
 
-    enable_hierarchy_based_contextualization: Optional[bool] = None
+    enable_hierarchy_based_contextualization: bool
     """Whether to enable section-based contextualization for chunking"""
 
-    max_chunk_length_tokens: Optional[int] = None
+    max_chunk_length_tokens: int
     """Target maximum length of text tokens chunks for chunking.
 
     Chunk length may exceed this value in some edge cases.
     """
 
-    min_chunk_length_tokens: Optional[int] = None
+    min_chunk_length_tokens: int
     """Target minimum length of chunks in tokens.
 
     Must be at least 384 tokens less than `max_chunk_length_tokens`. Chunk length
@@ -40,16 +55,16 @@ class ConfigurationChunking(BaseModel):
     """
 
 
-class ConfigurationHTMLConfig(BaseModel):
-    max_chunk_length_tokens: Optional[int] = None
+class ConfigurationHTMLConfig(TypedDict, total=False):
+    max_chunk_length_tokens: int
     """Target maximum length of text tokens chunks for chunking.
 
     Chunk length may exceed this value in some edge cases.
     """
 
 
-class ConfigurationParsing(BaseModel):
-    enable_split_tables: Optional[bool] = None
+class ConfigurationParsing(TypedDict, total=False):
+    enable_split_tables: bool
     """
     Whether to enable table splitting, which splits large tables into smaller tables
     with at most `max_split_table_cells` cells each. In each split table, the table
@@ -57,7 +72,7 @@ class ConfigurationParsing(BaseModel):
     context when tables are too large to fit into one chunk.
     """
 
-    figure_caption_mode: Optional[Literal["default", "custom", "ignore"]] = None
+    figure_caption_mode: Literal["default", "custom", "ignore"]
     """Mode for figure captioning.
 
     Options are `default`, `custom`, or `ignore`. Set to `ignore` to disable figure
@@ -65,42 +80,25 @@ class ConfigurationParsing(BaseModel):
     detailed caption for each figure. Set to `custom` to use a custom prompt.
     """
 
-    figure_captioning_prompt: Optional[str] = None
+    figure_captioning_prompt: str
     """Prompt to use for generating image captions.
 
     Must be non-empty if `figure_caption_mode` is `custom`. Otherwise, must be null.
     """
 
-    max_split_table_cells: Optional[int] = None
+    max_split_table_cells: int
     """Maximum number of cells for split tables.
 
     Ignored if `enable_split_tables` is False.
     """
 
 
-class Configuration(BaseModel):
-    chunking: Optional[ConfigurationChunking] = None
+class Configuration(TypedDict, total=False):
+    chunking: ConfigurationChunking
     """Configuration for document chunking"""
 
-    html_config: Optional[ConfigurationHTMLConfig] = None
+    html_config: ConfigurationHTMLConfig
     """Configuration for HTML Extraction"""
 
-    parsing: Optional[ConfigurationParsing] = None
+    parsing: ConfigurationParsing
     """Configuration for document parsing"""
-
-
-class Datastore(BaseModel):
-    id: str
-    """ID of the datastore"""
-
-    created_at: datetime
-    """Timestamp of when the datastore was created, in ISO format"""
-
-    datastore_type: Literal["UNSTRUCTURED"]
-    """Type of the datastore"""
-
-    name: str
-    """Name of the datastore"""
-
-    configuration: Optional[Configuration] = None
-    """Configuration of the datastore"""
