@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.1 (2025-08-30)
+
+Full Changelog: [v0.8.0...v0.8.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.8.0...v0.8.1)
+
+### Bug Fixes
+
+* avoid newer type syntax ([551b56e](https://github.com/ContextualAI/contextual-client-python/commit/551b56e22af03e8305e599814f484a5ed64b9cb3))
+
+
+### Chores
+
+* **internal:** add Sequence related utils ([f00b892](https://github.com/ContextualAI/contextual-client-python/commit/f00b892536ef8c2d6f67965d7db28a1956adebb5))
+* **internal:** update pyright exclude list ([e89669e](https://github.com/ContextualAI/contextual-client-python/commit/e89669e93ed4a4e74993adfee5756b3502719e8c))
+
 ## 0.8.0 (2025-08-26)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.7.0...v0.8.0)
