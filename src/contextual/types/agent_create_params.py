@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from typing import List
 from typing_extensions import Required, TypedDict
+
+from .._types import SequenceNotStr
 
 __all__ = ["AgentCreateParams"]
 
@@ -15,7 +16,7 @@ class AgentCreateParams(TypedDict, total=False):
     agent_configs: "AgentConfigsParam"
     """The following advanced parameters are experimental and subject to change."""
 
-    datastore_ids: List[str]
+    datastore_ids: SequenceNotStr[str]
     """The IDs of the datastore to associate with this agent."""
 
     description: str
@@ -36,7 +37,7 @@ class AgentCreateParams(TypedDict, total=False):
     retrievals that can be used to answer a query.
     """
 
-    suggested_queries: List[str]
+    suggested_queries: SequenceNotStr[str]
     """
     These queries will show up as suggestions in the Contextual UI when users load
     the agent. We recommend including common queries that users will ask, as well as

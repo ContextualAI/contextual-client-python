@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
-from typing import List, Union
+from typing import Union
 from datetime import datetime
 from typing_extensions import Annotated, TypedDict
 
+from ..._types import SequenceNotStr
 from ..._utils import PropertyInfo
 
 __all__ = ["QueryMetricsParams"]
 
 
 class QueryMetricsParams(TypedDict, total=False):
-    conversation_ids: List[str]
+    conversation_ids: SequenceNotStr[str]
     """Filter messages by conversation ids."""
 
     created_after: Annotated[Union[str, datetime], PropertyInfo(format="iso8601")]
@@ -27,5 +28,5 @@ class QueryMetricsParams(TypedDict, total=False):
     offset: int
     """Offset for pagination."""
 
-    user_emails: List[str]
+    user_emails: SequenceNotStr[str]
     """Filter messages by users."""

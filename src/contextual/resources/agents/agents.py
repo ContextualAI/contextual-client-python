@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, List, cast
+from typing import Any, cast
 
 import httpx
 
@@ -15,7 +15,7 @@ from .query import (
     AsyncQueryResourceWithStreamingResponse,
 )
 from ...types import agent_list_params, agent_create_params, agent_update_params
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven, SequenceNotStr
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -64,12 +64,12 @@ class AgentsResource(SyncAPIResource):
         *,
         name: str,
         agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
+        datastore_ids: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
+        suggested_queries: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -156,12 +156,12 @@ class AgentsResource(SyncAPIResource):
         agent_id: str,
         *,
         agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
+        datastore_ids: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
+        suggested_queries: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -462,12 +462,12 @@ class AsyncAgentsResource(AsyncAPIResource):
         *,
         name: str,
         agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
+        datastore_ids: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         description: str | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
+        suggested_queries: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -554,12 +554,12 @@ class AsyncAgentsResource(AsyncAPIResource):
         agent_id: str,
         *,
         agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
+        datastore_ids: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         filter_prompt: str | NotGiven = NOT_GIVEN,
         llm_model_id: str | NotGiven = NOT_GIVEN,
         multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
         no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
+        suggested_queries: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         system_prompt: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
