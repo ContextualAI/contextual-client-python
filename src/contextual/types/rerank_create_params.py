@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from typing import List
 from typing_extensions import Required, TypedDict
+
+from .._types import SequenceNotStr
 
 __all__ = ["RerankCreateParams"]
 
 
 class RerankCreateParams(TypedDict, total=False):
-    documents: Required[List[str]]
+    documents: Required[SequenceNotStr[str]]
     """
     The texts to be reranked according to their relevance to the query and the
     optional instruction
@@ -37,7 +38,7 @@ class RerankCreateParams(TypedDict, total=False):
     portal content supersedes distributor communications."
     """
 
-    metadata: List[str]
+    metadata: SequenceNotStr[str]
     """Metadata for documents being passed to the reranker.
 
     Must be the same length as the documents list. If a document does not have

@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
-from typing import List, Iterable
+from typing import Iterable
 from typing_extensions import Literal, Required, TypedDict
+
+from .._types import SequenceNotStr
 
 __all__ = ["GenerateCreateParams", "Message"]
 
 
 class GenerateCreateParams(TypedDict, total=False):
-    knowledge: Required[List[str]]
+    knowledge: Required[SequenceNotStr[str]]
     """The knowledge sources the model can use when generating a response."""
 
     messages: Required[Iterable[Message]]

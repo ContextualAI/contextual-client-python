@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from typing import List, Iterable
+from typing import Iterable
 
 import httpx
 
 from ..types import generate_create_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven, SequenceNotStr
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -46,7 +46,7 @@ class GenerateResource(SyncAPIResource):
     def create(
         self,
         *,
-        knowledge: List[str],
+        knowledge: SequenceNotStr[str],
         messages: Iterable[generate_create_params.Message],
         model: str,
         avoid_commentary: bool | NotGiven = NOT_GIVEN,
@@ -154,7 +154,7 @@ class AsyncGenerateResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        knowledge: List[str],
+        knowledge: SequenceNotStr[str],
         messages: Iterable[generate_create_params.Message],
         model: str,
         avoid_commentary: bool | NotGiven = NOT_GIVEN,
