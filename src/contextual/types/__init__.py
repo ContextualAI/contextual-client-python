@@ -55,13 +55,13 @@ from .generate_response_config_param import GenerateResponseConfigParam as Gener
 # This ensures that, when building the deferred (due to cyclical references) model schema,
 # Pydantic can resolve the necessary references.
 # See: https://github.com/pydantic/pydantic/issues/11250 for more context.
-if _compat.PYDANTIC_V2:
-    datastores.composite_metadata_filter.CompositeMetadataFilter.model_rebuild(_parent_namespace_depth=0)
-    agent_configs.AgentConfigs.model_rebuild(_parent_namespace_depth=0)
-    agent_metadata.AgentMetadata.model_rebuild(_parent_namespace_depth=0)
-    filter_and_rerank_config.FilterAndRerankConfig.model_rebuild(_parent_namespace_depth=0)
-else:
+if _compat.PYDANTIC_V1:
     datastores.composite_metadata_filter.CompositeMetadataFilter.update_forward_refs()  # type: ignore
     agent_configs.AgentConfigs.update_forward_refs()  # type: ignore
     agent_metadata.AgentMetadata.update_forward_refs()  # type: ignore
     filter_and_rerank_config.FilterAndRerankConfig.update_forward_refs()  # type: ignore
+else:
+    datastores.composite_metadata_filter.CompositeMetadataFilter.model_rebuild(_parent_namespace_depth=0)
+    agent_configs.AgentConfigs.model_rebuild(_parent_namespace_depth=0)
+    agent_metadata.AgentMetadata.model_rebuild(_parent_namespace_depth=0)
+    filter_and_rerank_config.FilterAndRerankConfig.model_rebuild(_parent_namespace_depth=0)
