@@ -8,7 +8,7 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
+from ..._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
 from ..._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -57,19 +57,19 @@ class DocumentsResource(SyncAPIResource):
         self,
         datastore_id: str,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        document_name_prefix: str | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        document_name_prefix: str | Omit = omit,
         ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
-        | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        uploaded_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
+        | Omit = omit,
+        limit: int | Omit = omit,
+        uploaded_after: Union[str, datetime] | Omit = omit,
+        uploaded_before: Union[str, datetime] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncDocumentsPage[DocumentMetadata]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
@@ -140,7 +140,7 @@ class DocumentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Delete a given document from its `Datastore`.
 
@@ -176,13 +176,13 @@ class DocumentsResource(SyncAPIResource):
         document_id: str,
         *,
         datastore_id: str,
-        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DocumentGetParseResultResponse:
         """
         Get the parse results that are generated during ingestion for a given document.
@@ -232,13 +232,13 @@ class DocumentsResource(SyncAPIResource):
         datastore_id: str,
         *,
         file: FileTypes,
-        metadata: str | NotGiven = NOT_GIVEN,
+        metadata: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> IngestionResponse:
         """Ingest a document into a given `Datastore`.
 
@@ -321,7 +321,7 @@ class DocumentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DocumentMetadata:
         """
         Get details of a given document, including its `name` and ingestion job
@@ -357,14 +357,14 @@ class DocumentsResource(SyncAPIResource):
         document_id: str,
         *,
         datastore_id: str,
-        custom_metadata: Dict[str, Union[bool, float, str]] | NotGiven = NOT_GIVEN,
-        custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | NotGiven = NOT_GIVEN,
+        custom_metadata: Dict[str, Union[bool, float, str]] | Omit = omit,
+        custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DocumentMetadata:
         """
         Post details of a given document that will enrich the chunk and be added to the
@@ -449,19 +449,19 @@ class AsyncDocumentsResource(AsyncAPIResource):
         self,
         datastore_id: str,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        document_name_prefix: str | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        document_name_prefix: str | Omit = omit,
         ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
-        | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        uploaded_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
+        | Omit = omit,
+        limit: int | Omit = omit,
+        uploaded_after: Union[str, datetime] | Omit = omit,
+        uploaded_before: Union[str, datetime] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[DocumentMetadata, AsyncDocumentsPage[DocumentMetadata]]:
         """
         Get list of documents in a given `Datastore`, including document `id`, `name`,
@@ -532,7 +532,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Delete a given document from its `Datastore`.
 
@@ -568,13 +568,13 @@ class AsyncDocumentsResource(AsyncAPIResource):
         document_id: str,
         *,
         datastore_id: str,
-        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DocumentGetParseResultResponse:
         """
         Get the parse results that are generated during ingestion for a given document.
@@ -624,13 +624,13 @@ class AsyncDocumentsResource(AsyncAPIResource):
         datastore_id: str,
         *,
         file: FileTypes,
-        metadata: str | NotGiven = NOT_GIVEN,
+        metadata: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> IngestionResponse:
         """Ingest a document into a given `Datastore`.
 
@@ -713,7 +713,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DocumentMetadata:
         """
         Get details of a given document, including its `name` and ingestion job
@@ -749,14 +749,14 @@ class AsyncDocumentsResource(AsyncAPIResource):
         document_id: str,
         *,
         datastore_id: str,
-        custom_metadata: Dict[str, Union[bool, float, str]] | NotGiven = NOT_GIVEN,
-        custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | NotGiven = NOT_GIVEN,
+        custom_metadata: Dict[str, Union[bool, float, str]] | Omit = omit,
+        custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DocumentMetadata:
         """
         Post details of a given document that will enrich the chunk and be added to the
