@@ -8,7 +8,7 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven, SequenceNotStr
+from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -57,20 +57,20 @@ class QueryResource(SyncAPIResource):
         agent_id: str,
         *,
         messages: Iterable[query_create_params.Message],
-        include_retrieval_content_text: bool | NotGiven = NOT_GIVEN,
-        retrievals_only: bool | NotGiven = NOT_GIVEN,
-        conversation_id: str | NotGiven = NOT_GIVEN,
-        documents_filters: query_create_params.DocumentsFilters | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        override_configuration: query_create_params.OverrideConfiguration | NotGiven = NOT_GIVEN,
-        stream: bool | NotGiven = NOT_GIVEN,
-        structured_output: query_create_params.StructuredOutput | NotGiven = NOT_GIVEN,
+        include_retrieval_content_text: bool | Omit = omit,
+        retrievals_only: bool | Omit = omit,
+        conversation_id: str | Omit = omit,
+        documents_filters: query_create_params.DocumentsFilters | Omit = omit,
+        llm_model_id: str | Omit = omit,
+        override_configuration: query_create_params.OverrideConfiguration | Omit = omit,
+        stream: bool | Omit = omit,
+        structured_output: query_create_params.StructuredOutput | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryResponse:
         """
         Start a conversation with an `Agent` and receive its generated response, along
@@ -188,14 +188,14 @@ class QueryResource(SyncAPIResource):
         *,
         feedback: Literal["thumbs_up", "thumbs_down", "flagged", "removed"],
         message_id: str,
-        content_id: str | NotGiven = NOT_GIVEN,
-        explanation: str | NotGiven = NOT_GIVEN,
+        content_id: str | Omit = omit,
+        explanation: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Provide feedback for a generation or a retrieval.
 
@@ -253,18 +253,18 @@ class QueryResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        conversation_ids: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        user_emails: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
+        conversation_ids: SequenceNotStr[str] | Omit = omit,
+        created_after: Union[str, datetime] | Omit = omit,
+        created_before: Union[str, datetime] | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        user_emails: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryMetricsResponse:
         """Returns usage and user-provided feedback data.
 
@@ -329,7 +329,7 @@ class QueryResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RetrievalInfoResponse:
         """
         Return metadata of the contents used to generate the response for a given
@@ -394,20 +394,20 @@ class AsyncQueryResource(AsyncAPIResource):
         agent_id: str,
         *,
         messages: Iterable[query_create_params.Message],
-        include_retrieval_content_text: bool | NotGiven = NOT_GIVEN,
-        retrievals_only: bool | NotGiven = NOT_GIVEN,
-        conversation_id: str | NotGiven = NOT_GIVEN,
-        documents_filters: query_create_params.DocumentsFilters | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        override_configuration: query_create_params.OverrideConfiguration | NotGiven = NOT_GIVEN,
-        stream: bool | NotGiven = NOT_GIVEN,
-        structured_output: query_create_params.StructuredOutput | NotGiven = NOT_GIVEN,
+        include_retrieval_content_text: bool | Omit = omit,
+        retrievals_only: bool | Omit = omit,
+        conversation_id: str | Omit = omit,
+        documents_filters: query_create_params.DocumentsFilters | Omit = omit,
+        llm_model_id: str | Omit = omit,
+        override_configuration: query_create_params.OverrideConfiguration | Omit = omit,
+        stream: bool | Omit = omit,
+        structured_output: query_create_params.StructuredOutput | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryResponse:
         """
         Start a conversation with an `Agent` and receive its generated response, along
@@ -525,14 +525,14 @@ class AsyncQueryResource(AsyncAPIResource):
         *,
         feedback: Literal["thumbs_up", "thumbs_down", "flagged", "removed"],
         message_id: str,
-        content_id: str | NotGiven = NOT_GIVEN,
-        explanation: str | NotGiven = NOT_GIVEN,
+        content_id: str | Omit = omit,
+        explanation: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Provide feedback for a generation or a retrieval.
 
@@ -590,18 +590,18 @@ class AsyncQueryResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        conversation_ids: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        user_emails: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
+        conversation_ids: SequenceNotStr[str] | Omit = omit,
+        created_after: Union[str, datetime] | Omit = omit,
+        created_before: Union[str, datetime] | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        user_emails: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryMetricsResponse:
         """Returns usage and user-provided feedback data.
 
@@ -666,7 +666,7 @@ class AsyncQueryResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RetrievalInfoResponse:
         """
         Return metadata of the contents used to generate the response for a given

@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ...types import datastore_list_params, datastore_create_params, datastore_update_params
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from .documents import (
@@ -61,13 +61,13 @@ class DatastoresResource(SyncAPIResource):
         self,
         *,
         name: str,
-        configuration: datastore_create_params.Configuration | NotGiven = NOT_GIVEN,
+        configuration: datastore_create_params.Configuration | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateDatastoreResponse:
         """Create a new `Datastore`.
 
@@ -119,14 +119,14 @@ class DatastoresResource(SyncAPIResource):
         self,
         datastore_id: str,
         *,
-        configuration: datastore_update_params.Configuration | NotGiven = NOT_GIVEN,
-        name: str | NotGiven = NOT_GIVEN,
+        configuration: datastore_update_params.Configuration | Omit = omit,
+        name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatastoreUpdateResponse:
         """
         Edit Datastore Configuration
@@ -167,15 +167,15 @@ class DatastoresResource(SyncAPIResource):
     def list(
         self,
         *,
-        agent_id: str | NotGiven = NOT_GIVEN,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        agent_id: str | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncDatastoresPage[Datastore]:
         """
         Retrieve a list of `Datastores`.
@@ -230,7 +230,7 @@ class DatastoresResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Delete a given `Datastore`, including all the documents ingested into it.
 
@@ -270,7 +270,7 @@ class DatastoresResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatastoreMetadata:
         """
         Get the details of a given `Datastore`, including its name, create time, and the
@@ -306,7 +306,7 @@ class DatastoresResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Reset the give `Datastore`.
 
@@ -363,13 +363,13 @@ class AsyncDatastoresResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        configuration: datastore_create_params.Configuration | NotGiven = NOT_GIVEN,
+        configuration: datastore_create_params.Configuration | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateDatastoreResponse:
         """Create a new `Datastore`.
 
@@ -421,14 +421,14 @@ class AsyncDatastoresResource(AsyncAPIResource):
         self,
         datastore_id: str,
         *,
-        configuration: datastore_update_params.Configuration | NotGiven = NOT_GIVEN,
-        name: str | NotGiven = NOT_GIVEN,
+        configuration: datastore_update_params.Configuration | Omit = omit,
+        name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatastoreUpdateResponse:
         """
         Edit Datastore Configuration
@@ -469,15 +469,15 @@ class AsyncDatastoresResource(AsyncAPIResource):
     def list(
         self,
         *,
-        agent_id: str | NotGiven = NOT_GIVEN,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        agent_id: str | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Datastore, AsyncDatastoresPage[Datastore]]:
         """
         Retrieve a list of `Datastores`.
@@ -532,7 +532,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Delete a given `Datastore`, including all the documents ingested into it.
 
@@ -572,7 +572,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatastoreMetadata:
         """
         Get the details of a given `Datastore`, including its name, create time, and the
@@ -608,7 +608,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Reset the give `Datastore`.
 

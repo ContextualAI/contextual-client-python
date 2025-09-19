@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ..types import rerank_create_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven, SequenceNotStr
+from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -47,15 +47,15 @@ class RerankResource(SyncAPIResource):
         documents: SequenceNotStr[str],
         model: str,
         query: str,
-        instruction: str | NotGiven = NOT_GIVEN,
-        metadata: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        top_n: int | NotGiven = NOT_GIVEN,
+        instruction: str | Omit = omit,
+        metadata: SequenceNotStr[str] | Omit = omit,
+        top_n: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RerankCreateResponse:
         """
         Rank a list of documents according to their relevance to a query primarily and
@@ -153,15 +153,15 @@ class AsyncRerankResource(AsyncAPIResource):
         documents: SequenceNotStr[str],
         model: str,
         query: str,
-        instruction: str | NotGiven = NOT_GIVEN,
-        metadata: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        top_n: int | NotGiven = NOT_GIVEN,
+        instruction: str | Omit = omit,
+        metadata: SequenceNotStr[str] | Omit = omit,
+        top_n: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RerankCreateResponse:
         """
         Rank a list of documents according to their relevance to a query primarily and

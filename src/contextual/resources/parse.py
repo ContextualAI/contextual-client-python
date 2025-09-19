@@ -9,7 +9,7 @@ from typing_extensions import Literal
 import httpx
 
 from ..types import parse_jobs_params, parse_create_params, parse_job_results_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
+from .._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
 from .._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -52,18 +52,18 @@ class ParseResource(SyncAPIResource):
         self,
         *,
         raw_file: FileTypes,
-        enable_document_hierarchy: bool | NotGiven = NOT_GIVEN,
-        enable_split_tables: bool | NotGiven = NOT_GIVEN,
-        figure_caption_mode: Literal["concise", "detailed"] | NotGiven = NOT_GIVEN,
-        max_split_table_cells: int | NotGiven = NOT_GIVEN,
-        page_range: str | NotGiven = NOT_GIVEN,
-        parse_mode: Literal["basic", "standard"] | NotGiven = NOT_GIVEN,
+        enable_document_hierarchy: bool | Omit = omit,
+        enable_split_tables: bool | Omit = omit,
+        figure_caption_mode: Literal["concise", "detailed"] | Omit = omit,
+        max_split_table_cells: int | Omit = omit,
+        page_range: str | Omit = omit,
+        parse_mode: Literal["basic", "standard"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseCreateResponse:
         """Parse a file into a structured Markdown and/or JSON.
 
@@ -141,13 +141,13 @@ class ParseResource(SyncAPIResource):
         self,
         job_id: str,
         *,
-        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseJobResultsResponse:
         """
         Get the results of a parse job.
@@ -196,7 +196,7 @@ class ParseResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseJobStatusResponse:
         """
         Get the status of a parse job.
@@ -228,15 +228,15 @@ class ParseResource(SyncAPIResource):
     def jobs(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        uploaded_after: Union[str, datetime] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseJobsResponse:
         """
         Get list of parse jobs, sorted from most recent to oldest.
@@ -307,18 +307,18 @@ class AsyncParseResource(AsyncAPIResource):
         self,
         *,
         raw_file: FileTypes,
-        enable_document_hierarchy: bool | NotGiven = NOT_GIVEN,
-        enable_split_tables: bool | NotGiven = NOT_GIVEN,
-        figure_caption_mode: Literal["concise", "detailed"] | NotGiven = NOT_GIVEN,
-        max_split_table_cells: int | NotGiven = NOT_GIVEN,
-        page_range: str | NotGiven = NOT_GIVEN,
-        parse_mode: Literal["basic", "standard"] | NotGiven = NOT_GIVEN,
+        enable_document_hierarchy: bool | Omit = omit,
+        enable_split_tables: bool | Omit = omit,
+        figure_caption_mode: Literal["concise", "detailed"] | Omit = omit,
+        max_split_table_cells: int | Omit = omit,
+        page_range: str | Omit = omit,
+        parse_mode: Literal["basic", "standard"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseCreateResponse:
         """Parse a file into a structured Markdown and/or JSON.
 
@@ -396,13 +396,13 @@ class AsyncParseResource(AsyncAPIResource):
         self,
         job_id: str,
         *,
-        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | NotGiven = NOT_GIVEN,
+        output_types: List[Literal["markdown-document", "markdown-per-page", "blocks-per-page"]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseJobResultsResponse:
         """
         Get the results of a parse job.
@@ -453,7 +453,7 @@ class AsyncParseResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseJobStatusResponse:
         """
         Get the status of a parse job.
@@ -485,15 +485,15 @@ class AsyncParseResource(AsyncAPIResource):
     async def jobs(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        uploaded_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        uploaded_after: Union[str, datetime] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParseJobsResponse:
         """
         Get list of parse jobs, sorted from most recent to oldest.
