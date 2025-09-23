@@ -36,12 +36,24 @@ class TestAgents:
             agent_configs={
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
@@ -124,12 +136,24 @@ class TestAgents:
             agent_configs={
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
@@ -410,12 +434,24 @@ class TestAsyncAgents:
             agent_configs={
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
@@ -498,12 +534,24 @@ class TestAsyncAgents:
             agent_configs={
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
