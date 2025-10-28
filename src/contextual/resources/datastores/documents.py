@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Union, Mapping, cast
+from typing import Dict, List, Union, Mapping, Iterable, cast
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -232,6 +232,7 @@ class DocumentsResource(SyncAPIResource):
         datastore_id: str,
         *,
         file: FileTypes,
+        configuration: str | Omit = omit,
         metadata: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -260,25 +261,29 @@ class DocumentsResource(SyncAPIResource):
 
           file: File to ingest.
 
-          metadata: Metadata request in JSON format. `custom_metadata` is a flat dictionary
-              containing one or more key-value pairs, where each value must be a primitive
-              type (`str`, `bool`, `float`, or `int`). The default maximum metadata fields
-              that can be used is 15, contact support if more is needed.The combined size of
-              the metadata must not exceed **2 KB** when encoded as JSON.The strings with date
-              format must stay in date format or be avoided if not in date format.The
-              `custom_metadata.url` field is automatically included in returned attributions
-              during query time, if provided.
+          configuration: Overrides the datastore's default configuration for this specific document. This
+              allows applying optimized settings tailored to the document's characteristics
+              without changing the global datastore configuration.
 
-              **Example Request Body:**
+          metadata: Metadata request in stringified JSON format. `custom_metadata` is a flat
+              dictionary containing one or more key-value pairs, where each value must be a
+              primitive type (`str`, `bool`, `float`, or `int`). The default maximum metadata
+              fields that can be used is 15, contact support@contextual.ai if more is needed.
+              The combined size of the metadata must not exceed **2 KB** when encoded as JSON.
+              The strings with date format must stay in date format or be avoided if not in
+              date format. The `custom_metadata.url` or `link` field is automatically included
+              in returned attributions during query time, if provided.
 
-              ```json
-              {
-                "custom_metadata": {
-                  "topic": "science",
-                  "difficulty": 3
-                }
-              }
-              ```
+                          **Example Request Body (as returned by `json.dumps`):**
+
+                          ```json
+                          "{{
+                          \"custom_metadata\": {{
+                              \"topic\": \"science\",
+                              \"difficulty\": 3
+                          }}
+                          }}"
+                          ```
 
           extra_headers: Send extra headers
 
@@ -293,6 +298,7 @@ class DocumentsResource(SyncAPIResource):
         body = deepcopy_minimal(
             {
                 "file": file,
+                "configuration": configuration,
                 "metadata": metadata,
             }
         )
@@ -357,7 +363,7 @@ class DocumentsResource(SyncAPIResource):
         document_id: str,
         *,
         datastore_id: str,
-        custom_metadata: Dict[str, Union[bool, float, str]] | Omit = omit,
+        custom_metadata: Dict[str, Union[bool, float, str, Iterable[float]]] | Omit = omit,
         custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -385,17 +391,12 @@ class DocumentsResource(SyncAPIResource):
               used is 15, contact support if more is needed.
 
           custom_metadata_config: A dictionary mapping metadata field names to the configuration to use for each
-              field.
-
-                      - If a metadata field is not present in the dictionary, the default configuration will be used.
-
-                      - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
-
-                      Limits: - Maximum characters per metadata field (for prompt or rerank): 400
-
-                      - Maximum number of metadata fields (for prompt or retrieval): 10
-
-                      Contact support@contextual.ai to request quota increases.
+              field. If a metadata field is not present in the dictionary, the default
+              configuration will be used. If the dictionary is not provided, metadata will be
+              added in context for rerank and generation but will not be returned back to the
+              user in retrievals in query API. Limits: - Maximum characters per metadata field
+              (for prompt or rerank): **400** - Maximum number of metadata fields (for prompt
+              or retrieval): **10** Contact support@contextual.ai to request quota increases.
 
           extra_headers: Send extra headers
 
@@ -409,7 +410,7 @@ class DocumentsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
-        return self._post(
+        return self._put(
             f"/datastores/{datastore_id}/documents/{document_id}/metadata",
             body=maybe_transform(
                 {
@@ -624,6 +625,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         datastore_id: str,
         *,
         file: FileTypes,
+        configuration: str | Omit = omit,
         metadata: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -652,25 +654,29 @@ class AsyncDocumentsResource(AsyncAPIResource):
 
           file: File to ingest.
 
-          metadata: Metadata request in JSON format. `custom_metadata` is a flat dictionary
-              containing one or more key-value pairs, where each value must be a primitive
-              type (`str`, `bool`, `float`, or `int`). The default maximum metadata fields
-              that can be used is 15, contact support if more is needed.The combined size of
-              the metadata must not exceed **2 KB** when encoded as JSON.The strings with date
-              format must stay in date format or be avoided if not in date format.The
-              `custom_metadata.url` field is automatically included in returned attributions
-              during query time, if provided.
+          configuration: Overrides the datastore's default configuration for this specific document. This
+              allows applying optimized settings tailored to the document's characteristics
+              without changing the global datastore configuration.
 
-              **Example Request Body:**
+          metadata: Metadata request in stringified JSON format. `custom_metadata` is a flat
+              dictionary containing one or more key-value pairs, where each value must be a
+              primitive type (`str`, `bool`, `float`, or `int`). The default maximum metadata
+              fields that can be used is 15, contact support@contextual.ai if more is needed.
+              The combined size of the metadata must not exceed **2 KB** when encoded as JSON.
+              The strings with date format must stay in date format or be avoided if not in
+              date format. The `custom_metadata.url` or `link` field is automatically included
+              in returned attributions during query time, if provided.
 
-              ```json
-              {
-                "custom_metadata": {
-                  "topic": "science",
-                  "difficulty": 3
-                }
-              }
-              ```
+                          **Example Request Body (as returned by `json.dumps`):**
+
+                          ```json
+                          "{{
+                          \"custom_metadata\": {{
+                              \"topic\": \"science\",
+                              \"difficulty\": 3
+                          }}
+                          }}"
+                          ```
 
           extra_headers: Send extra headers
 
@@ -685,6 +691,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         body = deepcopy_minimal(
             {
                 "file": file,
+                "configuration": configuration,
                 "metadata": metadata,
             }
         )
@@ -749,7 +756,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         document_id: str,
         *,
         datastore_id: str,
-        custom_metadata: Dict[str, Union[bool, float, str]] | Omit = omit,
+        custom_metadata: Dict[str, Union[bool, float, str, Iterable[float]]] | Omit = omit,
         custom_metadata_config: Dict[str, document_set_metadata_params.CustomMetadataConfig] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -777,17 +784,12 @@ class AsyncDocumentsResource(AsyncAPIResource):
               used is 15, contact support if more is needed.
 
           custom_metadata_config: A dictionary mapping metadata field names to the configuration to use for each
-              field.
-
-                      - If a metadata field is not present in the dictionary, the default configuration will be used.
-
-                      - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
-
-                      Limits: - Maximum characters per metadata field (for prompt or rerank): 400
-
-                      - Maximum number of metadata fields (for prompt or retrieval): 10
-
-                      Contact support@contextual.ai to request quota increases.
+              field. If a metadata field is not present in the dictionary, the default
+              configuration will be used. If the dictionary is not provided, metadata will be
+              added in context for rerank and generation but will not be returned back to the
+              user in retrievals in query API. Limits: - Maximum characters per metadata field
+              (for prompt or rerank): **400** - Maximum number of metadata fields (for prompt
+              or retrieval): **10** Contact support@contextual.ai to request quota increases.
 
           extra_headers: Send extra headers
 
@@ -801,7 +803,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
-        return await self._post(
+        return await self._put(
             f"/datastores/{datastore_id}/documents/{document_id}/metadata",
             body=await async_maybe_transform(
                 {

@@ -107,7 +107,7 @@ class RetrievalContent(BaseModel):
     ctxl_metadata: Optional[RetrievalContentCtxlMetadata] = None
     """Default metadata from the retrieval"""
 
-    custom_metadata: Optional[Dict[str, Union[bool, float, str]]] = None
+    custom_metadata: Optional[Dict[str, Union[bool, float, str, List[float]]]] = None
     """
     Custom metadata for the document, provided by the user at ingestion time.Must be
     a JSON-serializable dictionary with string keys and simple primitive values
@@ -121,20 +121,16 @@ class RetrievalContent(BaseModel):
     custom_metadata_config: Optional[Dict[str, RetrievalContentCustomMetadataConfig]] = None
     """
     A dictionary mapping metadata field names to the configuration to use for each
-    field.
-
-            - If a metadata field is not present in the dictionary, the default configuration will be used.
-
-            - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
-
-
-            Limits: - Maximum characters per metadata field (for prompt or rerank): 400
-
-            - Maximum number of metadata fields (for prompt or retrieval): 10
-
-
-            Contact support@contextual.ai to request quota increases.
+    field. If a metadata field is not present in the dictionary, the default
+    configuration will be used. If the dictionary is not provided, metadata will be
+    added in context for rerank and generation but will not be returned back to the
+    user in retrievals in query API. Limits: - Maximum characters per metadata field
+    (for prompt or rerank): **400** - Maximum number of metadata fields (for prompt
+    or retrieval): **10** Contact support@contextual.ai to request quota increases.
     """
+
+    datastore_id: Optional[str] = None
+    """Unique identifier of the datastore"""
 
     number: Optional[int] = None
     """Index of the retrieved item in the retrieval_contents list (starting from 1)"""
@@ -177,6 +173,9 @@ class Message(BaseModel):
 
     role: Literal["user", "system", "assistant", "knowledge"]
     """Role of the sender"""
+
+    custom_tags: Optional[List[str]] = None
+    """Custom tags for the message"""
 
 
 class QueryResponse(BaseModel):

@@ -71,6 +71,7 @@ class AgentsResource(SyncAPIResource):
         no_retrieval_system_prompt: str | Omit = omit,
         suggested_queries: SequenceNotStr[str] | Omit = omit,
         system_prompt: str | Omit = omit,
+        template_name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -121,6 +122,8 @@ class AgentsResource(SyncAPIResource):
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
 
+          template_name: The template defining the base configuration for the agent.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -142,6 +145,7 @@ class AgentsResource(SyncAPIResource):
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
+                    "template_name": template_name,
                 },
                 agent_create_params.AgentCreateParams,
             ),
@@ -157,9 +161,10 @@ class AgentsResource(SyncAPIResource):
         *,
         agent_configs: AgentConfigsParam | Omit = omit,
         datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
         filter_prompt: str | Omit = omit,
-        llm_model_id: str | Omit = omit,
         multiturn_system_prompt: str | Omit = omit,
+        name: str | Omit = omit,
         no_retrieval_system_prompt: str | Omit = omit,
         suggested_queries: SequenceNotStr[str] | Omit = omit,
         system_prompt: str | Omit = omit,
@@ -182,14 +187,14 @@ class AgentsResource(SyncAPIResource):
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
+          description: Description of the agent
+
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
-          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
-              on which they were tuned. If no model is specified, the default model is used.
-              Set to `default` to switch from a tuned model to the default model.
-
           multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          name: Name of the agent
 
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
@@ -218,9 +223,10 @@ class AgentsResource(SyncAPIResource):
                 {
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
+                    "description": description,
                     "filter_prompt": filter_prompt,
-                    "llm_model_id": llm_model_id,
                     "multiturn_system_prompt": multiturn_system_prompt,
+                    "name": name,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -469,6 +475,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         no_retrieval_system_prompt: str | Omit = omit,
         suggested_queries: SequenceNotStr[str] | Omit = omit,
         system_prompt: str | Omit = omit,
+        template_name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -519,6 +526,8 @@ class AsyncAgentsResource(AsyncAPIResource):
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
 
+          template_name: The template defining the base configuration for the agent.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -540,6 +549,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
+                    "template_name": template_name,
                 },
                 agent_create_params.AgentCreateParams,
             ),
@@ -555,9 +565,10 @@ class AsyncAgentsResource(AsyncAPIResource):
         *,
         agent_configs: AgentConfigsParam | Omit = omit,
         datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
         filter_prompt: str | Omit = omit,
-        llm_model_id: str | Omit = omit,
         multiturn_system_prompt: str | Omit = omit,
+        name: str | Omit = omit,
         no_retrieval_system_prompt: str | Omit = omit,
         suggested_queries: SequenceNotStr[str] | Omit = omit,
         system_prompt: str | Omit = omit,
@@ -580,14 +591,14 @@ class AsyncAgentsResource(AsyncAPIResource):
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
+          description: Description of the agent
+
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
-          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
-              on which they were tuned. If no model is specified, the default model is used.
-              Set to `default` to switch from a tuned model to the default model.
-
           multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          name: Name of the agent
 
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
@@ -616,9 +627,10 @@ class AsyncAgentsResource(AsyncAPIResource):
                 {
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
+                    "description": description,
                     "filter_prompt": filter_prompt,
-                    "llm_model_id": llm_model_id,
                     "multiturn_system_prompt": multiturn_system_prompt,
+                    "name": name,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,

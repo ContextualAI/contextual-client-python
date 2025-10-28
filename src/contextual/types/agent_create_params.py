@@ -52,5 +52,8 @@ class AgentCreateParams(TypedDict, total=False):
     exactly.
     """
 
+    template_name: str
+    """The template defining the base configuration for the agent."""
+
 
 from .agent_configs_param import AgentConfigsParam

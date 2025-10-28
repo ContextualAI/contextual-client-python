@@ -16,22 +16,20 @@ class AgentUpdateParams(TypedDict, total=False):
     datastore_ids: SequenceNotStr[str]
     """IDs of the datastore to associate with the agent."""
 
+    description: str
+    """Description of the agent"""
+
     filter_prompt: str
     """
     The prompt to an LLM which determines whether retrieved chunks are relevant to a
     given query and filters out irrelevant chunks.
     """
 
-    llm_model_id: str
-    """The model ID to use for generation.
-
-    Tuned models can only be used for the agents on which they were tuned. If no
-    model is specified, the default model is used. Set to `default` to switch from a
-    tuned model to the default model.
-    """
-
     multiturn_system_prompt: str
     """Instructions on how the agent should handle multi-turn conversations."""
+
+    name: str
+    """Name of the agent"""
 
     no_retrieval_system_prompt: str
     """

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Optional
+from typing import Dict, List, Union, Optional
 from typing_extensions import TypeAlias
 
 from .._models import BaseModel
@@ -30,7 +30,7 @@ class GetTwilightAgentResponse(BaseModel):
 
     template_name: str
 
-    agent_configs: Optional[object] = None
+    agent_configs: Optional[Dict[str, object]] = None
     """The following advanced parameters are experimental and subject to change."""
 
     agent_usages: Optional[GetTwilightAgentResponseAgentUsages] = None
