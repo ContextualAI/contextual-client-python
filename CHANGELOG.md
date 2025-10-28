@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.9.0 (2025-10-28)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **api:** update via SDK Studio ([3ebbcab](https://github.com/ContextualAI/contextual-client-python/commit/3ebbcab780e0391c420126b8cbf11589aba78470))
+* improve future compat with pydantic v3 ([2837532](https://github.com/ContextualAI/contextual-client-python/commit/2837532cb8930994be7d02c356421a1a3e990c78))
+* **types:** replace List[str] with SequenceNotStr in params ([ee66bc5](https://github.com/ContextualAI/contextual-client-python/commit/ee66bc5ce67fefb92b384ea979475ed54a53af9d))
+
+
+### Bug Fixes
+
+* avoid newer type syntax ([551b56e](https://github.com/ContextualAI/contextual-client-python/commit/551b56e22af03e8305e599814f484a5ed64b9cb3))
+* **compat:** compat with `pydantic&lt;2.8.0` when using additional fields ([ceb597f](https://github.com/ContextualAI/contextual-client-python/commit/ceb597f1da87f0e2ae718a6143ec57c60b8f4d3d))
+
+
+### Chores
+
+* bump `httpx-aiohttp` version to 0.1.9 ([bdcc7c6](https://github.com/ContextualAI/contextual-client-python/commit/bdcc7c6b9c7784c25b49debbcadca2307c43e5b6))
+* do not install brew dependencies in ./scripts/bootstrap by default ([41397b2](https://github.com/ContextualAI/contextual-client-python/commit/41397b25ce468bf58ed53e8e78e7cea2fcf41a47))
+* **internal:** add Sequence related utils ([f00b892](https://github.com/ContextualAI/contextual-client-python/commit/f00b892536ef8c2d6f67965d7db28a1956adebb5))
+* **internal:** detect missing future annotations with ruff ([6958d77](https://github.com/ContextualAI/contextual-client-python/commit/6958d772079b5f5571e7db3c39255d146b11dd5b))
+* **internal:** improve examples ([c6f06b9](https://github.com/ContextualAI/contextual-client-python/commit/c6f06b9b0859a68bb32fa96294443abd139070e4))
+* **internal:** move mypy configurations to `pyproject.toml` file ([57b4284](https://github.com/ContextualAI/contextual-client-python/commit/57b42849dd5340b2ce21aa8b6b8fb0c7e15529ba))
+* **internal:** update pydantic dependency ([35223af](https://github.com/ContextualAI/contextual-client-python/commit/35223af9a91cc39d4800294b7821480ac2d2b0ee))
+* **internal:** update pyright exclude list ([e89669e](https://github.com/ContextualAI/contextual-client-python/commit/e89669e93ed4a4e74993adfee5756b3502719e8c))
+* **tests:** simplify `get_platform` test ([1f089bd](https://github.com/ContextualAI/contextual-client-python/commit/1f089bdf7319dee3c726d844d11f35a924cfdcc4))
+* **types:** change optional parameter type from NotGiven to Omit ([07ee8a4](https://github.com/ContextualAI/contextual-client-python/commit/07ee8a4cecd02070a7fd44d1daec9687af2fce45))
+
 ## 0.8.0 (2025-08-26)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.7.0...v0.8.0)
