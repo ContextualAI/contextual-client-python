@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union
+from typing import Dict, Union, Iterable
 from typing_extensions import Required, TypedDict
 
 __all__ = ["DocumentSetMetadataParams", "CustomMetadataConfig"]
@@ -12,7 +12,7 @@ class DocumentSetMetadataParams(TypedDict, total=False):
     datastore_id: Required[str]
     """Datastore ID of the datastore from which to retrieve the document"""
 
-    custom_metadata: Dict[str, Union[bool, float, str]]
+    custom_metadata: Dict[str, Union[bool, float, str, Iterable[float]]]
     """
     Custom metadata for the document, provided by the user at ingestion time.Must be
     a JSON-serializable dictionary with string keys and simple primitive values
@@ -26,19 +26,12 @@ class DocumentSetMetadataParams(TypedDict, total=False):
     custom_metadata_config: Dict[str, CustomMetadataConfig]
     """
     A dictionary mapping metadata field names to the configuration to use for each
-    field.
-
-            - If a metadata field is not present in the dictionary, the default configuration will be used.
-
-            - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
-
-
-            Limits: - Maximum characters per metadata field (for prompt or rerank): 400
-
-            - Maximum number of metadata fields (for prompt or retrieval): 10
-
-
-            Contact support@contextual.ai to request quota increases.
+    field. If a metadata field is not present in the dictionary, the default
+    configuration will be used. If the dictionary is not provided, metadata will be
+    added in context for rerank and generation but will not be returned back to the
+    user in retrievals in query API. Limits: - Maximum characters per metadata field
+    (for prompt or rerank): **400** - Maximum number of metadata fields (for prompt
+    or retrieval): **10** Contact support@contextual.ai to request quota increases.
     """
 
 

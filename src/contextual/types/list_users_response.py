@@ -33,11 +33,14 @@ class User(BaseModel):
             Literal[
                 "VISITOR",
                 "AGENT_USER",
+                "CUSTOMER_USER",
                 "CUSTOMER_INTERNAL_USER",
                 "CONTEXTUAL_STAFF_USER",
                 "CONTEXTUAL_EXTERNAL_STAFF_USER",
                 "CONTEXTUAL_INTERNAL_STAFF_USER",
                 "TENANT_ADMIN",
+                "CUSTOMER_ADMIN",
+                "CONTEXTUAL_ADMIN",
                 "SUPER_ADMIN",
                 "SERVICE_ACCOUNT",
             ]
@@ -61,11 +64,14 @@ class User(BaseModel):
             Literal[
                 "VISITOR",
                 "AGENT_USER",
+                "CUSTOMER_USER",
                 "CUSTOMER_INTERNAL_USER",
                 "CONTEXTUAL_STAFF_USER",
                 "CONTEXTUAL_EXTERNAL_STAFF_USER",
                 "CONTEXTUAL_INTERNAL_STAFF_USER",
                 "TENANT_ADMIN",
+                "CUSTOMER_ADMIN",
+                "CONTEXTUAL_ADMIN",
                 "SUPER_ADMIN",
                 "SERVICE_ACCOUNT",
             ]

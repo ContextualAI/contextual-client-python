@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Union, Iterable
+from typing import Dict, Union, Iterable
 from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
+from ..._types import SequenceNotStr
 from ..datastores.base_metadata_filter_param import BaseMetadataFilterParam
 
 __all__ = ["QueryCreateParams", "Message", "DocumentsFilters", "OverrideConfiguration", "StructuredOutput"]
@@ -44,8 +45,10 @@ class QueryCreateParams(TypedDict, total=False):
     documents_filters: DocumentsFilters
     """
     Defines an Optional custom metadata filter, which can be a list of filters or
-    nested filters. The expected input is a nested JSON object that can represent a
-    single filter or a composite (logical) combination of filters.
+    nested filters. Use **lowercase** for `value` and/or **field.keyword** for
+    `field` when not using `equals` operator.The expected input is a nested JSON
+    object that can represent a single filter or a composite (logical) combination
+    of filters.
 
     Unnested Example:
 
@@ -104,6 +107,9 @@ class Message(TypedDict, total=False):
 
     role: Required[Literal["user", "system", "assistant", "knowledge"]]
     """Role of the sender"""
+
+    custom_tags: SequenceNotStr[str]
+    """Custom tags for the message"""
 
 
 DocumentsFilters: TypeAlias = Union[BaseMetadataFilterParam, "CompositeMetadataFilterParam"]
@@ -178,7 +184,7 @@ class OverrideConfiguration(TypedDict, total=False):
 
 
 class StructuredOutput(TypedDict, total=False):
-    json_schema: Required[object]
+    json_schema: Required[Dict[str, object]]
     """The output json structure."""
 
     type: Literal["JSON"]

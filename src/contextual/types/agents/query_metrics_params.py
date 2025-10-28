@@ -20,7 +20,17 @@ class QueryMetricsParams(TypedDict, total=False):
     """Filters messages that are created after the specified timestamp."""
 
     created_before: Annotated[Union[str, datetime], PropertyInfo(format="iso8601")]
-    """Filters messages that are created before specified timestamp."""
+    """Filters messages that are created before specified timestamp.
+
+    If both `created_after` and `created_before` are not provided, then
+    `created_before` will be set to the current time and `created_after` will be set
+    to the `created_before` - 2 days. If only `created_after` is provided, then
+    `created_before` will be set to the `created_after` + 2 days. If only
+    `created_before` is provided, then `created_after` will be set to the
+    `created_before` - 2 days. If both `created_after` and `created_before` are
+    provided, and the difference between them is more than 2 days, then
+    `created_after` will be set to the `created_before` - 2 days.
+    """
 
     limit: int
     """Limits the number of messages to return."""

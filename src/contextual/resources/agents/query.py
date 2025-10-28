@@ -27,6 +27,7 @@ from ...types.agents import (
 )
 from ...types.agents.query_response import QueryResponse
 from ...types.agents.query_metrics_response import QueryMetricsResponse
+from ...types.agents.query_feedback_response import QueryFeedbackResponse
 from ...types.agents.retrieval_info_response import RetrievalInfoResponse
 
 __all__ = ["QueryResource", "AsyncQueryResource"]
@@ -98,8 +99,10 @@ class QueryResource(SyncAPIResource):
               query will be ignored.
 
           documents_filters: Defines an Optional custom metadata filter, which can be a list of filters or
-              nested filters. The expected input is a nested JSON object that can represent a
-              single filter or a composite (logical) combination of filters.
+              nested filters. Use **lowercase** for `value` and/or **field.keyword** for
+              `field` when not using `equals` operator.The expected input is a nested JSON
+              object that can represent a single filter or a composite (logical) combination
+              of filters.
 
               Unnested Example:
 
@@ -196,18 +199,12 @@ class QueryResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> QueryFeedbackResponse:
         """Provide feedback for a generation or a retrieval.
 
         Feedback can be used to track
         overall `Agent` performance through the `Feedback` page in the Contextual UI,
         and as a basis for model fine-tuning.
-
-        If providing feedback on a retrieval, include the `message_id` from the `/query`
-        response, and a `content_id` returned in the query's `retrieval_contents` list.
-
-        For feedback on generations, include `message_id` and do not include a
-        `content_id`.
 
         Args:
           agent_id: ID of the agent for which to provide feedback
@@ -246,7 +243,7 @@ class QueryResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=QueryFeedbackResponse,
         )
 
     def metrics(
@@ -278,7 +275,15 @@ class QueryResource(SyncAPIResource):
 
           created_after: Filters messages that are created after the specified timestamp.
 
-          created_before: Filters messages that are created before specified timestamp.
+          created_before: Filters messages that are created before specified timestamp. If both
+              `created_after` and `created_before` are not provided, then `created_before`
+              will be set to the current time and `created_after` will be set to the
+              `created_before` - 2 days. If only `created_after` is provided, then
+              `created_before` will be set to the `created_after` + 2 days. If only
+              `created_before` is provided, then `created_after` will be set to the
+              `created_before` - 2 days. If both `created_after` and `created_before` are
+              provided, and the difference between them is more than 2 days, then
+              `created_after` will be set to the `created_before` - 2 days.
 
           limit: Limits the number of messages to return.
 
@@ -435,8 +440,10 @@ class AsyncQueryResource(AsyncAPIResource):
               query will be ignored.
 
           documents_filters: Defines an Optional custom metadata filter, which can be a list of filters or
-              nested filters. The expected input is a nested JSON object that can represent a
-              single filter or a composite (logical) combination of filters.
+              nested filters. Use **lowercase** for `value` and/or **field.keyword** for
+              `field` when not using `equals` operator.The expected input is a nested JSON
+              object that can represent a single filter or a composite (logical) combination
+              of filters.
 
               Unnested Example:
 
@@ -533,18 +540,12 @@ class AsyncQueryResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> QueryFeedbackResponse:
         """Provide feedback for a generation or a retrieval.
 
         Feedback can be used to track
         overall `Agent` performance through the `Feedback` page in the Contextual UI,
         and as a basis for model fine-tuning.
-
-        If providing feedback on a retrieval, include the `message_id` from the `/query`
-        response, and a `content_id` returned in the query's `retrieval_contents` list.
-
-        For feedback on generations, include `message_id` and do not include a
-        `content_id`.
 
         Args:
           agent_id: ID of the agent for which to provide feedback
@@ -583,7 +584,7 @@ class AsyncQueryResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=QueryFeedbackResponse,
         )
 
     async def metrics(
@@ -615,7 +616,15 @@ class AsyncQueryResource(AsyncAPIResource):
 
           created_after: Filters messages that are created after the specified timestamp.
 
-          created_before: Filters messages that are created before specified timestamp.
+          created_before: Filters messages that are created before specified timestamp. If both
+              `created_after` and `created_before` are not provided, then `created_before`
+              will be set to the current time and `created_after` will be set to the
+              `created_before` - 2 days. If only `created_after` is provided, then
+              `created_before` will be set to the `created_after` + 2 days. If only
+              `created_before` is provided, then `created_after` will be set to the
+              `created_before` - 2 days. If both `created_after` and `created_before` are
+              provided, and the difference between them is more than 2 days, then
+              `created_after` will be set to the `created_before` - 2 days.
 
           limit: Limits the number of messages to return.
 

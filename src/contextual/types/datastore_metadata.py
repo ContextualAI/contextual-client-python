@@ -112,7 +112,7 @@ class DatastoreMetadata(BaseModel):
     """Name of the datastore"""
 
     configuration: Optional[Configuration] = None
-    """Configuration of the datastore. Not set if default configuration is in use."""
+    """Configuration for unstructured datastores."""
 
     datastore_type: Optional[Literal["UNSTRUCTURED"]] = None
     """Type of the datastore"""
