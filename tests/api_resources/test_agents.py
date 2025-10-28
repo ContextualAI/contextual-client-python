@@ -34,14 +34,30 @@ class TestAgents:
         agent = client.agents.create(
             name="xxx",
             agent_configs={
+                "acl_config": {
+                    "acl_active": True,
+                    "acl_yaml": "acl_yaml",
+                },
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
@@ -75,6 +91,10 @@ class TestAgents:
                     "semantic_alpha": 0,
                     "top_k_retrieved_chunks": 0,
                 },
+                "translation_config": {
+                    "translate_confidence": 0,
+                    "translate_needed": True,
+                },
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="description",
@@ -83,6 +103,7 @@ class TestAgents:
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
+            template_name="template_name",
         )
         assert_matches_type(CreateAgentOutput, agent, path=["response"])
 
@@ -122,14 +143,30 @@ class TestAgents:
         agent = client.agents.update(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             agent_configs={
+                "acl_config": {
+                    "acl_active": True,
+                    "acl_yaml": "acl_yaml",
+                },
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
@@ -163,11 +200,16 @@ class TestAgents:
                     "semantic_alpha": 0,
                     "top_k_retrieved_chunks": 0,
                 },
+                "translation_config": {
+                    "translate_confidence": 0,
+                    "translate_needed": True,
+                },
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            description="description",
             filter_prompt="filter_prompt",
-            llm_model_id="llm_model_id",
             multiturn_system_prompt="multiturn_system_prompt",
+            name="xxx",
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
@@ -408,14 +450,30 @@ class TestAsyncAgents:
         agent = await async_client.agents.create(
             name="xxx",
             agent_configs={
+                "acl_config": {
+                    "acl_active": True,
+                    "acl_yaml": "acl_yaml",
+                },
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
@@ -449,6 +507,10 @@ class TestAsyncAgents:
                     "semantic_alpha": 0,
                     "top_k_retrieved_chunks": 0,
                 },
+                "translation_config": {
+                    "translate_confidence": 0,
+                    "translate_needed": True,
+                },
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             description="description",
@@ -457,6 +519,7 @@ class TestAsyncAgents:
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",
+            template_name="template_name",
         )
         assert_matches_type(CreateAgentOutput, agent, path=["response"])
 
@@ -496,14 +559,30 @@ class TestAsyncAgents:
         agent = await async_client.agents.update(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             agent_configs={
+                "acl_config": {
+                    "acl_active": True,
+                    "acl_yaml": "acl_yaml",
+                },
                 "filter_and_rerank_config": {
                     "default_metadata_filters": {
-                        "filters": [],
+                        "filters": [
+                            {
+                                "field": "field1",
+                                "operator": "equals",
+                                "value": "value1",
+                            }
+                        ],
                         "operator": "AND",
                     },
                     "per_datastore_metadata_filters": {
                         "d49609d9-61c3-4a67-b3bd-5196b10da560": {
-                            "filters": [],
+                            "filters": [
+                                {
+                                    "field": "field1",
+                                    "operator": "equals",
+                                    "value": "value1",
+                                }
+                            ],
                             "operator": "AND",
                         }
                     },
@@ -537,11 +616,16 @@ class TestAsyncAgents:
                     "semantic_alpha": 0,
                     "top_k_retrieved_chunks": 0,
                 },
+                "translation_config": {
+                    "translate_confidence": 0,
+                    "translate_needed": True,
+                },
             },
             datastore_ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            description="description",
             filter_prompt="filter_prompt",
-            llm_model_id="llm_model_id",
             multiturn_system_prompt="multiturn_system_prompt",
+            name="xxx",
             no_retrieval_system_prompt="no_retrieval_system_prompt",
             suggested_queries=["string"],
             system_prompt="system_prompt",

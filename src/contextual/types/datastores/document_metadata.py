@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, Union, Optional
+from typing import Dict, List, Union, Optional
 from typing_extensions import Literal
 
 from ..._models import BaseModel
@@ -38,7 +38,7 @@ class DocumentMetadata(BaseModel):
     status: Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]
     """Status of this document's ingestion job"""
 
-    custom_metadata: Optional[Dict[str, Union[bool, float, str]]] = None
+    custom_metadata: Optional[Dict[str, Union[bool, float, str, List[float]]]] = None
     """
     Custom metadata for the document, provided by the user at ingestion time.Must be
     a JSON-serializable dictionary with string keys and simple primitive values
@@ -52,25 +52,18 @@ class DocumentMetadata(BaseModel):
     custom_metadata_config: Optional[Dict[str, CustomMetadataConfig]] = None
     """
     A dictionary mapping metadata field names to the configuration to use for each
-    field.
-
-            - If a metadata field is not present in the dictionary, the default configuration will be used.
-
-            - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
-
-
-            Limits: - Maximum characters per metadata field (for prompt or rerank): 400
-
-            - Maximum number of metadata fields (for prompt or retrieval): 10
-
-
-            Contact support@contextual.ai to request quota increases.
+    field. If a metadata field is not present in the dictionary, the default
+    configuration will be used. If the dictionary is not provided, metadata will be
+    added in context for rerank and generation but will not be returned back to the
+    user in retrievals in query API. Limits: - Maximum characters per metadata field
+    (for prompt or rerank): **400** - Maximum number of metadata fields (for prompt
+    or retrieval): **10** Contact support@contextual.ai to request quota increases.
     """
 
     has_access: Optional[bool] = None
     """Whether the user has access to this document."""
 
-    ingestion_config: Optional[object] = None
+    ingestion_config: Optional[Dict[str, object]] = None
     """Ingestion configuration for the document when the document was ingested.
 
     It may be different from the current datastore configuration.

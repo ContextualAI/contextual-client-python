@@ -11,6 +11,7 @@ __all__ = [
     "ContentMetadata",
     "ContentMetadataUnstructuredContentMetadata",
     "ContentMetadataStructuredContentMetadata",
+    "ContentMetadataFileAnalysisContentMetadata",
 ]
 
 
@@ -61,8 +62,25 @@ class ContentMetadataStructuredContentMetadata(BaseModel):
     content_type: Optional[Literal["structured"]] = None
 
 
+class ContentMetadataFileAnalysisContentMetadata(BaseModel):
+    content_id: str
+    """Id of the content."""
+
+    file_format: str
+    """Format of the file."""
+
+    gcp_location: str
+    """GCP location of the file."""
+
+    content_type: Optional[Literal["file_analysis"]] = None
+
+
 ContentMetadata: TypeAlias = Annotated[
-    Union[ContentMetadataUnstructuredContentMetadata, ContentMetadataStructuredContentMetadata],
+    Union[
+        ContentMetadataUnstructuredContentMetadata,
+        ContentMetadataStructuredContentMetadata,
+        ContentMetadataFileAnalysisContentMetadata,
+    ],
     PropertyInfo(discriminator="content_type"),
 ]
 

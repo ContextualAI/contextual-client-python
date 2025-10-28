@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from typing import List, Union
+from typing import Union
 from typing_extensions import Literal, Required, TypedDict
+
+from ..._types import SequenceNotStr
 
 __all__ = ["BaseMetadataFilterParam"]
 
@@ -29,7 +31,7 @@ class BaseMetadataFilterParam(TypedDict, total=False):
     ]
     """Operator to be used for the filter."""
 
-    value: Union[str, float, bool, List[Union[str, float, bool]], None]
+    value: Union[str, float, bool, SequenceNotStr[Union[str, float, bool]], None]
     """The value to be searched for in the field.
 
     In case of exists operator, it is not needed.

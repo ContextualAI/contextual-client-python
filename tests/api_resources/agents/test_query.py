@@ -13,6 +13,7 @@ from contextual._utils import parse_datetime
 from contextual.types.agents import (
     QueryResponse,
     QueryMetricsResponse,
+    QueryFeedbackResponse,
     RetrievalInfoResponse,
 )
 
@@ -43,13 +44,20 @@ class TestQuery:
                 {
                     "content": "content",
                     "role": "user",
+                    "custom_tags": ["string"],
                 }
             ],
             include_retrieval_content_text=True,
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             documents_filters={
-                "filters": [],
+                "filters": [
+                    {
+                        "field": "field1",
+                        "operator": "equals",
+                        "value": "value1",
+                    }
+                ],
                 "operator": "AND",
             },
             llm_model_id="llm_model_id",
@@ -73,7 +81,7 @@ class TestQuery:
             },
             stream=True,
             structured_output={
-                "json_schema": {},
+                "json_schema": {"foo": "bar"},
                 "type": "JSON",
             },
         )
@@ -135,7 +143,7 @@ class TestQuery:
             feedback="thumbs_up",
             message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, query, path=["response"])
+        assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
     @parametrize
     def test_method_feedback_with_all_params(self, client: ContextualAI) -> None:
@@ -146,7 +154,7 @@ class TestQuery:
             content_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             explanation="explanation",
         )
-        assert_matches_type(object, query, path=["response"])
+        assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
     @parametrize
     def test_raw_response_feedback(self, client: ContextualAI) -> None:
@@ -159,7 +167,7 @@ class TestQuery:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         query = response.parse()
-        assert_matches_type(object, query, path=["response"])
+        assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
     @parametrize
     def test_streaming_response_feedback(self, client: ContextualAI) -> None:
@@ -172,7 +180,7 @@ class TestQuery:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             query = response.parse()
-            assert_matches_type(object, query, path=["response"])
+            assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -316,13 +324,20 @@ class TestAsyncQuery:
                 {
                     "content": "content",
                     "role": "user",
+                    "custom_tags": ["string"],
                 }
             ],
             include_retrieval_content_text=True,
             retrievals_only=True,
             conversation_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             documents_filters={
-                "filters": [],
+                "filters": [
+                    {
+                        "field": "field1",
+                        "operator": "equals",
+                        "value": "value1",
+                    }
+                ],
                 "operator": "AND",
             },
             llm_model_id="llm_model_id",
@@ -346,7 +361,7 @@ class TestAsyncQuery:
             },
             stream=True,
             structured_output={
-                "json_schema": {},
+                "json_schema": {"foo": "bar"},
                 "type": "JSON",
             },
         )
@@ -408,7 +423,7 @@ class TestAsyncQuery:
             feedback="thumbs_up",
             message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, query, path=["response"])
+        assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
     @parametrize
     async def test_method_feedback_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -419,7 +434,7 @@ class TestAsyncQuery:
             content_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             explanation="explanation",
         )
-        assert_matches_type(object, query, path=["response"])
+        assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
     @parametrize
     async def test_raw_response_feedback(self, async_client: AsyncContextualAI) -> None:
@@ -432,7 +447,7 @@ class TestAsyncQuery:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         query = await response.parse()
-        assert_matches_type(object, query, path=["response"])
+        assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
     @parametrize
     async def test_streaming_response_feedback(self, async_client: AsyncContextualAI) -> None:
@@ -445,7 +460,7 @@ class TestAsyncQuery:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             query = await response.parse()
-            assert_matches_type(object, query, path=["response"])
+            assert_matches_type(QueryFeedbackResponse, query, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

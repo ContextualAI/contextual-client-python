@@ -5,13 +5,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Union, Optional
 from typing_extensions import Literal, TypeAlias, TypeAliasType
 
-from ..._compat import PYDANTIC_V2
+from ..._compat import PYDANTIC_V1
 from ..._models import BaseModel
 from .base_metadata_filter import BaseMetadataFilter
 
 __all__ = ["CompositeMetadataFilter", "Filter"]
 
-if TYPE_CHECKING or PYDANTIC_V2:
+if TYPE_CHECKING or not PYDANTIC_V1:
     Filter = TypeAliasType("Filter", Union[BaseMetadataFilter, "CompositeMetadataFilter"])
 else:
     Filter: TypeAlias = Union[BaseMetadataFilter, "CompositeMetadataFilter"]

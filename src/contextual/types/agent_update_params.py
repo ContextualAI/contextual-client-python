@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from typing import List
 from typing_extensions import TypedDict
+
+from .._types import SequenceNotStr
 
 __all__ = ["AgentUpdateParams"]
 
@@ -12,8 +13,11 @@ class AgentUpdateParams(TypedDict, total=False):
     agent_configs: "AgentConfigsParam"
     """The following advanced parameters are experimental and subject to change."""
 
-    datastore_ids: List[str]
+    datastore_ids: SequenceNotStr[str]
     """IDs of the datastore to associate with the agent."""
+
+    description: str
+    """Description of the agent"""
 
     filter_prompt: str
     """
@@ -21,16 +25,11 @@ class AgentUpdateParams(TypedDict, total=False):
     given query and filters out irrelevant chunks.
     """
 
-    llm_model_id: str
-    """The model ID to use for generation.
-
-    Tuned models can only be used for the agents on which they were tuned. If no
-    model is specified, the default model is used. Set to `default` to switch from a
-    tuned model to the default model.
-    """
-
     multiturn_system_prompt: str
     """Instructions on how the agent should handle multi-turn conversations."""
+
+    name: str
+    """Name of the agent"""
 
     no_retrieval_system_prompt: str
     """
@@ -38,7 +37,7 @@ class AgentUpdateParams(TypedDict, total=False):
     retrievals that can be used to answer a query.
     """
 
-    suggested_queries: List[str]
+    suggested_queries: SequenceNotStr[str]
     """
     These queries will show up as suggestions in the Contextual UI when users load
     the agent. We recommend including common queries that users will ask, as well as

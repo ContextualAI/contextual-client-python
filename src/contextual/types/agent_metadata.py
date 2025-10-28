@@ -45,14 +45,6 @@ class AgentMetadata(BaseModel):
     given query and filters out irrelevant chunks. This prompt is applied per chunk.
     """
 
-    llm_model_id: Optional[str] = None
-    """The model ID to use for generation.
-
-    Tuned models can only be used for the agents on which they were tuned. If no
-    model is specified, the default model is used. Set to `default` to switch from a
-    tuned model to the default model.
-    """
-
     multiturn_system_prompt: Optional[str] = None
     """Instructions on how the agent should handle multi-turn conversations."""
 

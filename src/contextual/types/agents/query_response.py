@@ -49,12 +49,17 @@ class RetrievalContentCtxlMetadata(BaseModel):
     section_title: Optional[str] = None
     """Title of the section."""
 
-    __pydantic_extra__: Dict[str, object] = FieldInfo(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
     if TYPE_CHECKING:
+        # Some versions of Pydantic <2.8.0 have a bug and don’t allow assigning a
+        # value to this field, so for compatibility we avoid doing it at runtime.
+        __pydantic_extra__: Dict[str, object] = FieldInfo(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
+
         # Stub to indicate that arbitrary properties are accepted.
         # To access properties that are not valid identifiers you can use `getattr`, e.g.
         # `getattr(obj, '$type')`
         def __getattr__(self, attr: str) -> object: ...
+    else:
+        __pydantic_extra__: Dict[str, object]
 
 
 class RetrievalContentCustomMetadataConfig(BaseModel):
@@ -102,7 +107,7 @@ class RetrievalContent(BaseModel):
     ctxl_metadata: Optional[RetrievalContentCtxlMetadata] = None
     """Default metadata from the retrieval"""
 
-    custom_metadata: Optional[Dict[str, Union[bool, float, str]]] = None
+    custom_metadata: Optional[Dict[str, Union[bool, float, str, List[float]]]] = None
     """
     Custom metadata for the document, provided by the user at ingestion time.Must be
     a JSON-serializable dictionary with string keys and simple primitive values
@@ -116,20 +121,16 @@ class RetrievalContent(BaseModel):
     custom_metadata_config: Optional[Dict[str, RetrievalContentCustomMetadataConfig]] = None
     """
     A dictionary mapping metadata field names to the configuration to use for each
-    field.
-
-            - If a metadata field is not present in the dictionary, the default configuration will be used.
-
-            - If the dictionary is not provided, metadata will be added in chunks but will not be retrievable.
-
-
-            Limits: - Maximum characters per metadata field (for prompt or rerank): 400
-
-            - Maximum number of metadata fields (for prompt or retrieval): 10
-
-
-            Contact support@contextual.ai to request quota increases.
+    field. If a metadata field is not present in the dictionary, the default
+    configuration will be used. If the dictionary is not provided, metadata will be
+    added in context for rerank and generation but will not be returned back to the
+    user in retrievals in query API. Limits: - Maximum characters per metadata field
+    (for prompt or rerank): **400** - Maximum number of metadata fields (for prompt
+    or retrieval): **10** Contact support@contextual.ai to request quota increases.
     """
+
+    datastore_id: Optional[str] = None
+    """Unique identifier of the datastore"""
 
     number: Optional[int] = None
     """Index of the retrieved item in the retrieval_contents list (starting from 1)"""
@@ -172,6 +173,9 @@ class Message(BaseModel):
 
     role: Literal["user", "system", "assistant", "knowledge"]
     """Role of the sender"""
+
+    custom_tags: Optional[List[str]] = None
+    """Custom tags for the message"""
 
 
 class QueryResponse(BaseModel):

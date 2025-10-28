@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, List, cast
+from typing import Any, cast
 
 import httpx
 
@@ -15,7 +15,7 @@ from .query import (
     AsyncQueryResourceWithStreamingResponse,
 )
 from ...types import agent_list_params, agent_create_params, agent_update_params
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -63,20 +63,21 @@ class AgentsResource(SyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        description: str | NotGiven = NOT_GIVEN,
-        filter_prompt: str | NotGiven = NOT_GIVEN,
-        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
-        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
+        template_name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateAgentOutput:
         """
         Create a new `Agent` with a specific configuration.
@@ -121,6 +122,8 @@ class AgentsResource(SyncAPIResource):
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
 
+          template_name: The template defining the base configuration for the agent.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -142,6 +145,7 @@ class AgentsResource(SyncAPIResource):
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
+                    "template_name": template_name,
                 },
                 agent_create_params.AgentCreateParams,
             ),
@@ -155,20 +159,21 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        filter_prompt: str | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
-        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        name: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """
         Modify a given `Agent` to utilize the provided configuration.
@@ -182,14 +187,14 @@ class AgentsResource(SyncAPIResource):
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
+          description: Description of the agent
+
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
-          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
-              on which they were tuned. If no model is specified, the default model is used.
-              Set to `default` to switch from a tuned model to the default model.
-
           multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          name: Name of the agent
 
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
@@ -218,9 +223,10 @@ class AgentsResource(SyncAPIResource):
                 {
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
+                    "description": description,
                     "filter_prompt": filter_prompt,
-                    "llm_model_id": llm_model_id,
                     "multiturn_system_prompt": multiturn_system_prompt,
+                    "name": name,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -236,14 +242,14 @@ class AgentsResource(SyncAPIResource):
     def list(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncPage[Agent]:
         """
         Retrieve a list of all `Agents`.
@@ -290,7 +296,7 @@ class AgentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Delete a given `Agent`.
 
@@ -330,7 +336,7 @@ class AgentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateAgentOutput:
         """
         Copy an existing agent with all its configurations and datastore associations.
@@ -366,7 +372,7 @@ class AgentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AgentMetadataResponse:
         """
         Get metadata and configuration of a given `Agent`.
@@ -406,7 +412,7 @@ class AgentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """
         Reset a given `Agent` to default configuration.
@@ -461,20 +467,21 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        description: str | NotGiven = NOT_GIVEN,
-        filter_prompt: str | NotGiven = NOT_GIVEN,
-        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
-        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
+        template_name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateAgentOutput:
         """
         Create a new `Agent` with a specific configuration.
@@ -519,6 +526,8 @@ class AsyncAgentsResource(AsyncAPIResource):
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
 
+          template_name: The template defining the base configuration for the agent.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -540,6 +549,7 @@ class AsyncAgentsResource(AsyncAPIResource):
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
+                    "template_name": template_name,
                 },
                 agent_create_params.AgentCreateParams,
             ),
@@ -553,20 +563,21 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        agent_configs: AgentConfigsParam | NotGiven = NOT_GIVEN,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        filter_prompt: str | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        multiturn_system_prompt: str | NotGiven = NOT_GIVEN,
-        no_retrieval_system_prompt: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        name: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """
         Modify a given `Agent` to utilize the provided configuration.
@@ -580,14 +591,14 @@ class AsyncAgentsResource(AsyncAPIResource):
 
           datastore_ids: IDs of the datastore to associate with the agent.
 
+          description: Description of the agent
+
           filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
               given query and filters out irrelevant chunks.
 
-          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
-              on which they were tuned. If no model is specified, the default model is used.
-              Set to `default` to switch from a tuned model to the default model.
-
           multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          name: Name of the agent
 
           no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
               retrievals that can be used to answer a query.
@@ -616,9 +627,10 @@ class AsyncAgentsResource(AsyncAPIResource):
                 {
                     "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
+                    "description": description,
                     "filter_prompt": filter_prompt,
-                    "llm_model_id": llm_model_id,
                     "multiturn_system_prompt": multiturn_system_prompt,
+                    "name": name,
                     "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
@@ -634,14 +646,14 @@ class AsyncAgentsResource(AsyncAPIResource):
     def list(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Agent, AsyncPage[Agent]]:
         """
         Retrieve a list of all `Agents`.
@@ -688,7 +700,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """Delete a given `Agent`.
 
@@ -728,7 +740,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateAgentOutput:
         """
         Copy an existing agent with all its configurations and datastore associations.
@@ -764,7 +776,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AgentMetadataResponse:
         """
         Get metadata and configuration of a given `Agent`.
@@ -804,7 +816,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """
         Reset a given `Agent` to default configuration.
