@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.1 (2025-10-31)
+
+Full Changelog: [v0.9.0...v0.9.1](https://github.com/ContextualAI/contextual-client-python/compare/v0.9.0...v0.9.1)
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([3f212eb](https://github.com/ContextualAI/contextual-client-python/commit/3f212ebb31085b404c72d827f1d6992dd4bed24c))
+
+
+### Chores
+
+* **internal/tests:** avoid race condition with implicit client cleanup ([f7f3568](https://github.com/ContextualAI/contextual-client-python/commit/f7f35681c6ac40661872fbdc3159e79ff764d135))
+
 ## 0.9.0 (2025-10-28)
 
 Full Changelog: [v0.8.0...v0.9.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.8.0...v0.9.0)
