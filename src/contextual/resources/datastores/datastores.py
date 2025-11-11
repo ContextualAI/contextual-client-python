@@ -7,6 +7,14 @@ import httpx
 from ...types import datastore_list_params, datastore_create_params, datastore_update_params
 from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
+from .contents import (
+    ContentsResource,
+    AsyncContentsResource,
+    ContentsResourceWithRawResponse,
+    AsyncContentsResourceWithRawResponse,
+    ContentsResourceWithStreamingResponse,
+    AsyncContentsResourceWithStreamingResponse,
+)
 from ..._compat import cached_property
 from .documents import (
     DocumentsResource,
@@ -37,6 +45,10 @@ class DatastoresResource(SyncAPIResource):
     @cached_property
     def documents(self) -> DocumentsResource:
         return DocumentsResource(self._client)
+
+    @cached_property
+    def contents(self) -> ContentsResource:
+        return ContentsResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> DatastoresResourceWithRawResponse:
@@ -339,6 +351,10 @@ class AsyncDatastoresResource(AsyncAPIResource):
     @cached_property
     def documents(self) -> AsyncDocumentsResource:
         return AsyncDocumentsResource(self._client)
+
+    @cached_property
+    def contents(self) -> AsyncContentsResource:
+        return AsyncContentsResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncDatastoresResourceWithRawResponse:
@@ -664,6 +680,10 @@ class DatastoresResourceWithRawResponse:
     def documents(self) -> DocumentsResourceWithRawResponse:
         return DocumentsResourceWithRawResponse(self._datastores.documents)
 
+    @cached_property
+    def contents(self) -> ContentsResourceWithRawResponse:
+        return ContentsResourceWithRawResponse(self._datastores.contents)
+
 
 class AsyncDatastoresResourceWithRawResponse:
     def __init__(self, datastores: AsyncDatastoresResource) -> None:
@@ -691,6 +711,10 @@ class AsyncDatastoresResourceWithRawResponse:
     @cached_property
     def documents(self) -> AsyncDocumentsResourceWithRawResponse:
         return AsyncDocumentsResourceWithRawResponse(self._datastores.documents)
+
+    @cached_property
+    def contents(self) -> AsyncContentsResourceWithRawResponse:
+        return AsyncContentsResourceWithRawResponse(self._datastores.contents)
 
 
 class DatastoresResourceWithStreamingResponse:
@@ -720,6 +744,10 @@ class DatastoresResourceWithStreamingResponse:
     def documents(self) -> DocumentsResourceWithStreamingResponse:
         return DocumentsResourceWithStreamingResponse(self._datastores.documents)
 
+    @cached_property
+    def contents(self) -> ContentsResourceWithStreamingResponse:
+        return ContentsResourceWithStreamingResponse(self._datastores.contents)
+
 
 class AsyncDatastoresResourceWithStreamingResponse:
     def __init__(self, datastores: AsyncDatastoresResource) -> None:
@@ -747,3 +775,7 @@ class AsyncDatastoresResourceWithStreamingResponse:
     @cached_property
     def documents(self) -> AsyncDocumentsResourceWithStreamingResponse:
         return AsyncDocumentsResourceWithStreamingResponse(self._datastores.documents)
+
+    @cached_property
+    def contents(self) -> AsyncContentsResourceWithStreamingResponse:
+        return AsyncContentsResourceWithStreamingResponse(self._datastores.contents)

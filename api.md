@@ -45,6 +45,19 @@ Methods:
 - <code title="get /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">metadata</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_metadata.py">DocumentMetadata</a></code>
 - <code title="put /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">set_metadata</a>(document_id, \*, datastore_id, \*\*<a href="src/contextual/types/datastores/document_set_metadata_params.py">params</a>) -> <a href="./src/contextual/types/datastores/document_metadata.py">DocumentMetadata</a></code>
 
+## Contents
+
+Types:
+
+```python
+from contextual.types.datastores import ContentListResponse, ContentMetadataResponse
+```
+
+Methods:
+
+- <code title="get /datastores/{datastore_id}/contents">client.datastores.contents.<a href="./src/contextual/resources/datastores/contents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/content_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/content_list_response.py">SyncContentsPage[ContentListResponse]</a></code>
+- <code title="get /datastores/{datastore_id}/contents/{content_id}/metadata">client.datastores.contents.<a href="./src/contextual/resources/datastores/contents.py">metadata</a>(content_id, \*, datastore_id, \*\*<a href="src/contextual/types/datastores/content_metadata_params.py">params</a>) -> <a href="./src/contextual/types/datastores/content_metadata_response.py">ContentMetadataResponse</a></code>
+
 # Agents
 
 Types:
