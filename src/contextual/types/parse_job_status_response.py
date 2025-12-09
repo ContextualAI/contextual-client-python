@@ -8,6 +8,8 @@ __all__ = ["ParseJobStatusResponse"]
 
 
 class ParseJobStatusResponse(BaseModel):
+    """/parse status reponse object."""
+
     file_name: str
     """The name of the file that was uploaded for parsing"""
 

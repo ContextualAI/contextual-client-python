@@ -8,6 +8,8 @@ __all__ = ["CreateAgentOutput"]
 
 
 class CreateAgentOutput(BaseModel):
+    """Response to POST /agents request"""
+
     id: str
     """ID of the agent"""
 

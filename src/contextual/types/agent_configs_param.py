@@ -12,6 +12,8 @@ __all__ = ["AgentConfigsParam", "ACLConfig", "ReformulationConfig", "Translation
 
 
 class ACLConfig(TypedDict, total=False):
+    """Parameters that affect the agent's ACL workflow"""
+
     acl_active: bool
     """Whether to enable ACL."""
 
@@ -20,6 +22,8 @@ class ACLConfig(TypedDict, total=False):
 
 
 class ReformulationConfig(TypedDict, total=False):
+    """Parameters that affect the agent's query reformulation"""
+
     enable_query_decomposition: bool
     """Whether to enable query decomposition."""
 
@@ -34,6 +38,8 @@ class ReformulationConfig(TypedDict, total=False):
 
 
 class TranslationConfig(TypedDict, total=False):
+    """Parameters that affect the agent's translation workflow"""
+
     translate_confidence: float
     """The confidence threshold for translation."""
 
@@ -42,6 +48,8 @@ class TranslationConfig(TypedDict, total=False):
 
 
 class AgentConfigsParam(TypedDict, total=False):
+    """Response to configs for different components"""
+
     acl_config: ACLConfig
     """Parameters that affect the agent's ACL workflow"""
 

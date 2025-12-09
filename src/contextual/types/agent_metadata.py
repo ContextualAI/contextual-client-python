@@ -10,6 +10,8 @@ __all__ = ["AgentMetadata", "AgentUsages"]
 
 
 class AgentUsages(BaseModel):
+    """Total API request counts for the agent."""
+
     eval: int
     """eval request count"""
 
@@ -21,6 +23,8 @@ class AgentUsages(BaseModel):
 
 
 class AgentMetadata(BaseModel):
+    """Response to GET Agent request"""
+
     datastore_ids: List[str]
     """The IDs of the datastore(s) associated with the agent"""
 

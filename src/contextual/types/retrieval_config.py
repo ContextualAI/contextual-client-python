@@ -8,6 +8,8 @@ __all__ = ["RetrievalConfig"]
 
 
 class RetrievalConfig(BaseModel):
+    """Captures Retrieval configurations for an Agent"""
+
     lexical_alpha: Optional[float] = None
     """The weight of lexical search during retrieval.
 

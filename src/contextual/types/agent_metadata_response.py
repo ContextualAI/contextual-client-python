@@ -11,6 +11,8 @@ __all__ = ["AgentMetadataResponse", "GetTwilightAgentResponse", "GetTwilightAgen
 
 
 class GetTwilightAgentResponseAgentUsages(BaseModel):
+    """Total API request counts for the agent."""
+
     eval: int
     """eval request count"""
 
@@ -22,6 +24,8 @@ class GetTwilightAgentResponseAgentUsages(BaseModel):
 
 
 class GetTwilightAgentResponse(BaseModel):
+    """Response to GET Agent request"""
+
     datastore_ids: List[str]
     """The IDs of the datastore(s) associated with the agent"""
 

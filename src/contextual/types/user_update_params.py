@@ -46,6 +46,8 @@ class UserUpdateParams(TypedDict, total=False):
 
 
 class PerAgentRole(TypedDict, total=False):
+    """The schema used to capture agent level roles"""
+
     agent_id: Required[str]
     """ID of the agent on which to grant/revoke the role."""
 

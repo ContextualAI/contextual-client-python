@@ -8,6 +8,8 @@ __all__ = ["RerankCreateResponse", "Result"]
 
 
 class Result(BaseModel):
+    """Reranked result object."""
+
     index: int
     """Index of the document in the input list, starting with 0"""
 
@@ -23,6 +25,8 @@ class Result(BaseModel):
 
 
 class RerankCreateResponse(BaseModel):
+    """Rerank output response."""
+
     results: List[Result]
     """
     The ranked list of documents containing the index of the document and the

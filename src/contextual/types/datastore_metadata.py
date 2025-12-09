@@ -17,6 +17,8 @@ __all__ = [
 
 
 class ConfigurationChunking(BaseModel):
+    """Configuration for document chunking"""
+
     chunking_mode: Optional[Literal["hierarchy_depth", "hierarchy_heading", "static_length", "page_level"]] = None
     """Chunking mode to use.
 
@@ -48,6 +50,8 @@ class ConfigurationChunking(BaseModel):
 
 
 class ConfigurationHTMLConfig(BaseModel):
+    """Configuration for HTML Extraction"""
+
     max_chunk_length_tokens: Optional[int] = None
     """Target maximum length of text tokens chunks for chunking.
 
@@ -56,6 +60,8 @@ class ConfigurationHTMLConfig(BaseModel):
 
 
 class ConfigurationParsing(BaseModel):
+    """Configuration for document parsing"""
+
     enable_split_tables: Optional[bool] = None
     """
     Whether to enable table splitting, which splits large tables into smaller tables
@@ -86,6 +92,8 @@ class ConfigurationParsing(BaseModel):
 
 
 class Configuration(BaseModel):
+    """Configuration for unstructured datastores."""
+
     chunking: Optional[ConfigurationChunking] = None
     """Configuration for document chunking"""
 
@@ -97,6 +105,8 @@ class Configuration(BaseModel):
 
 
 class DatastoreUsages(BaseModel):
+    """Datastore usage"""
+
     size_gb: float
     """Actual size of the datastore in GB"""
 

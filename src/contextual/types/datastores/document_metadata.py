@@ -26,6 +26,8 @@ class CustomMetadataConfig(BaseModel):
 
 
 class DocumentMetadata(BaseModel):
+    """Document description"""
+
     id: str
     """ID of the document that was ingested"""
 

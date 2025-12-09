@@ -13,6 +13,8 @@ __all__ = ["AgentConfigs", "ACLConfig", "ReformulationConfig", "TranslationConfi
 
 
 class ACLConfig(BaseModel):
+    """Parameters that affect the agent's ACL workflow"""
+
     acl_active: Optional[bool] = None
     """Whether to enable ACL."""
 
@@ -21,6 +23,8 @@ class ACLConfig(BaseModel):
 
 
 class ReformulationConfig(BaseModel):
+    """Parameters that affect the agent's query reformulation"""
+
     enable_query_decomposition: Optional[bool] = None
     """Whether to enable query decomposition."""
 
@@ -35,6 +39,8 @@ class ReformulationConfig(BaseModel):
 
 
 class TranslationConfig(BaseModel):
+    """Parameters that affect the agent's translation workflow"""
+
     translate_confidence: Optional[float] = None
     """The confidence threshold for translation."""
 
@@ -43,6 +49,8 @@ class TranslationConfig(BaseModel):
 
 
 class AgentConfigs(BaseModel):
+    """Response to configs for different components"""
+
     acl_config: Optional[ACLConfig] = None
     """Parameters that affect the agent's ACL workflow"""
 

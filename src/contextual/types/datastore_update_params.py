@@ -25,6 +25,8 @@ class DatastoreUpdateParams(TypedDict, total=False):
 
 
 class ConfigurationChunking(TypedDict, total=False):
+    """Configuration for document chunking"""
+
     chunking_mode: Literal["hierarchy_depth", "hierarchy_heading", "static_length", "page_level"]
     """Chunking mode to use.
 
@@ -56,6 +58,8 @@ class ConfigurationChunking(TypedDict, total=False):
 
 
 class ConfigurationHTMLConfig(TypedDict, total=False):
+    """Configuration for HTML Extraction"""
+
     max_chunk_length_tokens: int
     """Target maximum length of text tokens chunks for chunking.
 
@@ -64,6 +68,8 @@ class ConfigurationHTMLConfig(TypedDict, total=False):
 
 
 class ConfigurationParsing(TypedDict, total=False):
+    """Configuration for document parsing"""
+
     enable_split_tables: bool
     """
     Whether to enable table splitting, which splits large tables into smaller tables
@@ -94,6 +100,11 @@ class ConfigurationParsing(TypedDict, total=False):
 
 
 class Configuration(TypedDict, total=False):
+    """Configuration of the datastore.
+
+    If not provided, current configuration is retained.
+    """
+
     chunking: ConfigurationChunking
     """Configuration for document chunking"""
 

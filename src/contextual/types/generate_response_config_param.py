@@ -8,6 +8,8 @@ __all__ = ["GenerateResponseConfigParam"]
 
 
 class GenerateResponseConfigParam(TypedDict, total=False):
+    """Captures advance LLM configurations for an Agent"""
+
     avoid_commentary: bool
     """
     Flag to indicate whether the model should avoid providing additional commentary

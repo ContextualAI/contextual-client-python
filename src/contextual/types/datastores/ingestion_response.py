@@ -6,5 +6,7 @@ __all__ = ["IngestionResponse"]
 
 
 class IngestionResponse(BaseModel):
+    """Response body from POST /data/documents"""
+
     id: str
     """ID of the document being ingested"""

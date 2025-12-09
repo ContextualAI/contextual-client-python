@@ -17,6 +17,11 @@ else:
 
 
 class CompositeMetadataFilterParam(TypedDict, total=False):
+    """\"Defines a custom metadata filter as a Composite MetadataFilter.
+
+    Which can be be a list of filters or nested filters.
+    """
+
     filters: Required[Iterable[Filter]]
     """Filters added to the query for filtering docs"""
 

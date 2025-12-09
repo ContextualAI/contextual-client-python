@@ -8,6 +8,8 @@ __all__ = ["GlobalConfigParam"]
 
 
 class GlobalConfigParam(TypedDict, total=False):
+    """Captures global configs"""
+
     enable_filter: bool
     """Enables filtering of retrieved chunks with a separate LLM"""
 

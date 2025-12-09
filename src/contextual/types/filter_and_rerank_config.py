@@ -14,6 +14,8 @@ DefaultMetadataFilters: TypeAlias = Union[BaseMetadataFilter, "CompositeMetadata
 
 
 class FilterAndRerankConfig(BaseModel):
+    """Captures Filter and Rerank configurations for an Agent"""
+
     default_metadata_filters: Optional[DefaultMetadataFilters] = None
     """
     Optional metadata filter which is applied while retrieving from every datastore

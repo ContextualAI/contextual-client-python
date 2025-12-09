@@ -8,6 +8,8 @@ __all__ = ["GlobalConfig"]
 
 
 class GlobalConfig(BaseModel):
+    """Captures global configs"""
+
     enable_filter: Optional[bool] = None
     """Enables filtering of retrieved chunks with a separate LLM"""
 

@@ -18,6 +18,10 @@ __all__ = [
 
 
 class DocumentMetadataHierarchyBlockBoundingBox(BaseModel):
+    """
+    The normalized bounding box of the block, as relative percentages of the page width and height
+    """
+
     x0: float
     """The x-coordinate of the top-left corner of the bounding box"""
 
@@ -32,6 +36,8 @@ class DocumentMetadataHierarchyBlockBoundingBox(BaseModel):
 
 
 class DocumentMetadataHierarchyBlock(BaseModel):
+    """One logical block of content from a parsed page."""
+
     id: str
     """Unique ID of the block"""
 
@@ -75,6 +81,10 @@ class DocumentMetadataHierarchyBlock(BaseModel):
 
 
 class DocumentMetadataHierarchy(BaseModel):
+    """
+    Hierarchy of the document, as both heading blocks and a markdown table of contents
+    """
+
     blocks: Optional[List[DocumentMetadataHierarchyBlock]] = None
     """Heading blocks which define the hierarchy of the document"""
 
@@ -83,6 +93,8 @@ class DocumentMetadataHierarchy(BaseModel):
 
 
 class DocumentMetadata(BaseModel):
+    """Document-level metadata parsed from the document"""
+
     hierarchy: Optional[DocumentMetadataHierarchy] = None
     """
     Hierarchy of the document, as both heading blocks and a markdown table of
@@ -91,6 +103,10 @@ class DocumentMetadata(BaseModel):
 
 
 class PageBlockBoundingBox(BaseModel):
+    """
+    The normalized bounding box of the block, as relative percentages of the page width and height
+    """
+
     x0: float
     """The x-coordinate of the top-left corner of the bounding box"""
 
@@ -105,6 +121,8 @@ class PageBlockBoundingBox(BaseModel):
 
 
 class PageBlock(BaseModel):
+    """One logical block of content from a parsed page."""
+
     id: str
     """Unique ID of the block"""
 
@@ -148,6 +166,8 @@ class PageBlock(BaseModel):
 
 
 class Page(BaseModel):
+    """Per-page parse results."""
+
     index: int
     """The index of the parsed page (zero-indexed)"""
 
@@ -165,6 +185,8 @@ class Page(BaseModel):
 
 
 class ParseJobResultsResponse(BaseModel):
+    """/parse results reponse object."""
+
     file_name: str
     """The name of the file that was uploaded for parsing"""
 

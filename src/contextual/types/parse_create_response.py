@@ -6,5 +6,7 @@ __all__ = ["ParseCreateResponse"]
 
 
 class ParseCreateResponse(BaseModel):
+    """/parse response object."""
+
     job_id: str
     """Unique ID of the parse job"""

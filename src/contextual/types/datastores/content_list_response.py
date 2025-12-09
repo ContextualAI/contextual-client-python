@@ -22,6 +22,8 @@ class DocumentContentEntry(BaseModel):
 
 
 class StructuredContentEntry(BaseModel):
+    """Tabular content entry used in query retrieval."""
+
     content_id: str
     """ID of the content"""
 
