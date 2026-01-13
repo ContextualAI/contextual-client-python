@@ -4,7 +4,19 @@ from __future__ import annotations
 
 import httpx
 
-from ...types import datastore_list_params, datastore_create_params, datastore_update_params
+from .chunks import (
+    ChunksResource,
+    AsyncChunksResource,
+    ChunksResourceWithRawResponse,
+    AsyncChunksResourceWithRawResponse,
+    ChunksResourceWithStreamingResponse,
+    AsyncChunksResourceWithStreamingResponse,
+)
+from ...types import (
+    datastore_list_params,
+    datastore_create_params,
+    datastore_update_params,
+)
 from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from .contents import (
@@ -35,8 +47,11 @@ from ...pagination import SyncDatastoresPage, AsyncDatastoresPage
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.datastore import Datastore
 from ...types.datastore_metadata import DatastoreMetadata
+from ...types.datastore_reset_response import DatastoreResetResponse
 from ...types.create_datastore_response import CreateDatastoreResponse
+from ...types.datastore_delete_response import DatastoreDeleteResponse
 from ...types.datastore_update_response import DatastoreUpdateResponse
+from ...types.unstructured_datastore_config_model_param import UnstructuredDatastoreConfigModelParam
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
 
@@ -49,6 +64,10 @@ class DatastoresResource(SyncAPIResource):
     @cached_property
     def contents(self) -> ContentsResource:
         return ContentsResource(self._client)
+
+    @cached_property
+    def chunks(self) -> ChunksResource:
+        return ChunksResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> DatastoresResourceWithRawResponse:
@@ -73,7 +92,7 @@ class DatastoresResource(SyncAPIResource):
         self,
         *,
         name: str,
-        configuration: datastore_create_params.Configuration | Omit = omit,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -131,7 +150,7 @@ class DatastoresResource(SyncAPIResource):
         self,
         datastore_id: str,
         *,
-        configuration: datastore_update_params.Configuration | Omit = omit,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
         name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -243,7 +262,7 @@ class DatastoresResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> DatastoreDeleteResponse:
         """Delete a given `Datastore`, including all the documents ingested into it.
 
         This
@@ -270,7 +289,7 @@ class DatastoresResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DatastoreDeleteResponse,
         )
 
     def metadata(
@@ -319,7 +338,7 @@ class DatastoresResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> DatastoreResetResponse:
         """Reset the give `Datastore`.
 
         This operation is irreversible and it deletes all
@@ -343,7 +362,7 @@ class DatastoresResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DatastoreResetResponse,
         )
 
 
@@ -355,6 +374,10 @@ class AsyncDatastoresResource(AsyncAPIResource):
     @cached_property
     def contents(self) -> AsyncContentsResource:
         return AsyncContentsResource(self._client)
+
+    @cached_property
+    def chunks(self) -> AsyncChunksResource:
+        return AsyncChunksResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncDatastoresResourceWithRawResponse:
@@ -379,7 +402,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        configuration: datastore_create_params.Configuration | Omit = omit,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -437,7 +460,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         self,
         datastore_id: str,
         *,
-        configuration: datastore_update_params.Configuration | Omit = omit,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
         name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -549,7 +572,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> DatastoreDeleteResponse:
         """Delete a given `Datastore`, including all the documents ingested into it.
 
         This
@@ -576,7 +599,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DatastoreDeleteResponse,
         )
 
     async def metadata(
@@ -625,7 +648,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> DatastoreResetResponse:
         """Reset the give `Datastore`.
 
         This operation is irreversible and it deletes all
@@ -649,7 +672,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DatastoreResetResponse,
         )
 
 
@@ -684,6 +707,10 @@ class DatastoresResourceWithRawResponse:
     def contents(self) -> ContentsResourceWithRawResponse:
         return ContentsResourceWithRawResponse(self._datastores.contents)
 
+    @cached_property
+    def chunks(self) -> ChunksResourceWithRawResponse:
+        return ChunksResourceWithRawResponse(self._datastores.chunks)
+
 
 class AsyncDatastoresResourceWithRawResponse:
     def __init__(self, datastores: AsyncDatastoresResource) -> None:
@@ -715,6 +742,10 @@ class AsyncDatastoresResourceWithRawResponse:
     @cached_property
     def contents(self) -> AsyncContentsResourceWithRawResponse:
         return AsyncContentsResourceWithRawResponse(self._datastores.contents)
+
+    @cached_property
+    def chunks(self) -> AsyncChunksResourceWithRawResponse:
+        return AsyncChunksResourceWithRawResponse(self._datastores.chunks)
 
 
 class DatastoresResourceWithStreamingResponse:
@@ -748,6 +779,10 @@ class DatastoresResourceWithStreamingResponse:
     def contents(self) -> ContentsResourceWithStreamingResponse:
         return ContentsResourceWithStreamingResponse(self._datastores.contents)
 
+    @cached_property
+    def chunks(self) -> ChunksResourceWithStreamingResponse:
+        return ChunksResourceWithStreamingResponse(self._datastores.chunks)
+
 
 class AsyncDatastoresResourceWithStreamingResponse:
     def __init__(self, datastores: AsyncDatastoresResource) -> None:
@@ -779,3 +814,7 @@ class AsyncDatastoresResourceWithStreamingResponse:
     @cached_property
     def contents(self) -> AsyncContentsResourceWithStreamingResponse:
         return AsyncContentsResourceWithStreamingResponse(self._datastores.contents)
+
+    @cached_property
+    def chunks(self) -> AsyncChunksResourceWithStreamingResponse:
+        return AsyncChunksResourceWithStreamingResponse(self._datastores.chunks)

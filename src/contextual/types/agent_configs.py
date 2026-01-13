@@ -5,47 +5,14 @@ from __future__ import annotations
 from typing import Optional
 
 from .._models import BaseModel
+from .acl_config import ACLConfig
 from .global_config import GlobalConfig
 from .retrieval_config import RetrievalConfig
+from .translation_config import TranslationConfig
+from .reformulation_config import ReformulationConfig
 from .generate_response_config import GenerateResponseConfig
 
-__all__ = ["AgentConfigs", "ACLConfig", "ReformulationConfig", "TranslationConfig"]
-
-
-class ACLConfig(BaseModel):
-    """Parameters that affect the agent's ACL workflow"""
-
-    acl_active: Optional[bool] = None
-    """Whether to enable ACL."""
-
-    acl_yaml: Optional[str] = None
-    """The YAML file to use for ACL."""
-
-
-class ReformulationConfig(BaseModel):
-    """Parameters that affect the agent's query reformulation"""
-
-    enable_query_decomposition: Optional[bool] = None
-    """Whether to enable query decomposition."""
-
-    enable_query_expansion: Optional[bool] = None
-    """Whether to enable query expansion."""
-
-    query_decomposition_prompt: Optional[str] = None
-    """The prompt to use for query decomposition."""
-
-    query_expansion_prompt: Optional[str] = None
-    """The prompt to use for query expansion."""
-
-
-class TranslationConfig(BaseModel):
-    """Parameters that affect the agent's translation workflow"""
-
-    translate_confidence: Optional[float] = None
-    """The confidence threshold for translation."""
-
-    translate_needed: Optional[bool] = None
-    """Whether to enable translation for the agent's responses."""
+__all__ = ["AgentConfigs"]
 
 
 class AgentConfigs(BaseModel):

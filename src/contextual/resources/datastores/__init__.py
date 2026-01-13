@@ -1,5 +1,13 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .chunks import (
+    ChunksResource,
+    AsyncChunksResource,
+    ChunksResourceWithRawResponse,
+    AsyncChunksResourceWithRawResponse,
+    ChunksResourceWithStreamingResponse,
+    AsyncChunksResourceWithStreamingResponse,
+)
 from .contents import (
     ContentsResource,
     AsyncContentsResource,
@@ -38,6 +46,12 @@ __all__ = [
     "AsyncContentsResourceWithRawResponse",
     "ContentsResourceWithStreamingResponse",
     "AsyncContentsResourceWithStreamingResponse",
+    "ChunksResource",
+    "AsyncChunksResource",
+    "ChunksResourceWithRawResponse",
+    "AsyncChunksResourceWithRawResponse",
+    "ChunksResourceWithStreamingResponse",
+    "AsyncChunksResourceWithStreamingResponse",
     "DatastoresResource",
     "AsyncDatastoresResource",
     "DatastoresResourceWithRawResponse",

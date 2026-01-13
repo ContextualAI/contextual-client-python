@@ -4,53 +4,20 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
+from .acl_config_param import ACLConfigParam
 from .global_config_param import GlobalConfigParam
 from .retrieval_config_param import RetrievalConfigParam
+from .translation_config_param import TranslationConfigParam
+from .reformulation_config_param import ReformulationConfigParam
 from .generate_response_config_param import GenerateResponseConfigParam
 
-__all__ = ["AgentConfigsParam", "ACLConfig", "ReformulationConfig", "TranslationConfig"]
-
-
-class ACLConfig(TypedDict, total=False):
-    """Parameters that affect the agent's ACL workflow"""
-
-    acl_active: bool
-    """Whether to enable ACL."""
-
-    acl_yaml: str
-    """The YAML file to use for ACL."""
-
-
-class ReformulationConfig(TypedDict, total=False):
-    """Parameters that affect the agent's query reformulation"""
-
-    enable_query_decomposition: bool
-    """Whether to enable query decomposition."""
-
-    enable_query_expansion: bool
-    """Whether to enable query expansion."""
-
-    query_decomposition_prompt: str
-    """The prompt to use for query decomposition."""
-
-    query_expansion_prompt: str
-    """The prompt to use for query expansion."""
-
-
-class TranslationConfig(TypedDict, total=False):
-    """Parameters that affect the agent's translation workflow"""
-
-    translate_confidence: float
-    """The confidence threshold for translation."""
-
-    translate_needed: bool
-    """Whether to enable translation for the agent's responses."""
+__all__ = ["AgentConfigsParam"]
 
 
 class AgentConfigsParam(TypedDict, total=False):
     """Response to configs for different components"""
 
-    acl_config: ACLConfig
+    acl_config: ACLConfigParam
     """Parameters that affect the agent's ACL workflow"""
 
     filter_and_rerank_config: "FilterAndRerankConfigParam"
@@ -62,13 +29,13 @@ class AgentConfigsParam(TypedDict, total=False):
     global_config: GlobalConfigParam
     """Parameters that affect the agent's overall RAG workflow"""
 
-    reformulation_config: ReformulationConfig
+    reformulation_config: ReformulationConfigParam
     """Parameters that affect the agent's query reformulation"""
 
     retrieval_config: RetrievalConfigParam
     """Parameters that affect how the agent retrieves from datastore(s)"""
 
-    translation_config: TranslationConfig
+    translation_config: TranslationConfigParam
     """Parameters that affect the agent's translation workflow"""
 
 

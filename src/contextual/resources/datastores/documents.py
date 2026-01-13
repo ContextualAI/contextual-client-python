@@ -28,6 +28,7 @@ from ...types.datastores import (
 )
 from ...types.datastores.document_metadata import DocumentMetadata
 from ...types.datastores.ingestion_response import IngestionResponse
+from ...types.datastores.document_delete_response import DocumentDeleteResponse
 from ...types.datastores.document_get_parse_result_response import DocumentGetParseResultResponse
 
 __all__ = ["DocumentsResource", "AsyncDocumentsResource"]
@@ -141,7 +142,7 @@ class DocumentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> DocumentDeleteResponse:
         """Delete a given document from its `Datastore`.
 
         This operation is irreversible.
@@ -168,7 +169,7 @@ class DocumentsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DocumentDeleteResponse,
         )
 
     def get_parse_result(
@@ -534,7 +535,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> DocumentDeleteResponse:
         """Delete a given document from its `Datastore`.
 
         This operation is irreversible.
@@ -561,7 +562,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DocumentDeleteResponse,
         )
 
     async def get_parse_result(

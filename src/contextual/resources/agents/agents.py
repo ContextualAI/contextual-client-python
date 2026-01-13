@@ -14,10 +14,23 @@ from .query import (
     QueryResourceWithStreamingResponse,
     AsyncQueryResourceWithStreamingResponse,
 )
-from ...types import agent_list_params, agent_create_params, agent_update_params
+from ...types import (
+    agent_list_params,
+    agent_create_params,
+    agent_update_params,
+    agent_save_template_params,
+)
 from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
+from .templates import (
+    TemplatesResource,
+    AsyncTemplatesResource,
+    TemplatesResourceWithRawResponse,
+    AsyncTemplatesResourceWithRawResponse,
+    TemplatesResourceWithStreamingResponse,
+    AsyncTemplatesResourceWithStreamingResponse,
+)
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
     to_raw_response_wrapper,
@@ -30,6 +43,8 @@ from ...types.agent import Agent
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.agent_configs_param import AgentConfigsParam
 from ...types.create_agent_output import CreateAgentOutput
+from ...types.agent_delete_response import AgentDeleteResponse
+from ...types.agent_update_response import AgentUpdateResponse
 from ...types.agent_metadata_response import AgentMetadataResponse
 
 __all__ = ["AgentsResource", "AsyncAgentsResource"]
@@ -39,6 +54,10 @@ class AgentsResource(SyncAPIResource):
     @cached_property
     def query(self) -> QueryResource:
         return QueryResource(self._client)
+
+    @cached_property
+    def templates(self) -> TemplatesResource:
+        return TemplatesResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AgentsResourceWithRawResponse:
@@ -174,7 +193,7 @@ class AgentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> AgentUpdateResponse:
         """
         Modify a given `Agent` to utilize the provided configuration.
 
@@ -236,7 +255,7 @@ class AgentsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentUpdateResponse,
         )
 
     def list(
@@ -297,7 +316,7 @@ class AgentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> AgentDeleteResponse:
         """Delete a given `Agent`.
 
         This is an irreversible operation.
@@ -324,7 +343,7 @@ class AgentsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentDeleteResponse,
         )
 
     def copy(
@@ -438,11 +457,54 @@ class AgentsResource(SyncAPIResource):
             cast_to=object,
         )
 
+    def save_template(
+        self,
+        agent_id: str,
+        *,
+        name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> object:
+        """
+        Save Template
+
+        Args:
+          agent_id: ID of the agent
+
+          name: The name of the template
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return self._post(
+            f"/agents/{agent_id}/template",
+            body=maybe_transform({"name": name}, agent_save_template_params.AgentSaveTemplateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=object,
+        )
+
 
 class AsyncAgentsResource(AsyncAPIResource):
     @cached_property
     def query(self) -> AsyncQueryResource:
         return AsyncQueryResource(self._client)
+
+    @cached_property
+    def templates(self) -> AsyncTemplatesResource:
+        return AsyncTemplatesResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncAgentsResourceWithRawResponse:
@@ -578,7 +640,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> AgentUpdateResponse:
         """
         Modify a given `Agent` to utilize the provided configuration.
 
@@ -640,7 +702,7 @@ class AsyncAgentsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentUpdateResponse,
         )
 
     def list(
@@ -701,7 +763,7 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
+    ) -> AgentDeleteResponse:
         """Delete a given `Agent`.
 
         This is an irreversible operation.
@@ -728,7 +790,7 @@ class AsyncAgentsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentDeleteResponse,
         )
 
     async def copy(
@@ -842,6 +904,45 @@ class AsyncAgentsResource(AsyncAPIResource):
             cast_to=object,
         )
 
+    async def save_template(
+        self,
+        agent_id: str,
+        *,
+        name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> object:
+        """
+        Save Template
+
+        Args:
+          agent_id: ID of the agent
+
+          name: The name of the template
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return await self._post(
+            f"/agents/{agent_id}/template",
+            body=await async_maybe_transform({"name": name}, agent_save_template_params.AgentSaveTemplateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=object,
+        )
+
 
 class AgentsResourceWithRawResponse:
     def __init__(self, agents: AgentsResource) -> None:
@@ -868,10 +969,17 @@ class AgentsResourceWithRawResponse:
         self.reset = to_raw_response_wrapper(
             agents.reset,
         )
+        self.save_template = to_raw_response_wrapper(
+            agents.save_template,
+        )
 
     @cached_property
     def query(self) -> QueryResourceWithRawResponse:
         return QueryResourceWithRawResponse(self._agents.query)
+
+    @cached_property
+    def templates(self) -> TemplatesResourceWithRawResponse:
+        return TemplatesResourceWithRawResponse(self._agents.templates)
 
 
 class AsyncAgentsResourceWithRawResponse:
@@ -899,10 +1007,17 @@ class AsyncAgentsResourceWithRawResponse:
         self.reset = async_to_raw_response_wrapper(
             agents.reset,
         )
+        self.save_template = async_to_raw_response_wrapper(
+            agents.save_template,
+        )
 
     @cached_property
     def query(self) -> AsyncQueryResourceWithRawResponse:
         return AsyncQueryResourceWithRawResponse(self._agents.query)
+
+    @cached_property
+    def templates(self) -> AsyncTemplatesResourceWithRawResponse:
+        return AsyncTemplatesResourceWithRawResponse(self._agents.templates)
 
 
 class AgentsResourceWithStreamingResponse:
@@ -930,10 +1045,17 @@ class AgentsResourceWithStreamingResponse:
         self.reset = to_streamed_response_wrapper(
             agents.reset,
         )
+        self.save_template = to_streamed_response_wrapper(
+            agents.save_template,
+        )
 
     @cached_property
     def query(self) -> QueryResourceWithStreamingResponse:
         return QueryResourceWithStreamingResponse(self._agents.query)
+
+    @cached_property
+    def templates(self) -> TemplatesResourceWithStreamingResponse:
+        return TemplatesResourceWithStreamingResponse(self._agents.templates)
 
 
 class AsyncAgentsResourceWithStreamingResponse:
@@ -961,7 +1083,14 @@ class AsyncAgentsResourceWithStreamingResponse:
         self.reset = async_to_streamed_response_wrapper(
             agents.reset,
         )
+        self.save_template = async_to_streamed_response_wrapper(
+            agents.save_template,
+        )
 
     @cached_property
     def query(self) -> AsyncQueryResourceWithStreamingResponse:
         return AsyncQueryResourceWithStreamingResponse(self._agents.query)
+
+    @cached_property
+    def templates(self) -> AsyncTemplatesResourceWithStreamingResponse:
+        return AsyncTemplatesResourceWithStreamingResponse(self._agents.templates)

@@ -1,14 +1,26 @@
+# Shared Types
+
+```python
+from contextual.types import ParsedBlock
+```
+
 # Datastores
 
 Types:
 
 ```python
 from contextual.types import (
+    ChunkingConfiguration,
     CreateDatastoreResponse,
     Datastore,
     DatastoreMetadata,
+    DatastoreParseConfiguration,
+    HTMLConfiguration,
     ListDatastoresResponse,
+    UnstructuredDatastoreConfigModel,
     DatastoreUpdateResponse,
+    DatastoreDeleteResponse,
+    DatastoreResetResponse,
 )
 ```
 
@@ -17,9 +29,9 @@ Methods:
 - <code title="post /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">create</a>(\*\*<a href="src/contextual/types/datastore_create_params.py">params</a>) -> <a href="./src/contextual/types/create_datastore_response.py">CreateDatastoreResponse</a></code>
 - <code title="put /datastores/{datastore_id}">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">update</a>(datastore_id, \*\*<a href="src/contextual/types/datastore_update_params.py">params</a>) -> <a href="./src/contextual/types/datastore_update_response.py">DatastoreUpdateResponse</a></code>
 - <code title="get /datastores">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">list</a>(\*\*<a href="src/contextual/types/datastore_list_params.py">params</a>) -> <a href="./src/contextual/types/datastore.py">SyncDatastoresPage[Datastore]</a></code>
-- <code title="delete /datastores/{datastore_id}">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">delete</a>(datastore_id) -> object</code>
+- <code title="delete /datastores/{datastore_id}">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">delete</a>(datastore_id) -> <a href="./src/contextual/types/datastore_delete_response.py">DatastoreDeleteResponse</a></code>
 - <code title="get /datastores/{datastore_id}/metadata">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">metadata</a>(datastore_id) -> <a href="./src/contextual/types/datastore_metadata.py">DatastoreMetadata</a></code>
-- <code title="put /datastores/{datastore_id}/reset">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">reset</a>(datastore_id) -> object</code>
+- <code title="put /datastores/{datastore_id}/reset">client.datastores.<a href="./src/contextual/resources/datastores/datastores.py">reset</a>(datastore_id) -> <a href="./src/contextual/types/datastore_reset_response.py">DatastoreResetResponse</a></code>
 
 ## Documents
 
@@ -32,6 +44,7 @@ from contextual.types.datastores import (
     DocumentMetadata,
     IngestionResponse,
     ListDocumentsResponse,
+    DocumentDeleteResponse,
     DocumentGetParseResultResponse,
 )
 ```
@@ -39,7 +52,7 @@ from contextual.types.datastores import (
 Methods:
 
 - <code title="get /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/document_metadata.py">SyncDocumentsPage[DocumentMetadata]</a></code>
-- <code title="delete /datastores/{datastore_id}/documents/{document_id}">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">delete</a>(document_id, \*, datastore_id) -> object</code>
+- <code title="delete /datastores/{datastore_id}/documents/{document_id}">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">delete</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_delete_response.py">DocumentDeleteResponse</a></code>
 - <code title="get /datastores/{datastore_id}/documents/{document_id}/parse">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">get_parse_result</a>(document_id, \*, datastore_id, \*\*<a href="src/contextual/types/datastores/document_get_parse_result_params.py">params</a>) -> <a href="./src/contextual/types/datastores/document_get_parse_result_response.py">DocumentGetParseResultResponse</a></code>
 - <code title="post /datastores/{datastore_id}/documents">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">ingest</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/document_ingest_params.py">params</a>) -> <a href="./src/contextual/types/datastores/ingestion_response.py">IngestionResponse</a></code>
 - <code title="get /datastores/{datastore_id}/documents/{document_id}/metadata">client.datastores.documents.<a href="./src/contextual/resources/datastores/documents.py">metadata</a>(document_id, \*, datastore_id) -> <a href="./src/contextual/types/datastores/document_metadata.py">DocumentMetadata</a></code>
@@ -58,12 +71,25 @@ Methods:
 - <code title="get /datastores/{datastore_id}/contents">client.datastores.contents.<a href="./src/contextual/resources/datastores/contents.py">list</a>(datastore_id, \*\*<a href="src/contextual/types/datastores/content_list_params.py">params</a>) -> <a href="./src/contextual/types/datastores/content_list_response.py">SyncContentsPage[ContentListResponse]</a></code>
 - <code title="get /datastores/{datastore_id}/contents/{content_id}/metadata">client.datastores.contents.<a href="./src/contextual/resources/datastores/contents.py">metadata</a>(content_id, \*, datastore_id, \*\*<a href="src/contextual/types/datastores/content_metadata_params.py">params</a>) -> <a href="./src/contextual/types/datastores/content_metadata_response.py">ContentMetadataResponse</a></code>
 
+## Chunks
+
+Types:
+
+```python
+from contextual.types.datastores import ChunkUpdateContentResponse
+```
+
+Methods:
+
+- <code title="put /datastores/{datastore_id}/chunks/{content_id}/content">client.datastores.chunks.<a href="./src/contextual/resources/datastores/chunks.py">update_content</a>(content_id, \*, datastore_id, \*\*<a href="src/contextual/types/datastores/chunk_update_content_params.py">params</a>) -> <a href="./src/contextual/types/datastores/chunk_update_content_response.py">ChunkUpdateContentResponse</a></code>
+
 # Agents
 
 Types:
 
 ```python
 from contextual.types import (
+    ACLConfig,
     Agent,
     AgentConfigs,
     AgentMetadata,
@@ -72,7 +98,11 @@ from contextual.types import (
     GenerateResponseConfig,
     GlobalConfig,
     ListAgentsResponse,
+    ReformulationConfig,
     RetrievalConfig,
+    TranslationConfig,
+    AgentUpdateResponse,
+    AgentDeleteResponse,
     AgentMetadataResponse,
 )
 ```
@@ -80,12 +110,13 @@ from contextual.types import (
 Methods:
 
 - <code title="post /agents">client.agents.<a href="./src/contextual/resources/agents/agents.py">create</a>(\*\*<a href="src/contextual/types/agent_create_params.py">params</a>) -> <a href="./src/contextual/types/create_agent_output.py">CreateAgentOutput</a></code>
-- <code title="put /agents/{agent_id}">client.agents.<a href="./src/contextual/resources/agents/agents.py">update</a>(agent_id, \*\*<a href="src/contextual/types/agent_update_params.py">params</a>) -> object</code>
+- <code title="put /agents/{agent_id}">client.agents.<a href="./src/contextual/resources/agents/agents.py">update</a>(agent_id, \*\*<a href="src/contextual/types/agent_update_params.py">params</a>) -> <a href="./src/contextual/types/agent_update_response.py">AgentUpdateResponse</a></code>
 - <code title="get /agents">client.agents.<a href="./src/contextual/resources/agents/agents.py">list</a>(\*\*<a href="src/contextual/types/agent_list_params.py">params</a>) -> <a href="./src/contextual/types/agent.py">SyncPage[Agent]</a></code>
-- <code title="delete /agents/{agent_id}">client.agents.<a href="./src/contextual/resources/agents/agents.py">delete</a>(agent_id) -> object</code>
+- <code title="delete /agents/{agent_id}">client.agents.<a href="./src/contextual/resources/agents/agents.py">delete</a>(agent_id) -> <a href="./src/contextual/types/agent_delete_response.py">AgentDeleteResponse</a></code>
 - <code title="post /agents/{agent_id}/copy">client.agents.<a href="./src/contextual/resources/agents/agents.py">copy</a>(agent_id) -> <a href="./src/contextual/types/create_agent_output.py">CreateAgentOutput</a></code>
 - <code title="get /agents/{agent_id}/metadata">client.agents.<a href="./src/contextual/resources/agents/agents.py">metadata</a>(agent_id) -> <a href="./src/contextual/types/agent_metadata_response.py">AgentMetadataResponse</a></code>
 - <code title="put /agents/{agent_id}/reset">client.agents.<a href="./src/contextual/resources/agents/agents.py">reset</a>(agent_id) -> object</code>
+- <code title="post /agents/{agent_id}/template">client.agents.<a href="./src/contextual/resources/agents/agents.py">save_template</a>(agent_id, \*\*<a href="src/contextual/types/agent_save_template_params.py">params</a>) -> object</code>
 
 ## Query
 
@@ -106,6 +137,19 @@ Methods:
 - <code title="post /agents/{agent_id}/feedback">client.agents.query.<a href="./src/contextual/resources/agents/query.py">feedback</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_feedback_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_feedback_response.py">QueryFeedbackResponse</a></code>
 - <code title="get /agents/{agent_id}/metrics">client.agents.query.<a href="./src/contextual/resources/agents/query.py">metrics</a>(agent_id, \*\*<a href="src/contextual/types/agents/query_metrics_params.py">params</a>) -> <a href="./src/contextual/types/agents/query_metrics_response.py">QueryMetricsResponse</a></code>
 - <code title="get /agents/{agent_id}/query/{message_id}/retrieval/info">client.agents.query.<a href="./src/contextual/resources/agents/query.py">retrieval_info</a>(message_id, \*, agent_id, \*\*<a href="src/contextual/types/agents/query_retrieval_info_params.py">params</a>) -> <a href="./src/contextual/types/agents/retrieval_info_response.py">RetrievalInfoResponse</a></code>
+
+## Templates
+
+Types:
+
+```python
+from contextual.types.agents import TemplateListResponse
+```
+
+Methods:
+
+- <code title="get /agents/templates/{template}">client.agents.templates.<a href="./src/contextual/resources/agents/templates.py">retrieve</a>(template) -> <a href="./src/contextual/types/agent_metadata.py">AgentMetadata</a></code>
+- <code title="get /agents/templates">client.agents.templates.<a href="./src/contextual/resources/agents/templates.py">list</a>() -> <a href="./src/contextual/types/agents/template_list_response.py">TemplateListResponse</a></code>
 
 # Users
 
