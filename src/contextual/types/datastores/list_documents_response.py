@@ -9,6 +9,8 @@ __all__ = ["ListDocumentsResponse"]
 
 
 class ListDocumentsResponse(BaseModel):
+    """Response body from GET /data/documents"""
+
     documents: List[DocumentMetadata]
     """List of documents retrieved based on the user's GET request"""
 

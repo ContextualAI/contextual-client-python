@@ -56,6 +56,8 @@ class GenerateCreateParams(TypedDict, total=False):
 
 
 class Message(TypedDict, total=False):
+    """Message object for a message received in the /generate request"""
+
     content: Required[str]
     """Content of the message"""
 

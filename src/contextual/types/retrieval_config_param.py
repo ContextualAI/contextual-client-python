@@ -8,6 +8,8 @@ __all__ = ["RetrievalConfigParam"]
 
 
 class RetrievalConfigParam(TypedDict, total=False):
+    """Captures Retrieval configurations for an Agent"""
+
     lexical_alpha: float
     """The weight of lexical search during retrieval.
 

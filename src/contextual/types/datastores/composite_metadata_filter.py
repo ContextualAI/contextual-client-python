@@ -18,6 +18,11 @@ else:
 
 
 class CompositeMetadataFilter(BaseModel):
+    """\"Defines a custom metadata filter as a Composite MetadataFilter.
+
+    Which can be be a list of filters or nested filters.
+    """
+
     filters: List[Filter]
     """Filters added to the query for filtering docs"""
 

@@ -9,6 +9,8 @@ __all__ = ["ListUsersResponse", "User", "UserPerAgentRole"]
 
 
 class UserPerAgentRole(BaseModel):
+    """The schema used to capture agent level roles"""
+
     agent_id: str
     """ID of the agent on which to grant/revoke the role."""
 
@@ -20,6 +22,8 @@ class UserPerAgentRole(BaseModel):
 
 
 class User(BaseModel):
+    """The schema used for listing existing (activated / deactivated) users."""
+
     id: str
 
     email: str

@@ -11,6 +11,15 @@ __all__ = ["BaseMetadataFilterParam"]
 
 
 class BaseMetadataFilterParam(TypedDict, total=False):
+    """Defines a custom metadata filter.
+
+    The expected input is a dict which can have different operators, fields and values. For example:
+
+        {"field": "title", "operator": "startswith", "value": "hr-"}
+
+    Use **lowercase** for `value` when not using `equals` operator. For document_id and date_created the query is built using direct query without nesting.
+    """
+
     field: Required[str]
     """Field name to search for in the metadata"""
 

@@ -12,6 +12,8 @@ from tests.utils import assert_matches_type
 from contextual.types import (
     Agent,
     CreateAgentOutput,
+    AgentDeleteResponse,
+    AgentUpdateResponse,
     AgentMetadataResponse,
 )
 from contextual.pagination import SyncPage, AsyncPage
@@ -136,7 +138,7 @@ class TestAgents:
         agent = client.agents.update(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
     @parametrize
     def test_method_update_with_all_params(self, client: ContextualAI) -> None:
@@ -214,7 +216,7 @@ class TestAgents:
             suggested_queries=["string"],
             system_prompt="system_prompt",
         )
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
     @parametrize
     def test_raw_response_update(self, client: ContextualAI) -> None:
@@ -225,7 +227,7 @@ class TestAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = response.parse()
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
     @parametrize
     def test_streaming_response_update(self, client: ContextualAI) -> None:
@@ -236,7 +238,7 @@ class TestAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = response.parse()
-            assert_matches_type(object, agent, path=["response"])
+            assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -285,7 +287,7 @@ class TestAgents:
         agent = client.agents.delete(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
     @parametrize
     def test_raw_response_delete(self, client: ContextualAI) -> None:
@@ -296,7 +298,7 @@ class TestAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = response.parse()
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
     @parametrize
     def test_streaming_response_delete(self, client: ContextualAI) -> None:
@@ -307,7 +309,7 @@ class TestAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = response.parse()
-            assert_matches_type(object, agent, path=["response"])
+            assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -432,6 +434,48 @@ class TestAgents:
                 "",
             )
 
+    @parametrize
+    def test_method_save_template(self, client: ContextualAI) -> None:
+        agent = client.agents.save_template(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            name="name",
+        )
+        assert_matches_type(object, agent, path=["response"])
+
+    @parametrize
+    def test_raw_response_save_template(self, client: ContextualAI) -> None:
+        response = client.agents.with_raw_response.save_template(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            name="name",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        agent = response.parse()
+        assert_matches_type(object, agent, path=["response"])
+
+    @parametrize
+    def test_streaming_response_save_template(self, client: ContextualAI) -> None:
+        with client.agents.with_streaming_response.save_template(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            name="name",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            agent = response.parse()
+            assert_matches_type(object, agent, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_save_template(self, client: ContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
+            client.agents.with_raw_response.save_template(
+                agent_id="",
+                name="name",
+            )
+
 
 class TestAsyncAgents:
     parametrize = pytest.mark.parametrize(
@@ -552,7 +596,7 @@ class TestAsyncAgents:
         agent = await async_client.agents.update(
             agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncContextualAI) -> None:
@@ -630,7 +674,7 @@ class TestAsyncAgents:
             suggested_queries=["string"],
             system_prompt="system_prompt",
         )
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncContextualAI) -> None:
@@ -641,7 +685,7 @@ class TestAsyncAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = await response.parse()
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncContextualAI) -> None:
@@ -652,7 +696,7 @@ class TestAsyncAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = await response.parse()
-            assert_matches_type(object, agent, path=["response"])
+            assert_matches_type(AgentUpdateResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -701,7 +745,7 @@ class TestAsyncAgents:
         agent = await async_client.agents.delete(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncContextualAI) -> None:
@@ -712,7 +756,7 @@ class TestAsyncAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = await response.parse()
-        assert_matches_type(object, agent, path=["response"])
+        assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncContextualAI) -> None:
@@ -723,7 +767,7 @@ class TestAsyncAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = await response.parse()
-            assert_matches_type(object, agent, path=["response"])
+            assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -846,4 +890,46 @@ class TestAsyncAgents:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
             await async_client.agents.with_raw_response.reset(
                 "",
+            )
+
+    @parametrize
+    async def test_method_save_template(self, async_client: AsyncContextualAI) -> None:
+        agent = await async_client.agents.save_template(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            name="name",
+        )
+        assert_matches_type(object, agent, path=["response"])
+
+    @parametrize
+    async def test_raw_response_save_template(self, async_client: AsyncContextualAI) -> None:
+        response = await async_client.agents.with_raw_response.save_template(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            name="name",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        agent = await response.parse()
+        assert_matches_type(object, agent, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_save_template(self, async_client: AsyncContextualAI) -> None:
+        async with async_client.agents.with_streaming_response.save_template(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            name="name",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            agent = await response.parse()
+            assert_matches_type(object, agent, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_save_template(self, async_client: AsyncContextualAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
+            await async_client.agents.with_raw_response.save_template(
+                agent_id="",
+                name="name",
             )

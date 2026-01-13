@@ -4,78 +4,17 @@ from typing import List, Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
+from .shared.parsed_block import ParsedBlock
 
-__all__ = [
-    "ParseJobResultsResponse",
-    "DocumentMetadata",
-    "DocumentMetadataHierarchy",
-    "DocumentMetadataHierarchyBlock",
-    "DocumentMetadataHierarchyBlockBoundingBox",
-    "Page",
-    "PageBlock",
-    "PageBlockBoundingBox",
-]
-
-
-class DocumentMetadataHierarchyBlockBoundingBox(BaseModel):
-    x0: float
-    """The x-coordinate of the top-left corner of the bounding box"""
-
-    x1: float
-    """The x-coordinate of the bottom-right corner of the bounding box"""
-
-    y0: float
-    """The y-coordinate of the top-left corner of the bounding box"""
-
-    y1: float
-    """The y-coordinate of the bottom-right corner of the bounding box"""
-
-
-class DocumentMetadataHierarchyBlock(BaseModel):
-    id: str
-    """Unique ID of the block"""
-
-    bounding_box: DocumentMetadataHierarchyBlockBoundingBox
-    """
-    The normalized bounding box of the block, as relative percentages of the page
-    width and height
-    """
-
-    markdown: str
-    """The Markdown representation of the block"""
-
-    type: Literal["heading", "text", "table", "figure"]
-    """The type of the block"""
-
-    confidence_level: Optional[Literal["low", "medium", "high"]] = None
-    """The confidence level of this block categorized as 'low', 'medium', or 'high'.
-
-    Only available for blocks of type 'table' currently.
-    """
-
-    hierarchy_level: Optional[int] = None
-    """
-    The level of the block in the document hierarchy, starting at 0 for the
-    root-level title block. Only present if `enable_document_hierarchy` was set to
-    true in the request.
-    """
-
-    page_index: Optional[int] = None
-    """The page (0-indexed) that this block belongs to.
-
-    Only set for heading blocks that are returned in the table of contents.
-    """
-
-    parent_ids: Optional[List[str]] = None
-    """
-    The IDs of the parent in the document hierarchy, sorted from root-level to
-    bottom. For root-level heading blocks, this will be an empty list. Only present
-    if `enable_document_hierarchy` was set to true in the request.
-    """
+__all__ = ["ParseJobResultsResponse", "DocumentMetadata", "DocumentMetadataHierarchy", "Page"]
 
 
 class DocumentMetadataHierarchy(BaseModel):
-    blocks: Optional[List[DocumentMetadataHierarchyBlock]] = None
+    """
+    Hierarchy of the document, as both heading blocks and a markdown table of contents
+    """
+
+    blocks: Optional[List[ParsedBlock]] = None
     """Heading blocks which define the hierarchy of the document"""
 
     table_of_contents: Optional[str] = None
@@ -83,6 +22,8 @@ class DocumentMetadataHierarchy(BaseModel):
 
 
 class DocumentMetadata(BaseModel):
+    """Document-level metadata parsed from the document"""
+
     hierarchy: Optional[DocumentMetadataHierarchy] = None
     """
     Hierarchy of the document, as both heading blocks and a markdown table of
@@ -90,68 +31,13 @@ class DocumentMetadata(BaseModel):
     """
 
 
-class PageBlockBoundingBox(BaseModel):
-    x0: float
-    """The x-coordinate of the top-left corner of the bounding box"""
-
-    x1: float
-    """The x-coordinate of the bottom-right corner of the bounding box"""
-
-    y0: float
-    """The y-coordinate of the top-left corner of the bounding box"""
-
-    y1: float
-    """The y-coordinate of the bottom-right corner of the bounding box"""
-
-
-class PageBlock(BaseModel):
-    id: str
-    """Unique ID of the block"""
-
-    bounding_box: PageBlockBoundingBox
-    """
-    The normalized bounding box of the block, as relative percentages of the page
-    width and height
-    """
-
-    markdown: str
-    """The Markdown representation of the block"""
-
-    type: Literal["heading", "text", "table", "figure"]
-    """The type of the block"""
-
-    confidence_level: Optional[Literal["low", "medium", "high"]] = None
-    """The confidence level of this block categorized as 'low', 'medium', or 'high'.
-
-    Only available for blocks of type 'table' currently.
-    """
-
-    hierarchy_level: Optional[int] = None
-    """
-    The level of the block in the document hierarchy, starting at 0 for the
-    root-level title block. Only present if `enable_document_hierarchy` was set to
-    true in the request.
-    """
-
-    page_index: Optional[int] = None
-    """The page (0-indexed) that this block belongs to.
-
-    Only set for heading blocks that are returned in the table of contents.
-    """
-
-    parent_ids: Optional[List[str]] = None
-    """
-    The IDs of the parent in the document hierarchy, sorted from root-level to
-    bottom. For root-level heading blocks, this will be an empty list. Only present
-    if `enable_document_hierarchy` was set to true in the request.
-    """
-
-
 class Page(BaseModel):
+    """Per-page parse results."""
+
     index: int
     """The index of the parsed page (zero-indexed)"""
 
-    blocks: Optional[List[PageBlock]] = None
+    blocks: Optional[List[ParsedBlock]] = None
     """The parsed, structured blocks of this page.
 
     Present if `blocks-per-page` was among the requested output types.
@@ -165,6 +51,8 @@ class Page(BaseModel):
 
 
 class ParseJobResultsResponse(BaseModel):
+    """/parse results reponse object."""
+
     file_name: str
     """The name of the file that was uploaded for parsing"""
 

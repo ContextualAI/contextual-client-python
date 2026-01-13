@@ -9,6 +9,8 @@ __all__ = ["NewUserParam", "PerAgentRole"]
 
 
 class PerAgentRole(TypedDict, total=False):
+    """The schema used to capture agent level roles"""
+
     agent_id: Required[str]
     """ID of the agent on which to grant/revoke the role."""
 
@@ -20,6 +22,8 @@ class PerAgentRole(TypedDict, total=False):
 
 
 class NewUserParam(TypedDict, total=False):
+    """The schema used for creating new users or updating existing users."""
+
     email: Required[str]
     """The email of the user"""
 

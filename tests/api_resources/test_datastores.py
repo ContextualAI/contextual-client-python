@@ -12,7 +12,9 @@ from tests.utils import assert_matches_type
 from contextual.types import (
     Datastore,
     DatastoreMetadata,
+    DatastoreResetResponse,
     CreateDatastoreResponse,
+    DatastoreDeleteResponse,
     DatastoreUpdateResponse,
 )
 from contextual.pagination import SyncDatastoresPage, AsyncDatastoresPage
@@ -176,7 +178,7 @@ class TestDatastores:
         datastore = client.datastores.delete(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreDeleteResponse, datastore, path=["response"])
 
     @parametrize
     def test_raw_response_delete(self, client: ContextualAI) -> None:
@@ -187,7 +189,7 @@ class TestDatastores:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         datastore = response.parse()
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreDeleteResponse, datastore, path=["response"])
 
     @parametrize
     def test_streaming_response_delete(self, client: ContextualAI) -> None:
@@ -198,7 +200,7 @@ class TestDatastores:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             datastore = response.parse()
-            assert_matches_type(object, datastore, path=["response"])
+            assert_matches_type(DatastoreDeleteResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -252,7 +254,7 @@ class TestDatastores:
         datastore = client.datastores.reset(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreResetResponse, datastore, path=["response"])
 
     @parametrize
     def test_raw_response_reset(self, client: ContextualAI) -> None:
@@ -263,7 +265,7 @@ class TestDatastores:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         datastore = response.parse()
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreResetResponse, datastore, path=["response"])
 
     @parametrize
     def test_streaming_response_reset(self, client: ContextualAI) -> None:
@@ -274,7 +276,7 @@ class TestDatastores:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             datastore = response.parse()
-            assert_matches_type(object, datastore, path=["response"])
+            assert_matches_type(DatastoreResetResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -444,7 +446,7 @@ class TestAsyncDatastores:
         datastore = await async_client.datastores.delete(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreDeleteResponse, datastore, path=["response"])
 
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncContextualAI) -> None:
@@ -455,7 +457,7 @@ class TestAsyncDatastores:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         datastore = await response.parse()
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreDeleteResponse, datastore, path=["response"])
 
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncContextualAI) -> None:
@@ -466,7 +468,7 @@ class TestAsyncDatastores:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             datastore = await response.parse()
-            assert_matches_type(object, datastore, path=["response"])
+            assert_matches_type(DatastoreDeleteResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -520,7 +522,7 @@ class TestAsyncDatastores:
         datastore = await async_client.datastores.reset(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreResetResponse, datastore, path=["response"])
 
     @parametrize
     async def test_raw_response_reset(self, async_client: AsyncContextualAI) -> None:
@@ -531,7 +533,7 @@ class TestAsyncDatastores:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         datastore = await response.parse()
-        assert_matches_type(object, datastore, path=["response"])
+        assert_matches_type(DatastoreResetResponse, datastore, path=["response"])
 
     @parametrize
     async def test_streaming_response_reset(self, async_client: AsyncContextualAI) -> None:
@@ -542,7 +544,7 @@ class TestAsyncDatastores:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             datastore = await response.parse()
-            assert_matches_type(object, datastore, path=["response"])
+            assert_matches_type(DatastoreResetResponse, datastore, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

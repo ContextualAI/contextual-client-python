@@ -19,6 +19,8 @@ __all__ = [
 
 
 class RetrievalContentCtxlMetadata(BaseModel):
+    """Default metadata from the retrieval"""
+
     chunk_id: Optional[str] = None
     """Unique identifier for the chunk."""
 
@@ -80,6 +82,8 @@ class RetrievalContentCustomMetadataConfig(BaseModel):
 
 
 class RetrievalContent(BaseModel):
+    """Retrieval content object typing for v0.1 API."""
+
     content_id: str
     """Unique identifier of the retrieved content"""
 
@@ -146,6 +150,8 @@ class RetrievalContent(BaseModel):
 
 
 class Attribution(BaseModel):
+    """Attribution for some claim made in a generated message`."""
+
     content_ids: List[str]
     """Content IDs of the sources for the attributed text"""
 
@@ -157,6 +163,8 @@ class Attribution(BaseModel):
 
 
 class GroundednessScore(BaseModel):
+    """Groundedness scores in a generated message`."""
+
     end_idx: int
     """End index of the span in the generated message"""
 
@@ -168,6 +176,8 @@ class GroundednessScore(BaseModel):
 
 
 class Message(BaseModel):
+    """Response to the query request"""
+
     content: str
     """Content of the message"""
 
@@ -179,6 +189,8 @@ class Message(BaseModel):
 
 
 class QueryResponse(BaseModel):
+    """Response body for POST /query"""
+
     conversation_id: str
     """A unique identifier for the conversation.
 

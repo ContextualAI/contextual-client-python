@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.11.0 (2026-01-13)
+
+Full Changelog: [v0.10.0...v0.11.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.10.0...v0.11.0)
+
+### Features
+
+* **api:** manual updates ([9d0101f](https://github.com/ContextualAI/contextual-client-python/commit/9d0101ffe5e7af7104ef461b420112cb66a32a2d))
+
+
+### Bug Fixes
+
+* **compat:** update signatures of `model_dump` and `model_dump_json` for Pydantic v1 ([fdbee33](https://github.com/ContextualAI/contextual-client-python/commit/fdbee33a0cb13ef5bfc346bc969ff890c69c2c98))
+* ensure streams are always closed ([6bdc831](https://github.com/ContextualAI/contextual-client-python/commit/6bdc8314add1b629d570f4ad623540b12c4e9332))
+* **types:** allow pyright to infer TypedDict types within SequenceNotStr ([831b67d](https://github.com/ContextualAI/contextual-client-python/commit/831b67dbc9acbb586bd2b9c822dbb01cac56f580))
+* use async_to_httpx_files in patch method ([04bc4cc](https://github.com/ContextualAI/contextual-client-python/commit/04bc4cc6900d37483546c7c754ffe459371e6ae0))
+
+
+### Chores
+
+* add missing docstrings ([9c019eb](https://github.com/ContextualAI/contextual-client-python/commit/9c019ebc453ca8ef0e2a587c57af09b995f2e581))
+* add Python 3.14 classifier and testing ([26541da](https://github.com/ContextualAI/contextual-client-python/commit/26541dab7cfa5d991a300fe0010bad88a4ecf733))
+* **deps:** mypy 1.18.1 has a regression, pin to 1.17 ([4566f14](https://github.com/ContextualAI/contextual-client-python/commit/4566f141302cad92947d2cd1ea927d44ffa441c7))
+* **docs:** use environment variables for authentication in code snippets ([92f7455](https://github.com/ContextualAI/contextual-client-python/commit/92f74555cddacdb3396094ac0742fb66f1c44bef))
+* **internal:** add `--fix` argument to lint script ([0264ded](https://github.com/ContextualAI/contextual-client-python/commit/0264ded1e8082533087b4307365e318d9f02398e))
+* **internal:** add missing files argument to base client ([44a2de1](https://github.com/ContextualAI/contextual-client-python/commit/44a2de1749524dfc21042d082d60f080953c3da3))
+* **internal:** codegen related update ([37f6758](https://github.com/ContextualAI/contextual-client-python/commit/37f6758c6b43ecbb642d84dc692084cb8daef0c0))
+* update lockfile ([9dd374a](https://github.com/ContextualAI/contextual-client-python/commit/9dd374a4936f2269bc05ff5c8c672acaae629f86))
+
 ## 0.10.0 (2025-11-11)
 
 Full Changelog: [v0.9.0...v0.10.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.9.0...v0.10.0)

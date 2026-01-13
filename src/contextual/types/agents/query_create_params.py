@@ -102,6 +102,8 @@ class QueryCreateParams(TypedDict, total=False):
 
 
 class Message(TypedDict, total=False):
+    """Message object for a message sent or received in a conversation"""
+
     content: Required[str]
     """Content of the message"""
 
@@ -116,6 +118,10 @@ DocumentsFilters: TypeAlias = Union[BaseMetadataFilterParam, "CompositeMetadataF
 
 
 class OverrideConfiguration(TypedDict, total=False):
+    """
+    This will modify select configuration parameters for the agent during the response generation.
+    """
+
     enable_filter: bool
     """Override the filter_retrievals for the query.
 
@@ -184,6 +190,8 @@ class OverrideConfiguration(TypedDict, total=False):
 
 
 class StructuredOutput(TypedDict, total=False):
+    """Custom output structure format."""
+
     json_schema: Required[Dict[str, object]]
     """The output json structure."""
 

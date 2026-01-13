@@ -14,6 +14,7 @@ from contextual.pagination import SyncDocumentsPage, AsyncDocumentsPage
 from contextual.types.datastores import (
     DocumentMetadata,
     IngestionResponse,
+    DocumentDeleteResponse,
     DocumentGetParseResultResponse,
 )
 
@@ -80,7 +81,7 @@ class TestDocuments:
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, document, path=["response"])
+        assert_matches_type(DocumentDeleteResponse, document, path=["response"])
 
     @parametrize
     def test_raw_response_delete(self, client: ContextualAI) -> None:
@@ -92,7 +93,7 @@ class TestDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = response.parse()
-        assert_matches_type(object, document, path=["response"])
+        assert_matches_type(DocumentDeleteResponse, document, path=["response"])
 
     @parametrize
     def test_streaming_response_delete(self, client: ContextualAI) -> None:
@@ -104,7 +105,7 @@ class TestDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = response.parse()
-            assert_matches_type(object, document, path=["response"])
+            assert_matches_type(DocumentDeleteResponse, document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -406,7 +407,7 @@ class TestAsyncDocuments:
             document_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, document, path=["response"])
+        assert_matches_type(DocumentDeleteResponse, document, path=["response"])
 
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncContextualAI) -> None:
@@ -418,7 +419,7 @@ class TestAsyncDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = await response.parse()
-        assert_matches_type(object, document, path=["response"])
+        assert_matches_type(DocumentDeleteResponse, document, path=["response"])
 
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncContextualAI) -> None:
@@ -430,7 +431,7 @@ class TestAsyncDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = await response.parse()
-            assert_matches_type(object, document, path=["response"])
+            assert_matches_type(DocumentDeleteResponse, document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

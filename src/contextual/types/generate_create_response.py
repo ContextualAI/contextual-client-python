@@ -6,5 +6,7 @@ __all__ = ["GenerateCreateResponse"]
 
 
 class GenerateCreateResponse(BaseModel):
+    """/generate result object."""
+
     response: str
     """The model's response to the last user message."""

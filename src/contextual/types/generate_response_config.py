@@ -8,6 +8,8 @@ __all__ = ["GenerateResponseConfig"]
 
 
 class GenerateResponseConfig(BaseModel):
+    """Captures advance LLM configurations for an Agent"""
+
     avoid_commentary: Optional[bool] = None
     """
     Flag to indicate whether the model should avoid providing additional commentary

@@ -6,5 +6,7 @@ __all__ = ["QueryFeedbackResponse"]
 
 
 class QueryFeedbackResponse(BaseModel):
+    """Response schema for feedback submission endpoint."""
+
     feedback_id: str
     """ID of the submitted or updated feedback."""

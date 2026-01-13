@@ -20,6 +20,8 @@ class Job(BaseModel):
 
 
 class ParseJobsResponse(BaseModel):
+    """/parse list jobs object."""
+
     jobs: List[Job]
     """List of parse jobs"""
 

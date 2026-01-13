@@ -13,6 +13,8 @@ DefaultMetadataFilters: TypeAlias = Union[BaseMetadataFilterParam, "CompositeMet
 
 
 class FilterAndRerankConfigParam(TypedDict, total=False):
+    """Captures Filter and Rerank configurations for an Agent"""
+
     default_metadata_filters: DefaultMetadataFilters
     """
     Optional metadata filter which is applied while retrieving from every datastore
