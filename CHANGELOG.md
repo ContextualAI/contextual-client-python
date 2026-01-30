@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.12.0 (2026-01-30)
+
+Full Changelog: [v0.11.0...v0.12.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.11.0...v0.12.0)
+
+### Features
+
+* **client:** add custom JSON encoder for extended type support ([e01457b](https://github.com/ContextualAI/contextual-client-python/commit/e01457b08cf1179bae6fe9f7879b5d1aee4a21cd))
+* **client:** add support for binary request streaming ([7fae555](https://github.com/ContextualAI/contextual-client-python/commit/7fae555bb4623daa57ea4850116642e5a589eeb7))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([a1f8aa1](https://github.com/ContextualAI/contextual-client-python/commit/a1f8aa1b48c303770a0335a25f52b95ba1b785f2))
+* **internal:** update `actions/checkout` version ([3a2e638](https://github.com/ContextualAI/contextual-client-python/commit/3a2e6386c9126a42419048d8c2863acf29865107))
+
 ## 0.11.0 (2026-01-13)
 
 Full Changelog: [v0.10.0...v0.11.0](https://github.com/ContextualAI/contextual-client-python/compare/v0.10.0...v0.11.0)
