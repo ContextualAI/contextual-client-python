@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List
+from typing import Any, cast
 
 import httpx
 
@@ -14,20 +14,22 @@ from .query import (
     QueryResourceWithStreamingResponse,
     AsyncQueryResourceWithStreamingResponse,
 )
-from ...types import agent_list_params, agent_create_params, agent_update_params
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._utils import (
-    maybe_transform,
-    async_maybe_transform,
+from ...types import (
+    agent_list_params,
+    agent_create_params,
+    agent_update_params,
+    agent_save_template_params,
 )
+from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
-from .tune.tune import (
-    TuneResource,
-    AsyncTuneResource,
-    TuneResourceWithRawResponse,
-    AsyncTuneResourceWithRawResponse,
-    TuneResourceWithStreamingResponse,
-    AsyncTuneResourceWithStreamingResponse,
+from .templates import (
+    TemplatesResource,
+    AsyncTemplatesResource,
+    TemplatesResourceWithRawResponse,
+    AsyncTemplatesResourceWithRawResponse,
+    TemplatesResourceWithStreamingResponse,
+    AsyncTemplatesResourceWithStreamingResponse,
 )
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -39,24 +41,11 @@ from ..._response import (
 from ...pagination import SyncPage, AsyncPage
 from ...types.agent import Agent
 from ..._base_client import AsyncPaginator, make_request_options
-from .datasets.datasets import (
-    DatasetsResource,
-    AsyncDatasetsResource,
-    DatasetsResourceWithRawResponse,
-    AsyncDatasetsResourceWithRawResponse,
-    DatasetsResourceWithStreamingResponse,
-    AsyncDatasetsResourceWithStreamingResponse,
-)
-from .evaluate.evaluate import (
-    EvaluateResource,
-    AsyncEvaluateResource,
-    EvaluateResourceWithRawResponse,
-    AsyncEvaluateResourceWithRawResponse,
-    EvaluateResourceWithStreamingResponse,
-    AsyncEvaluateResourceWithStreamingResponse,
-)
-from ...types.agent_metadata import AgentMetadata
+from ...types.agent_configs_param import AgentConfigsParam
 from ...types.create_agent_output import CreateAgentOutput
+from ...types.agent_delete_response import AgentDeleteResponse
+from ...types.agent_update_response import AgentUpdateResponse
+from ...types.agent_metadata_response import AgentMetadataResponse
 
 __all__ = ["AgentsResource", "AsyncAgentsResource"]
 
@@ -67,16 +56,8 @@ class AgentsResource(SyncAPIResource):
         return QueryResource(self._client)
 
     @cached_property
-    def evaluate(self) -> EvaluateResource:
-        return EvaluateResource(self._client)
-
-    @cached_property
-    def datasets(self) -> DatasetsResource:
-        return DatasetsResource(self._client)
-
-    @cached_property
-    def tune(self) -> TuneResource:
-        return TuneResource(self._client)
+    def templates(self) -> TemplatesResource:
+        return TemplatesResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AgentsResourceWithRawResponse:
@@ -101,16 +82,21 @@ class AgentsResource(SyncAPIResource):
         self,
         *,
         name: str,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        description: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
+        template_name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateAgentOutput:
         """
         Create a new `Agent` with a specific configuration.
@@ -125,21 +111,37 @@ class AgentsResource(SyncAPIResource):
         creates an empty `Datastore` and configures the `Agent` to use the newly created
         `Datastore`.
 
+        > Note that self-serve users are currently required to create agents through our
+        > UI. Otherwise, they will receive the following message: "This endpoint is
+        > disabled as you need to go through checkout. Please use the UI to make this
+        > request."
+
         Args:
           name: Name of the agent
 
-          datastore_ids: The IDs of the datastore associated with the agent. Leave empty to automatically
-              create a new datastore.
+          agent_configs: The following advanced parameters are experimental and subject to change.
+
+          datastore_ids: The IDs of the datastore to associate with this agent.
 
           description: Description of the agent
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
+
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
+
+          template_name: The template defining the base configuration for the agent.
 
           extra_headers: Send extra headers
 
@@ -154,10 +156,15 @@ class AgentsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "name": name,
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "description": description,
+                    "filter_prompt": filter_prompt,
+                    "multiturn_system_prompt": multiturn_system_prompt,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
+                    "template_name": template_name,
                 },
                 agent_create_params.AgentCreateParams,
             ),
@@ -171,17 +178,22 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        name: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AgentUpdateResponse:
         """
         Modify a given `Agent` to utilize the provided configuration.
 
@@ -190,16 +202,26 @@ class AgentsResource(SyncAPIResource):
         Args:
           agent_id: ID of the agent to edit
 
+          agent_configs: The following advanced parameters are experimental and subject to change.
+
           datastore_ids: IDs of the datastore to associate with the agent.
 
-          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
-              on which they were tuned. If no model is specified, the default model is used.
-              Set to `default` to switch from a tuned model to the default model.
+          description: Description of the agent
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
+
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          name: Name of the agent
+
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
@@ -218,8 +240,13 @@ class AgentsResource(SyncAPIResource):
             f"/agents/{agent_id}",
             body=maybe_transform(
                 {
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
-                    "llm_model_id": llm_model_id,
+                    "description": description,
+                    "filter_prompt": filter_prompt,
+                    "multiturn_system_prompt": multiturn_system_prompt,
+                    "name": name,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -228,20 +255,20 @@ class AgentsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentUpdateResponse,
         )
 
     def list(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncPage[Agent]:
         """
         Retrieve a list of all `Agents`.
@@ -288,8 +315,8 @@ class AgentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AgentDeleteResponse:
         """Delete a given `Agent`.
 
         This is an irreversible operation.
@@ -316,7 +343,43 @@ class AgentsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentDeleteResponse,
+        )
+
+    def copy(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CreateAgentOutput:
+        """
+        Copy an existing agent with all its configurations and datastore associations.
+        The copied agent will have "[COPY]" appended to its name.
+
+        Args:
+          agent_id: ID of the agent to copy
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return self._post(
+            f"/agents/{agent_id}/copy",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CreateAgentOutput,
         )
 
     def metadata(
@@ -328,8 +391,8 @@ class AgentsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AgentMetadata:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AgentMetadataResponse:
         """
         Get metadata and configuration of a given `Agent`.
 
@@ -346,12 +409,91 @@ class AgentsResource(SyncAPIResource):
         """
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
-        return self._get(
-            f"/agents/{agent_id}/metadata",
+        return cast(
+            AgentMetadataResponse,
+            self._get(
+                f"/agents/{agent_id}/metadata",
+                options=make_request_options(
+                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                ),
+                cast_to=cast(
+                    Any, AgentMetadataResponse
+                ),  # Union types cannot be passed in as arguments in the type system
+            ),
+        )
+
+    def reset(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> object:
+        """
+        Reset a given `Agent` to default configuration.
+
+        Args:
+          agent_id: ID of the agent to reset
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return self._put(
+            f"/agents/{agent_id}/reset",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=AgentMetadata,
+            cast_to=object,
+        )
+
+    def save_template(
+        self,
+        agent_id: str,
+        *,
+        name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> object:
+        """
+        Save Template
+
+        Args:
+          agent_id: ID of the agent
+
+          name: The name of the template
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return self._post(
+            f"/agents/{agent_id}/template",
+            body=maybe_transform({"name": name}, agent_save_template_params.AgentSaveTemplateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=object,
         )
 
 
@@ -361,16 +503,8 @@ class AsyncAgentsResource(AsyncAPIResource):
         return AsyncQueryResource(self._client)
 
     @cached_property
-    def evaluate(self) -> AsyncEvaluateResource:
-        return AsyncEvaluateResource(self._client)
-
-    @cached_property
-    def datasets(self) -> AsyncDatasetsResource:
-        return AsyncDatasetsResource(self._client)
-
-    @cached_property
-    def tune(self) -> AsyncTuneResource:
-        return AsyncTuneResource(self._client)
+    def templates(self) -> AsyncTemplatesResource:
+        return AsyncTemplatesResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncAgentsResourceWithRawResponse:
@@ -395,16 +529,21 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         *,
         name: str,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        description: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
+        template_name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateAgentOutput:
         """
         Create a new `Agent` with a specific configuration.
@@ -419,21 +558,37 @@ class AsyncAgentsResource(AsyncAPIResource):
         creates an empty `Datastore` and configures the `Agent` to use the newly created
         `Datastore`.
 
+        > Note that self-serve users are currently required to create agents through our
+        > UI. Otherwise, they will receive the following message: "This endpoint is
+        > disabled as you need to go through checkout. Please use the UI to make this
+        > request."
+
         Args:
           name: Name of the agent
 
-          datastore_ids: The IDs of the datastore associated with the agent. Leave empty to automatically
-              create a new datastore.
+          agent_configs: The following advanced parameters are experimental and subject to change.
+
+          datastore_ids: The IDs of the datastore to associate with this agent.
 
           description: Description of the agent
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
+
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
+
+          template_name: The template defining the base configuration for the agent.
 
           extra_headers: Send extra headers
 
@@ -448,10 +603,15 @@ class AsyncAgentsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "name": name,
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
                     "description": description,
+                    "filter_prompt": filter_prompt,
+                    "multiturn_system_prompt": multiturn_system_prompt,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
+                    "template_name": template_name,
                 },
                 agent_create_params.AgentCreateParams,
             ),
@@ -465,17 +625,22 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        datastore_ids: List[str] | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        suggested_queries: List[str] | NotGiven = NOT_GIVEN,
-        system_prompt: str | NotGiven = NOT_GIVEN,
+        agent_configs: AgentConfigsParam | Omit = omit,
+        datastore_ids: SequenceNotStr[str] | Omit = omit,
+        description: str | Omit = omit,
+        filter_prompt: str | Omit = omit,
+        multiturn_system_prompt: str | Omit = omit,
+        name: str | Omit = omit,
+        no_retrieval_system_prompt: str | Omit = omit,
+        suggested_queries: SequenceNotStr[str] | Omit = omit,
+        system_prompt: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AgentUpdateResponse:
         """
         Modify a given `Agent` to utilize the provided configuration.
 
@@ -484,16 +649,26 @@ class AsyncAgentsResource(AsyncAPIResource):
         Args:
           agent_id: ID of the agent to edit
 
+          agent_configs: The following advanced parameters are experimental and subject to change.
+
           datastore_ids: IDs of the datastore to associate with the agent.
 
-          llm_model_id: The model ID to use for generation. Tuned models can only be used for the agents
-              on which they were tuned. If no model is specified, the default model is used.
-              Set to `default` to switch from a tuned model to the default model.
+          description: Description of the agent
+
+          filter_prompt: The prompt to an LLM which determines whether retrieved chunks are relevant to a
+              given query and filters out irrelevant chunks.
+
+          multiturn_system_prompt: Instructions on how the agent should handle multi-turn conversations.
+
+          name: Name of the agent
+
+          no_retrieval_system_prompt: Instructions on how the agent should respond when there are no relevant
+              retrievals that can be used to answer a query.
 
           suggested_queries: These queries will show up as suggestions in the Contextual UI when users load
               the agent. We recommend including common queries that users will ask, as well as
               complex queries so users understand the types of complex queries the system can
-              handle.
+              handle. The max length of all the suggested queries is 1000.
 
           system_prompt: Instructions that your agent references when generating responses. Note that we
               do not guarantee that the system will follow these instructions exactly.
@@ -512,8 +687,13 @@ class AsyncAgentsResource(AsyncAPIResource):
             f"/agents/{agent_id}",
             body=await async_maybe_transform(
                 {
+                    "agent_configs": agent_configs,
                     "datastore_ids": datastore_ids,
-                    "llm_model_id": llm_model_id,
+                    "description": description,
+                    "filter_prompt": filter_prompt,
+                    "multiturn_system_prompt": multiturn_system_prompt,
+                    "name": name,
+                    "no_retrieval_system_prompt": no_retrieval_system_prompt,
                     "suggested_queries": suggested_queries,
                     "system_prompt": system_prompt,
                 },
@@ -522,20 +702,20 @@ class AsyncAgentsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentUpdateResponse,
         )
 
     def list(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Agent, AsyncPage[Agent]]:
         """
         Retrieve a list of all `Agents`.
@@ -582,8 +762,8 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AgentDeleteResponse:
         """Delete a given `Agent`.
 
         This is an irreversible operation.
@@ -610,7 +790,43 @@ class AsyncAgentsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=AgentDeleteResponse,
+        )
+
+    async def copy(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CreateAgentOutput:
+        """
+        Copy an existing agent with all its configurations and datastore associations.
+        The copied agent will have "[COPY]" appended to its name.
+
+        Args:
+          agent_id: ID of the agent to copy
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return await self._post(
+            f"/agents/{agent_id}/copy",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CreateAgentOutput,
         )
 
     async def metadata(
@@ -622,8 +838,8 @@ class AsyncAgentsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AgentMetadata:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AgentMetadataResponse:
         """
         Get metadata and configuration of a given `Agent`.
 
@@ -640,12 +856,91 @@ class AsyncAgentsResource(AsyncAPIResource):
         """
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
-        return await self._get(
-            f"/agents/{agent_id}/metadata",
+        return cast(
+            AgentMetadataResponse,
+            await self._get(
+                f"/agents/{agent_id}/metadata",
+                options=make_request_options(
+                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                ),
+                cast_to=cast(
+                    Any, AgentMetadataResponse
+                ),  # Union types cannot be passed in as arguments in the type system
+            ),
+        )
+
+    async def reset(
+        self,
+        agent_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> object:
+        """
+        Reset a given `Agent` to default configuration.
+
+        Args:
+          agent_id: ID of the agent to reset
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return await self._put(
+            f"/agents/{agent_id}/reset",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=AgentMetadata,
+            cast_to=object,
+        )
+
+    async def save_template(
+        self,
+        agent_id: str,
+        *,
+        name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> object:
+        """
+        Save Template
+
+        Args:
+          agent_id: ID of the agent
+
+          name: The name of the template
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        return await self._post(
+            f"/agents/{agent_id}/template",
+            body=await async_maybe_transform({"name": name}, agent_save_template_params.AgentSaveTemplateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=object,
         )
 
 
@@ -665,8 +960,17 @@ class AgentsResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             agents.delete,
         )
+        self.copy = to_raw_response_wrapper(
+            agents.copy,
+        )
         self.metadata = to_raw_response_wrapper(
             agents.metadata,
+        )
+        self.reset = to_raw_response_wrapper(
+            agents.reset,
+        )
+        self.save_template = to_raw_response_wrapper(
+            agents.save_template,
         )
 
     @cached_property
@@ -674,16 +978,8 @@ class AgentsResourceWithRawResponse:
         return QueryResourceWithRawResponse(self._agents.query)
 
     @cached_property
-    def evaluate(self) -> EvaluateResourceWithRawResponse:
-        return EvaluateResourceWithRawResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> DatasetsResourceWithRawResponse:
-        return DatasetsResourceWithRawResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> TuneResourceWithRawResponse:
-        return TuneResourceWithRawResponse(self._agents.tune)
+    def templates(self) -> TemplatesResourceWithRawResponse:
+        return TemplatesResourceWithRawResponse(self._agents.templates)
 
 
 class AsyncAgentsResourceWithRawResponse:
@@ -702,8 +998,17 @@ class AsyncAgentsResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             agents.delete,
         )
+        self.copy = async_to_raw_response_wrapper(
+            agents.copy,
+        )
         self.metadata = async_to_raw_response_wrapper(
             agents.metadata,
+        )
+        self.reset = async_to_raw_response_wrapper(
+            agents.reset,
+        )
+        self.save_template = async_to_raw_response_wrapper(
+            agents.save_template,
         )
 
     @cached_property
@@ -711,16 +1016,8 @@ class AsyncAgentsResourceWithRawResponse:
         return AsyncQueryResourceWithRawResponse(self._agents.query)
 
     @cached_property
-    def evaluate(self) -> AsyncEvaluateResourceWithRawResponse:
-        return AsyncEvaluateResourceWithRawResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> AsyncDatasetsResourceWithRawResponse:
-        return AsyncDatasetsResourceWithRawResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> AsyncTuneResourceWithRawResponse:
-        return AsyncTuneResourceWithRawResponse(self._agents.tune)
+    def templates(self) -> AsyncTemplatesResourceWithRawResponse:
+        return AsyncTemplatesResourceWithRawResponse(self._agents.templates)
 
 
 class AgentsResourceWithStreamingResponse:
@@ -739,8 +1036,17 @@ class AgentsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             agents.delete,
         )
+        self.copy = to_streamed_response_wrapper(
+            agents.copy,
+        )
         self.metadata = to_streamed_response_wrapper(
             agents.metadata,
+        )
+        self.reset = to_streamed_response_wrapper(
+            agents.reset,
+        )
+        self.save_template = to_streamed_response_wrapper(
+            agents.save_template,
         )
 
     @cached_property
@@ -748,16 +1054,8 @@ class AgentsResourceWithStreamingResponse:
         return QueryResourceWithStreamingResponse(self._agents.query)
 
     @cached_property
-    def evaluate(self) -> EvaluateResourceWithStreamingResponse:
-        return EvaluateResourceWithStreamingResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> DatasetsResourceWithStreamingResponse:
-        return DatasetsResourceWithStreamingResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> TuneResourceWithStreamingResponse:
-        return TuneResourceWithStreamingResponse(self._agents.tune)
+    def templates(self) -> TemplatesResourceWithStreamingResponse:
+        return TemplatesResourceWithStreamingResponse(self._agents.templates)
 
 
 class AsyncAgentsResourceWithStreamingResponse:
@@ -776,8 +1074,17 @@ class AsyncAgentsResourceWithStreamingResponse:
         self.delete = async_to_streamed_response_wrapper(
             agents.delete,
         )
+        self.copy = async_to_streamed_response_wrapper(
+            agents.copy,
+        )
         self.metadata = async_to_streamed_response_wrapper(
             agents.metadata,
+        )
+        self.reset = async_to_streamed_response_wrapper(
+            agents.reset,
+        )
+        self.save_template = async_to_streamed_response_wrapper(
+            agents.save_template,
         )
 
     @cached_property
@@ -785,13 +1092,5 @@ class AsyncAgentsResourceWithStreamingResponse:
         return AsyncQueryResourceWithStreamingResponse(self._agents.query)
 
     @cached_property
-    def evaluate(self) -> AsyncEvaluateResourceWithStreamingResponse:
-        return AsyncEvaluateResourceWithStreamingResponse(self._agents.evaluate)
-
-    @cached_property
-    def datasets(self) -> AsyncDatasetsResourceWithStreamingResponse:
-        return AsyncDatasetsResourceWithStreamingResponse(self._agents.datasets)
-
-    @cached_property
-    def tune(self) -> AsyncTuneResourceWithStreamingResponse:
-        return AsyncTuneResourceWithStreamingResponse(self._agents.tune)
+    def templates(self) -> AsyncTemplatesResourceWithStreamingResponse:
+        return AsyncTemplatesResourceWithStreamingResponse(self._agents.templates)

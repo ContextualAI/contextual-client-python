@@ -1,13 +1,5 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .tune import (
-    TuneResource,
-    AsyncTuneResource,
-    TuneResourceWithRawResponse,
-    AsyncTuneResourceWithRawResponse,
-    TuneResourceWithStreamingResponse,
-    AsyncTuneResourceWithStreamingResponse,
-)
 from .query import (
     QueryResource,
     AsyncQueryResource,
@@ -24,21 +16,13 @@ from .agents import (
     AgentsResourceWithStreamingResponse,
     AsyncAgentsResourceWithStreamingResponse,
 )
-from .datasets import (
-    DatasetsResource,
-    AsyncDatasetsResource,
-    DatasetsResourceWithRawResponse,
-    AsyncDatasetsResourceWithRawResponse,
-    DatasetsResourceWithStreamingResponse,
-    AsyncDatasetsResourceWithStreamingResponse,
-)
-from .evaluate import (
-    EvaluateResource,
-    AsyncEvaluateResource,
-    EvaluateResourceWithRawResponse,
-    AsyncEvaluateResourceWithRawResponse,
-    EvaluateResourceWithStreamingResponse,
-    AsyncEvaluateResourceWithStreamingResponse,
+from .templates import (
+    TemplatesResource,
+    AsyncTemplatesResource,
+    TemplatesResourceWithRawResponse,
+    AsyncTemplatesResourceWithRawResponse,
+    TemplatesResourceWithStreamingResponse,
+    AsyncTemplatesResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -48,24 +32,12 @@ __all__ = [
     "AsyncQueryResourceWithRawResponse",
     "QueryResourceWithStreamingResponse",
     "AsyncQueryResourceWithStreamingResponse",
-    "EvaluateResource",
-    "AsyncEvaluateResource",
-    "EvaluateResourceWithRawResponse",
-    "AsyncEvaluateResourceWithRawResponse",
-    "EvaluateResourceWithStreamingResponse",
-    "AsyncEvaluateResourceWithStreamingResponse",
-    "DatasetsResource",
-    "AsyncDatasetsResource",
-    "DatasetsResourceWithRawResponse",
-    "AsyncDatasetsResourceWithRawResponse",
-    "DatasetsResourceWithStreamingResponse",
-    "AsyncDatasetsResourceWithStreamingResponse",
-    "TuneResource",
-    "AsyncTuneResource",
-    "TuneResourceWithRawResponse",
-    "AsyncTuneResourceWithRawResponse",
-    "TuneResourceWithStreamingResponse",
-    "AsyncTuneResourceWithStreamingResponse",
+    "TemplatesResource",
+    "AsyncTemplatesResource",
+    "TemplatesResourceWithRawResponse",
+    "AsyncTemplatesResourceWithRawResponse",
+    "TemplatesResourceWithStreamingResponse",
+    "AsyncTemplatesResourceWithStreamingResponse",
     "AgentsResource",
     "AsyncAgentsResource",
     "AgentsResourceWithRawResponse",

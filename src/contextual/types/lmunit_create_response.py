@@ -1,12 +1,13 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-
 from .._models import BaseModel
 
 __all__ = ["LMUnitCreateResponse"]
 
 
 class LMUnitCreateResponse(BaseModel):
+    """LMUnit result object."""
+
     score: float
     """The response is scored on a continuous scale from 1 to 5 on the unit test.
 

@@ -2,17 +2,14 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable
+from typing import Union, Iterable
 from datetime import datetime
 from typing_extensions import Literal
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -30,6 +27,7 @@ from ...types.agents import (
 )
 from ...types.agents.query_response import QueryResponse
 from ...types.agents.query_metrics_response import QueryMetricsResponse
+from ...types.agents.query_feedback_response import QueryFeedbackResponse
 from ...types.agents.retrieval_info_response import RetrievalInfoResponse
 
 __all__ = ["QueryResource", "AsyncQueryResource"]
@@ -60,16 +58,20 @@ class QueryResource(SyncAPIResource):
         agent_id: str,
         *,
         messages: Iterable[query_create_params.Message],
-        retrievals_only: bool | NotGiven = NOT_GIVEN,
-        conversation_id: str | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        stream: bool | NotGiven = NOT_GIVEN,
+        include_retrieval_content_text: bool | Omit = omit,
+        retrievals_only: bool | Omit = omit,
+        conversation_id: str | Omit = omit,
+        documents_filters: query_create_params.DocumentsFilters | Omit = omit,
+        llm_model_id: str | Omit = omit,
+        override_configuration: query_create_params.OverrideConfiguration | Omit = omit,
+        stream: bool | Omit = omit,
+        structured_output: query_create_params.StructuredOutput | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryResponse:
         """
         Start a conversation with an `Agent` and receive its generated response, along
@@ -82,16 +84,66 @@ class QueryResource(SyncAPIResource):
               multiple objects to provide conversation history. Last message in the list must
               be a `user`-sent message (i.e. `role` equals `"user"`).
 
-          retrievals_only: Set to `true` to skip generation of the response.
+          include_retrieval_content_text: Set to `true` to include the text of the retrieved contents in the response. If
+              `false`, only metadata about the retrieved contents will be included, not
+              content text. This parameter is ignored if `retrievals_only` is `true`, in which
+              case `content_text` will always be returned. Content text and other metadata can
+              also be fetched separately using the
+              `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
+
+          retrievals_only: Set to `true` to fetch retrieval content and metadata, and then skip generation
+              of the response.
 
           conversation_id: An optional alternative to providing message history in the `messages` field. If
               provided, all messages in the `messages` list prior to the latest user-sent
               query will be ignored.
 
+          documents_filters: Defines an Optional custom metadata filter, which can be a list of filters or
+              nested filters. Use **lowercase** for `value` and/or **field.keyword** for
+              `field` when not using `equals` operator.The expected input is a nested JSON
+              object that can represent a single filter or a composite (logical) combination
+              of filters.
+
+              Unnested Example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [{ "field": "status", "operator": "equals", "value": "active" }]
+              }
+              ```
+
+              Nested example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [
+                  { "field": "status", "operator": "equals", "value": "active" },
+                  {
+                    "operator": "OR",
+                    "filters": [
+                      {
+                        "field": "category",
+                        "operator": "containsany",
+                        "value": ["policy", "HR"]
+                      },
+                      { "field": "tags", "operator": "exists" }
+                    ]
+                  }
+                ]
+              }
+              ```
+
           llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
               base model if not specified.
 
+          override_configuration: This will modify select configuration parameters for the agent during the
+              response generation.
+
           stream: Set to `true` to receive a streamed response
+
+          structured_output: Custom output structure format.
 
           extra_headers: Send extra headers
 
@@ -109,8 +161,11 @@ class QueryResource(SyncAPIResource):
                 {
                     "messages": messages,
                     "conversation_id": conversation_id,
+                    "documents_filters": documents_filters,
                     "llm_model_id": llm_model_id,
+                    "override_configuration": override_configuration,
                     "stream": stream,
+                    "structured_output": structured_output,
                 },
                 query_create_params.QueryCreateParams,
             ),
@@ -119,7 +174,13 @@ class QueryResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"retrievals_only": retrievals_only}, query_create_params.QueryCreateParams),
+                query=maybe_transform(
+                    {
+                        "include_retrieval_content_text": include_retrieval_content_text,
+                        "retrievals_only": retrievals_only,
+                    },
+                    query_create_params.QueryCreateParams,
+                ),
             ),
             cast_to=QueryResponse,
         )
@@ -130,26 +191,20 @@ class QueryResource(SyncAPIResource):
         *,
         feedback: Literal["thumbs_up", "thumbs_down", "flagged", "removed"],
         message_id: str,
-        content_id: str | NotGiven = NOT_GIVEN,
-        explanation: str | NotGiven = NOT_GIVEN,
+        content_id: str | Omit = omit,
+        explanation: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> QueryFeedbackResponse:
         """Provide feedback for a generation or a retrieval.
 
         Feedback can be used to track
         overall `Agent` performance through the `Feedback` page in the Contextual UI,
         and as a basis for model fine-tuning.
-
-        If providing feedback on a retrieval, include the `message_id` from the `/query`
-        response, and a `content_id` returned in the query's `retrieval_contents` list.
-
-        For feedback on generations, include `message_id` and do not include a
-        `content_id`.
 
         Args:
           agent_id: ID of the agent for which to provide feedback
@@ -188,23 +243,25 @@ class QueryResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=QueryFeedbackResponse,
         )
 
     def metrics(
         self,
         agent_id: str,
         *,
-        created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
+        conversation_ids: SequenceNotStr[str] | Omit = omit,
+        created_after: Union[str, datetime] | Omit = omit,
+        created_before: Union[str, datetime] | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        user_emails: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryMetricsResponse:
         """Returns usage and user-provided feedback data.
 
@@ -214,13 +271,25 @@ class QueryResource(SyncAPIResource):
         Args:
           agent_id: Agent ID of the agent to get metrics for
 
+          conversation_ids: Filter messages by conversation ids.
+
           created_after: Filters messages that are created after the specified timestamp.
 
-          created_before: Filters messages that are created before specified timestamp.
+          created_before: Filters messages that are created before specified timestamp. If both
+              `created_after` and `created_before` are not provided, then `created_before`
+              will be set to the current time and `created_after` will be set to the
+              `created_before` - 2 days. If only `created_after` is provided, then
+              `created_before` will be set to the `created_after` + 2 days. If only
+              `created_before` is provided, then `created_after` will be set to the
+              `created_before` - 2 days. If both `created_after` and `created_before` are
+              provided, and the difference between them is more than 2 days, then
+              `created_after` will be set to the `created_before` - 2 days.
 
           limit: Limits the number of messages to return.
 
           offset: Offset for pagination.
+
+          user_emails: Filter messages by users.
 
           extra_headers: Send extra headers
 
@@ -241,10 +310,12 @@ class QueryResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "conversation_ids": conversation_ids,
                         "created_after": created_after,
                         "created_before": created_before,
                         "limit": limit,
                         "offset": offset,
+                        "user_emails": user_emails,
                     },
                     query_metrics_params.QueryMetricsParams,
                 ),
@@ -257,13 +328,13 @@ class QueryResource(SyncAPIResource):
         message_id: str,
         *,
         agent_id: str,
-        content_ids: List[str],
+        content_ids: SequenceNotStr[str],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RetrievalInfoResponse:
         """
         Return metadata of the contents used to generate the response for a given
@@ -328,16 +399,20 @@ class AsyncQueryResource(AsyncAPIResource):
         agent_id: str,
         *,
         messages: Iterable[query_create_params.Message],
-        retrievals_only: bool | NotGiven = NOT_GIVEN,
-        conversation_id: str | NotGiven = NOT_GIVEN,
-        llm_model_id: str | NotGiven = NOT_GIVEN,
-        stream: bool | NotGiven = NOT_GIVEN,
+        include_retrieval_content_text: bool | Omit = omit,
+        retrievals_only: bool | Omit = omit,
+        conversation_id: str | Omit = omit,
+        documents_filters: query_create_params.DocumentsFilters | Omit = omit,
+        llm_model_id: str | Omit = omit,
+        override_configuration: query_create_params.OverrideConfiguration | Omit = omit,
+        stream: bool | Omit = omit,
+        structured_output: query_create_params.StructuredOutput | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryResponse:
         """
         Start a conversation with an `Agent` and receive its generated response, along
@@ -350,16 +425,66 @@ class AsyncQueryResource(AsyncAPIResource):
               multiple objects to provide conversation history. Last message in the list must
               be a `user`-sent message (i.e. `role` equals `"user"`).
 
-          retrievals_only: Set to `true` to skip generation of the response.
+          include_retrieval_content_text: Set to `true` to include the text of the retrieved contents in the response. If
+              `false`, only metadata about the retrieved contents will be included, not
+              content text. This parameter is ignored if `retrievals_only` is `true`, in which
+              case `content_text` will always be returned. Content text and other metadata can
+              also be fetched separately using the
+              `/agents/{agent_id}/query/{message_id}/retrieval/info` endpoint.
+
+          retrievals_only: Set to `true` to fetch retrieval content and metadata, and then skip generation
+              of the response.
 
           conversation_id: An optional alternative to providing message history in the `messages` field. If
               provided, all messages in the `messages` list prior to the latest user-sent
               query will be ignored.
 
+          documents_filters: Defines an Optional custom metadata filter, which can be a list of filters or
+              nested filters. Use **lowercase** for `value` and/or **field.keyword** for
+              `field` when not using `equals` operator.The expected input is a nested JSON
+              object that can represent a single filter or a composite (logical) combination
+              of filters.
+
+              Unnested Example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [{ "field": "status", "operator": "equals", "value": "active" }]
+              }
+              ```
+
+              Nested example:
+
+              ```json
+              {
+                "operator": "AND",
+                "filters": [
+                  { "field": "status", "operator": "equals", "value": "active" },
+                  {
+                    "operator": "OR",
+                    "filters": [
+                      {
+                        "field": "category",
+                        "operator": "containsany",
+                        "value": ["policy", "HR"]
+                      },
+                      { "field": "tags", "operator": "exists" }
+                    ]
+                  }
+                ]
+              }
+              ```
+
           llm_model_id: Model ID of the specific fine-tuned or aligned LLM model to use. Defaults to
               base model if not specified.
 
+          override_configuration: This will modify select configuration parameters for the agent during the
+              response generation.
+
           stream: Set to `true` to receive a streamed response
+
+          structured_output: Custom output structure format.
 
           extra_headers: Send extra headers
 
@@ -377,8 +502,11 @@ class AsyncQueryResource(AsyncAPIResource):
                 {
                     "messages": messages,
                     "conversation_id": conversation_id,
+                    "documents_filters": documents_filters,
                     "llm_model_id": llm_model_id,
+                    "override_configuration": override_configuration,
                     "stream": stream,
+                    "structured_output": structured_output,
                 },
                 query_create_params.QueryCreateParams,
             ),
@@ -388,7 +516,11 @@ class AsyncQueryResource(AsyncAPIResource):
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {"retrievals_only": retrievals_only}, query_create_params.QueryCreateParams
+                    {
+                        "include_retrieval_content_text": include_retrieval_content_text,
+                        "retrievals_only": retrievals_only,
+                    },
+                    query_create_params.QueryCreateParams,
                 ),
             ),
             cast_to=QueryResponse,
@@ -400,26 +532,20 @@ class AsyncQueryResource(AsyncAPIResource):
         *,
         feedback: Literal["thumbs_up", "thumbs_down", "flagged", "removed"],
         message_id: str,
-        content_id: str | NotGiven = NOT_GIVEN,
-        explanation: str | NotGiven = NOT_GIVEN,
+        content_id: str | Omit = omit,
+        explanation: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> QueryFeedbackResponse:
         """Provide feedback for a generation or a retrieval.
 
         Feedback can be used to track
         overall `Agent` performance through the `Feedback` page in the Contextual UI,
         and as a basis for model fine-tuning.
-
-        If providing feedback on a retrieval, include the `message_id` from the `/query`
-        response, and a `content_id` returned in the query's `retrieval_contents` list.
-
-        For feedback on generations, include `message_id` and do not include a
-        `content_id`.
 
         Args:
           agent_id: ID of the agent for which to provide feedback
@@ -458,23 +584,25 @@ class AsyncQueryResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=QueryFeedbackResponse,
         )
 
     async def metrics(
         self,
         agent_id: str,
         *,
-        created_after: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        created_before: Union[str, datetime] | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
+        conversation_ids: SequenceNotStr[str] | Omit = omit,
+        created_after: Union[str, datetime] | Omit = omit,
+        created_before: Union[str, datetime] | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        user_emails: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> QueryMetricsResponse:
         """Returns usage and user-provided feedback data.
 
@@ -484,13 +612,25 @@ class AsyncQueryResource(AsyncAPIResource):
         Args:
           agent_id: Agent ID of the agent to get metrics for
 
+          conversation_ids: Filter messages by conversation ids.
+
           created_after: Filters messages that are created after the specified timestamp.
 
-          created_before: Filters messages that are created before specified timestamp.
+          created_before: Filters messages that are created before specified timestamp. If both
+              `created_after` and `created_before` are not provided, then `created_before`
+              will be set to the current time and `created_after` will be set to the
+              `created_before` - 2 days. If only `created_after` is provided, then
+              `created_before` will be set to the `created_after` + 2 days. If only
+              `created_before` is provided, then `created_after` will be set to the
+              `created_before` - 2 days. If both `created_after` and `created_before` are
+              provided, and the difference between them is more than 2 days, then
+              `created_after` will be set to the `created_before` - 2 days.
 
           limit: Limits the number of messages to return.
 
           offset: Offset for pagination.
+
+          user_emails: Filter messages by users.
 
           extra_headers: Send extra headers
 
@@ -511,10 +651,12 @@ class AsyncQueryResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "conversation_ids": conversation_ids,
                         "created_after": created_after,
                         "created_before": created_before,
                         "limit": limit,
                         "offset": offset,
+                        "user_emails": user_emails,
                     },
                     query_metrics_params.QueryMetricsParams,
                 ),
@@ -527,13 +669,13 @@ class AsyncQueryResource(AsyncAPIResource):
         message_id: str,
         *,
         agent_id: str,
-        content_ids: List[str],
+        content_ids: SequenceNotStr[str],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RetrievalInfoResponse:
         """
         Return metadata of the contents used to generate the response for a given

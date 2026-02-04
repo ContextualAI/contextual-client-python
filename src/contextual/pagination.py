@@ -10,8 +10,12 @@ __all__ = [
     "AsyncDatastoresPage",
     "SyncDocumentsPage",
     "AsyncDocumentsPage",
+    "SyncUsersPage",
+    "AsyncUsersPage",
     "SyncPage",
     "AsyncPage",
+    "SyncContentsPage",
+    "AsyncContentsPage",
 ]
 
 _T = TypeVar("_T")
@@ -97,6 +101,46 @@ class AsyncDocumentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
+class SyncUsersPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    users: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        users = self.users
+        if not users:
+            return []
+        return users
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
+class AsyncUsersPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    users: List[_T]
+    next_cursor: Optional[str] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        users = self.users
+        if not users:
+            return []
+        return users
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        next_cursor = self.next_cursor
+        if not next_cursor:
+            return None
+
+        return PageInfo(params={"cursor": next_cursor})
+
+
 class SyncPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     agents: List[_T]
     next_cursor: Optional[str] = None
@@ -135,3 +179,47 @@ class AsyncPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
             return None
 
         return PageInfo(params={"cursor": next_cursor})
+
+
+class SyncContentsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    data: List[_T]
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        data = self.data
+        if not data:
+            return []
+        return data
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        offset = self._options.params.get("offset") or 0
+        if not isinstance(offset, int):
+            raise ValueError(f'Expected "offset" param to be an integer but got {offset}')
+
+        length = len(self._get_page_items())
+        current_count = offset + length
+
+        return PageInfo(params={"offset": current_count})
+
+
+class AsyncContentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    data: List[_T]
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        data = self.data
+        if not data:
+            return []
+        return data
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        offset = self._options.params.get("offset") or 0
+        if not isinstance(offset, int):
+            raise ValueError(f'Expected "offset" param to be an integer but got {offset}')
+
+        length = len(self._get_page_items())
+        current_count = offset + length
+
+        return PageInfo(params={"offset": current_count})

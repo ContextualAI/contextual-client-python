@@ -4,11 +4,28 @@ from __future__ import annotations
 
 import httpx
 
-from ...types import datastore_list_params, datastore_create_params
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from ..._utils import (
-    maybe_transform,
-    async_maybe_transform,
+from .chunks import (
+    ChunksResource,
+    AsyncChunksResource,
+    ChunksResourceWithRawResponse,
+    AsyncChunksResourceWithRawResponse,
+    ChunksResourceWithStreamingResponse,
+    AsyncChunksResourceWithStreamingResponse,
+)
+from ...types import (
+    datastore_list_params,
+    datastore_create_params,
+    datastore_update_params,
+)
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._utils import maybe_transform, async_maybe_transform
+from .contents import (
+    ContentsResource,
+    AsyncContentsResource,
+    ContentsResourceWithRawResponse,
+    AsyncContentsResourceWithRawResponse,
+    ContentsResourceWithStreamingResponse,
+    AsyncContentsResourceWithStreamingResponse,
 )
 from ..._compat import cached_property
 from .documents import (
@@ -30,7 +47,11 @@ from ...pagination import SyncDatastoresPage, AsyncDatastoresPage
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.datastore import Datastore
 from ...types.datastore_metadata import DatastoreMetadata
+from ...types.datastore_reset_response import DatastoreResetResponse
 from ...types.create_datastore_response import CreateDatastoreResponse
+from ...types.datastore_delete_response import DatastoreDeleteResponse
+from ...types.datastore_update_response import DatastoreUpdateResponse
+from ...types.unstructured_datastore_config_model_param import UnstructuredDatastoreConfigModelParam
 
 __all__ = ["DatastoresResource", "AsyncDatastoresResource"]
 
@@ -39,6 +60,14 @@ class DatastoresResource(SyncAPIResource):
     @cached_property
     def documents(self) -> DocumentsResource:
         return DocumentsResource(self._client)
+
+    @cached_property
+    def contents(self) -> ContentsResource:
+        return ContentsResource(self._client)
+
+    @cached_property
+    def chunks(self) -> ChunksResource:
+        return ChunksResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> DatastoresResourceWithRawResponse:
@@ -63,12 +92,13 @@ class DatastoresResource(SyncAPIResource):
         self,
         *,
         name: str,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateDatastoreResponse:
         """Create a new `Datastore`.
 
@@ -83,8 +113,15 @@ class DatastoresResource(SyncAPIResource):
         from multiple sources of information. This linkage of `Datastore` to `Agent` is
         done through the `Create Agent` or `Edit Agent` APIs.
 
+        > Note that self-serve users are currently required to create datastores through
+        > our UI. Otherwise, they will receive the following message: "This endpoint is
+        > disabled as you need to go through checkout. Please use the UI to make this
+        > request."
+
         Args:
           name: Name of the datastore
+
+          configuration: Configuration of the datastore. If not provided, default configuration is used.
 
           extra_headers: Send extra headers
 
@@ -96,25 +133,80 @@ class DatastoresResource(SyncAPIResource):
         """
         return self._post(
             "/datastores",
-            body=maybe_transform({"name": name}, datastore_create_params.DatastoreCreateParams),
+            body=maybe_transform(
+                {
+                    "name": name,
+                    "configuration": configuration,
+                },
+                datastore_create_params.DatastoreCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=CreateDatastoreResponse,
         )
 
-    def list(
+    def update(
         self,
+        datastore_id: str,
         *,
-        agent_id: str | NotGiven = NOT_GIVEN,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
+        name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> DatastoreUpdateResponse:
+        """
+        Edit Datastore Configuration
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          configuration: Configuration of the datastore. If not provided, current configuration is
+              retained.
+
+          name: Name of the datastore
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return self._put(
+            f"/datastores/{datastore_id}",
+            body=maybe_transform(
+                {
+                    "configuration": configuration,
+                    "name": name,
+                },
+                datastore_update_params.DatastoreUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreUpdateResponse,
+        )
+
+    def list(
+        self,
+        *,
+        agent_id: str | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncDatastoresPage[Datastore]:
         """
         Retrieve a list of `Datastores`.
@@ -169,8 +261,8 @@ class DatastoresResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> DatastoreDeleteResponse:
         """Delete a given `Datastore`, including all the documents ingested into it.
 
         This
@@ -197,7 +289,7 @@ class DatastoresResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DatastoreDeleteResponse,
         )
 
     def metadata(
@@ -209,7 +301,7 @@ class DatastoresResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatastoreMetadata:
         """
         Get the details of a given `Datastore`, including its name, create time, and the
@@ -236,11 +328,56 @@ class DatastoresResource(SyncAPIResource):
             cast_to=DatastoreMetadata,
         )
 
+    def reset(
+        self,
+        datastore_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> DatastoreResetResponse:
+        """Reset the give `Datastore`.
+
+        This operation is irreversible and it deletes all
+        the documents associated with the datastore.
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return self._put(
+            f"/datastores/{datastore_id}/reset",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreResetResponse,
+        )
+
 
 class AsyncDatastoresResource(AsyncAPIResource):
     @cached_property
     def documents(self) -> AsyncDocumentsResource:
         return AsyncDocumentsResource(self._client)
+
+    @cached_property
+    def contents(self) -> AsyncContentsResource:
+        return AsyncContentsResource(self._client)
+
+    @cached_property
+    def chunks(self) -> AsyncChunksResource:
+        return AsyncChunksResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncDatastoresResourceWithRawResponse:
@@ -265,12 +402,13 @@ class AsyncDatastoresResource(AsyncAPIResource):
         self,
         *,
         name: str,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CreateDatastoreResponse:
         """Create a new `Datastore`.
 
@@ -285,8 +423,15 @@ class AsyncDatastoresResource(AsyncAPIResource):
         from multiple sources of information. This linkage of `Datastore` to `Agent` is
         done through the `Create Agent` or `Edit Agent` APIs.
 
+        > Note that self-serve users are currently required to create datastores through
+        > our UI. Otherwise, they will receive the following message: "This endpoint is
+        > disabled as you need to go through checkout. Please use the UI to make this
+        > request."
+
         Args:
           name: Name of the datastore
+
+          configuration: Configuration of the datastore. If not provided, default configuration is used.
 
           extra_headers: Send extra headers
 
@@ -298,25 +443,80 @@ class AsyncDatastoresResource(AsyncAPIResource):
         """
         return await self._post(
             "/datastores",
-            body=await async_maybe_transform({"name": name}, datastore_create_params.DatastoreCreateParams),
+            body=await async_maybe_transform(
+                {
+                    "name": name,
+                    "configuration": configuration,
+                },
+                datastore_create_params.DatastoreCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=CreateDatastoreResponse,
         )
 
-    def list(
+    async def update(
         self,
+        datastore_id: str,
         *,
-        agent_id: str | NotGiven = NOT_GIVEN,
-        cursor: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
+        configuration: UnstructuredDatastoreConfigModelParam | Omit = omit,
+        name: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> DatastoreUpdateResponse:
+        """
+        Edit Datastore Configuration
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          configuration: Configuration of the datastore. If not provided, current configuration is
+              retained.
+
+          name: Name of the datastore
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return await self._put(
+            f"/datastores/{datastore_id}",
+            body=await async_maybe_transform(
+                {
+                    "configuration": configuration,
+                    "name": name,
+                },
+                datastore_update_params.DatastoreUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreUpdateResponse,
+        )
+
+    def list(
+        self,
+        *,
+        agent_id: str | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Datastore, AsyncDatastoresPage[Datastore]]:
         """
         Retrieve a list of `Datastores`.
@@ -371,8 +571,8 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> DatastoreDeleteResponse:
         """Delete a given `Datastore`, including all the documents ingested into it.
 
         This
@@ -399,7 +599,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=DatastoreDeleteResponse,
         )
 
     async def metadata(
@@ -411,7 +611,7 @@ class AsyncDatastoresResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatastoreMetadata:
         """
         Get the details of a given `Datastore`, including its name, create time, and the
@@ -438,6 +638,43 @@ class AsyncDatastoresResource(AsyncAPIResource):
             cast_to=DatastoreMetadata,
         )
 
+    async def reset(
+        self,
+        datastore_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> DatastoreResetResponse:
+        """Reset the give `Datastore`.
+
+        This operation is irreversible and it deletes all
+        the documents associated with the datastore.
+
+        Args:
+          datastore_id: ID of the datastore to edit
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not datastore_id:
+            raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
+        return await self._put(
+            f"/datastores/{datastore_id}/reset",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=DatastoreResetResponse,
+        )
+
 
 class DatastoresResourceWithRawResponse:
     def __init__(self, datastores: DatastoresResource) -> None:
@@ -445,6 +682,9 @@ class DatastoresResourceWithRawResponse:
 
         self.create = to_raw_response_wrapper(
             datastores.create,
+        )
+        self.update = to_raw_response_wrapper(
+            datastores.update,
         )
         self.list = to_raw_response_wrapper(
             datastores.list,
@@ -455,10 +695,21 @@ class DatastoresResourceWithRawResponse:
         self.metadata = to_raw_response_wrapper(
             datastores.metadata,
         )
+        self.reset = to_raw_response_wrapper(
+            datastores.reset,
+        )
 
     @cached_property
     def documents(self) -> DocumentsResourceWithRawResponse:
         return DocumentsResourceWithRawResponse(self._datastores.documents)
+
+    @cached_property
+    def contents(self) -> ContentsResourceWithRawResponse:
+        return ContentsResourceWithRawResponse(self._datastores.contents)
+
+    @cached_property
+    def chunks(self) -> ChunksResourceWithRawResponse:
+        return ChunksResourceWithRawResponse(self._datastores.chunks)
 
 
 class AsyncDatastoresResourceWithRawResponse:
@@ -467,6 +718,9 @@ class AsyncDatastoresResourceWithRawResponse:
 
         self.create = async_to_raw_response_wrapper(
             datastores.create,
+        )
+        self.update = async_to_raw_response_wrapper(
+            datastores.update,
         )
         self.list = async_to_raw_response_wrapper(
             datastores.list,
@@ -477,10 +731,21 @@ class AsyncDatastoresResourceWithRawResponse:
         self.metadata = async_to_raw_response_wrapper(
             datastores.metadata,
         )
+        self.reset = async_to_raw_response_wrapper(
+            datastores.reset,
+        )
 
     @cached_property
     def documents(self) -> AsyncDocumentsResourceWithRawResponse:
         return AsyncDocumentsResourceWithRawResponse(self._datastores.documents)
+
+    @cached_property
+    def contents(self) -> AsyncContentsResourceWithRawResponse:
+        return AsyncContentsResourceWithRawResponse(self._datastores.contents)
+
+    @cached_property
+    def chunks(self) -> AsyncChunksResourceWithRawResponse:
+        return AsyncChunksResourceWithRawResponse(self._datastores.chunks)
 
 
 class DatastoresResourceWithStreamingResponse:
@@ -489,6 +754,9 @@ class DatastoresResourceWithStreamingResponse:
 
         self.create = to_streamed_response_wrapper(
             datastores.create,
+        )
+        self.update = to_streamed_response_wrapper(
+            datastores.update,
         )
         self.list = to_streamed_response_wrapper(
             datastores.list,
@@ -499,10 +767,21 @@ class DatastoresResourceWithStreamingResponse:
         self.metadata = to_streamed_response_wrapper(
             datastores.metadata,
         )
+        self.reset = to_streamed_response_wrapper(
+            datastores.reset,
+        )
 
     @cached_property
     def documents(self) -> DocumentsResourceWithStreamingResponse:
         return DocumentsResourceWithStreamingResponse(self._datastores.documents)
+
+    @cached_property
+    def contents(self) -> ContentsResourceWithStreamingResponse:
+        return ContentsResourceWithStreamingResponse(self._datastores.contents)
+
+    @cached_property
+    def chunks(self) -> ChunksResourceWithStreamingResponse:
+        return ChunksResourceWithStreamingResponse(self._datastores.chunks)
 
 
 class AsyncDatastoresResourceWithStreamingResponse:
@@ -511,6 +790,9 @@ class AsyncDatastoresResourceWithStreamingResponse:
 
         self.create = async_to_streamed_response_wrapper(
             datastores.create,
+        )
+        self.update = async_to_streamed_response_wrapper(
+            datastores.update,
         )
         self.list = async_to_streamed_response_wrapper(
             datastores.list,
@@ -521,7 +803,18 @@ class AsyncDatastoresResourceWithStreamingResponse:
         self.metadata = async_to_streamed_response_wrapper(
             datastores.metadata,
         )
+        self.reset = async_to_streamed_response_wrapper(
+            datastores.reset,
+        )
 
     @cached_property
     def documents(self) -> AsyncDocumentsResourceWithStreamingResponse:
         return AsyncDocumentsResourceWithStreamingResponse(self._datastores.documents)
+
+    @cached_property
+    def contents(self) -> AsyncContentsResourceWithStreamingResponse:
+        return AsyncContentsResourceWithStreamingResponse(self._datastores.contents)
+
+    @cached_property
+    def chunks(self) -> AsyncChunksResourceWithStreamingResponse:
+        return AsyncChunksResourceWithStreamingResponse(self._datastores.chunks)

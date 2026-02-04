@@ -1,12 +1,13 @@
 # Contextual AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/contextual-client.svg)](https://pypi.org/project/contextual-client/)
+<!-- prettier-ignore -->
+[![PyPI version](https://img.shields.io/pypi/v/contextual-client.svg?label=pypi%20(stable))](https://pypi.org/project/contextual-client/)
 
-The Contextual AI Python library provides convenient access to the Contextual AI REST API from any Python 3.8+
+The Contextual AI Python library provides convenient access to the Contextual AI REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
@@ -32,7 +33,7 @@ client = ContextualAI(
 )
 
 create_agent_output = client.agents.create(
-    name="xxx",
+    name="Example",
 )
 print(create_agent_output.id)
 ```
@@ -58,7 +59,7 @@ client = AsyncContextualAI(
 
 async def main() -> None:
     create_agent_output = await client.agents.create(
-        name="xxx",
+        name="Example",
     )
     print(create_agent_output.id)
 
@@ -67,6 +68,40 @@ asyncio.run(main())
 ```
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
+
+### With aiohttp
+
+By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+
+You can enable this by installing `aiohttp`:
+
+```sh
+# install from PyPI
+pip install contextual-client[aiohttp]
+```
+
+Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+
+```python
+import os
+import asyncio
+from contextual import DefaultAioHttpClient
+from contextual import AsyncContextualAI
+
+
+async def main() -> None:
+    async with AsyncContextualAI(
+        api_key=os.environ.get("CONTEXTUAL_API_KEY"),  # This is the default and can be omitted
+        http_client=DefaultAioHttpClient(),
+    ) as client:
+        create_agent_output = await client.agents.create(
+            name="Example",
+        )
+        print(create_agent_output.id)
+
+
+asyncio.run(main())
+```
 
 ## Using types
 
@@ -140,6 +175,40 @@ for agent in first_page.agents:
 # Remove `await` for non-async usage.
 ```
 
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from contextual import ContextualAI
+
+client = ContextualAI()
+
+create_agent_output = client.agents.create(
+    name="xxx",
+    agent_configs={},
+)
+print(create_agent_output.agent_configs)
+```
+
+## File uploads
+
+Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
+
+```python
+from pathlib import Path
+from contextual import ContextualAI
+
+client = ContextualAI()
+
+client.datastores.documents.ingest(
+    datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+    file=Path("/path/to/file"),
+)
+```
+
+The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
+
 ## Handling errors
 
 When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `contextual.APIConnectionError` is raised.
@@ -157,7 +226,7 @@ client = ContextualAI()
 
 try:
     client.agents.create(
-        name="xxx",
+        name="Example",
     )
 except contextual.APIConnectionError as e:
     print("The server could not be reached")
@@ -202,14 +271,14 @@ client = ContextualAI(
 
 # Or, configure per-request:
 client.with_options(max_retries=5).agents.create(
-    name="xxx",
+    name="Example",
 )
 ```
 
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
 from contextual import ContextualAI
@@ -227,7 +296,7 @@ client = ContextualAI(
 
 # Override per-request:
 client.with_options(timeout=5.0).agents.create(
-    name="xxx",
+    name="Example",
 )
 ```
 
@@ -270,7 +339,7 @@ from contextual import ContextualAI
 
 client = ContextualAI()
 response = client.agents.with_raw_response.create(
-    name="xxx",
+    name="Example",
 )
 print(response.headers.get('X-My-Header'))
 
@@ -290,7 +359,7 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 
 ```python
 with client.agents.with_streaming_response.create(
-    name="xxx",
+    name="Example",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
@@ -401,7 +470,7 @@ print(contextual.__version__)
 
 ## Requirements
 
-Python 3.8 or higher.
+Python 3.9 or higher.
 
 ## Contributing
 

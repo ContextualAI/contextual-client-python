@@ -18,6 +18,9 @@ class DocumentListParams(TypedDict, total=False):
     of results
     """
 
+    document_name_prefix: str
+    """Filters documents with the given prefix."""
+
     ingestion_job_status: List[Literal["pending", "processing", "retrying", "completed", "failed", "cancelled"]]
     """
     Filters documents whose ingestion job status matches (one of) the provided

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Union, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -11,20 +11,17 @@ import httpx
 from . import _exceptions
 from ._qs import Querystring
 from ._types import (
-    NOT_GIVEN,
     Omit,
     Timeout,
     NotGiven,
     Transport,
     ProxiesTypes,
     RequestOptions,
+    not_given,
 )
-from ._utils import (
-    is_given,
-    get_async_library,
-)
+from ._utils import is_given, get_async_library
+from ._compat import cached_property
 from ._version import __version__
-from .resources import lmunit
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, ContextualAIError
 from ._base_client import (
@@ -32,8 +29,16 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
-from .resources.agents import agents
-from .resources.datastores import datastores
+
+if TYPE_CHECKING:
+    from .resources import parse, users, agents, lmunit, rerank, generate, datastores
+    from .resources.parse import ParseResource, AsyncParseResource
+    from .resources.users import UsersResource, AsyncUsersResource
+    from .resources.lmunit import LMUnitResource, AsyncLMUnitResource
+    from .resources.rerank import RerankResource, AsyncRerankResource
+    from .resources.generate import GenerateResource, AsyncGenerateResource
+    from .resources.agents.agents import AgentsResource, AsyncAgentsResource
+    from .resources.datastores.datastores import DatastoresResource, AsyncDatastoresResource
 
 __all__ = [
     "Timeout",
@@ -48,12 +53,6 @@ __all__ = [
 
 
 class ContextualAI(SyncAPIClient):
-    datastores: datastores.DatastoresResource
-    agents: agents.AgentsResource
-    lmunit: lmunit.LMUnitResource
-    with_raw_response: ContextualAIWithRawResponse
-    with_streaming_response: ContextualAIWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -62,7 +61,7 @@ class ContextualAI(SyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -80,7 +79,7 @@ class ContextualAI(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous Contextual AI client instance.
+        """Construct a new synchronous ContextualAI client instance.
 
         This automatically infers the `api_key` argument from the `CONTEXTUAL_API_KEY` environment variable if it is not provided.
         """
@@ -108,11 +107,55 @@ class ContextualAI(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.datastores = datastores.DatastoresResource(self)
-        self.agents = agents.AgentsResource(self)
-        self.lmunit = lmunit.LMUnitResource(self)
-        self.with_raw_response = ContextualAIWithRawResponse(self)
-        self.with_streaming_response = ContextualAIWithStreamedResponse(self)
+    @cached_property
+    def datastores(self) -> DatastoresResource:
+        from .resources.datastores import DatastoresResource
+
+        return DatastoresResource(self)
+
+    @cached_property
+    def agents(self) -> AgentsResource:
+        from .resources.agents import AgentsResource
+
+        return AgentsResource(self)
+
+    @cached_property
+    def users(self) -> UsersResource:
+        from .resources.users import UsersResource
+
+        return UsersResource(self)
+
+    @cached_property
+    def lmunit(self) -> LMUnitResource:
+        from .resources.lmunit import LMUnitResource
+
+        return LMUnitResource(self)
+
+    @cached_property
+    def rerank(self) -> RerankResource:
+        from .resources.rerank import RerankResource
+
+        return RerankResource(self)
+
+    @cached_property
+    def generate(self) -> GenerateResource:
+        from .resources.generate import GenerateResource
+
+        return GenerateResource(self)
+
+    @cached_property
+    def parse(self) -> ParseResource:
+        from .resources.parse import ParseResource
+
+        return ParseResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> ContextualAIWithRawResponse:
+        return ContextualAIWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> ContextualAIWithStreamedResponse:
+        return ContextualAIWithStreamedResponse(self)
 
     @property
     @override
@@ -139,9 +182,9 @@ class ContextualAI(SyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -220,12 +263,6 @@ class ContextualAI(SyncAPIClient):
 
 
 class AsyncContextualAI(AsyncAPIClient):
-    datastores: datastores.AsyncDatastoresResource
-    agents: agents.AsyncAgentsResource
-    lmunit: lmunit.AsyncLMUnitResource
-    with_raw_response: AsyncContextualAIWithRawResponse
-    with_streaming_response: AsyncContextualAIWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -234,7 +271,7 @@ class AsyncContextualAI(AsyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -252,7 +289,7 @@ class AsyncContextualAI(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async Contextual AI client instance.
+        """Construct a new async AsyncContextualAI client instance.
 
         This automatically infers the `api_key` argument from the `CONTEXTUAL_API_KEY` environment variable if it is not provided.
         """
@@ -280,11 +317,55 @@ class AsyncContextualAI(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.datastores = datastores.AsyncDatastoresResource(self)
-        self.agents = agents.AsyncAgentsResource(self)
-        self.lmunit = lmunit.AsyncLMUnitResource(self)
-        self.with_raw_response = AsyncContextualAIWithRawResponse(self)
-        self.with_streaming_response = AsyncContextualAIWithStreamedResponse(self)
+    @cached_property
+    def datastores(self) -> AsyncDatastoresResource:
+        from .resources.datastores import AsyncDatastoresResource
+
+        return AsyncDatastoresResource(self)
+
+    @cached_property
+    def agents(self) -> AsyncAgentsResource:
+        from .resources.agents import AsyncAgentsResource
+
+        return AsyncAgentsResource(self)
+
+    @cached_property
+    def users(self) -> AsyncUsersResource:
+        from .resources.users import AsyncUsersResource
+
+        return AsyncUsersResource(self)
+
+    @cached_property
+    def lmunit(self) -> AsyncLMUnitResource:
+        from .resources.lmunit import AsyncLMUnitResource
+
+        return AsyncLMUnitResource(self)
+
+    @cached_property
+    def rerank(self) -> AsyncRerankResource:
+        from .resources.rerank import AsyncRerankResource
+
+        return AsyncRerankResource(self)
+
+    @cached_property
+    def generate(self) -> AsyncGenerateResource:
+        from .resources.generate import AsyncGenerateResource
+
+        return AsyncGenerateResource(self)
+
+    @cached_property
+    def parse(self) -> AsyncParseResource:
+        from .resources.parse import AsyncParseResource
+
+        return AsyncParseResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncContextualAIWithRawResponse:
+        return AsyncContextualAIWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncContextualAIWithStreamedResponse:
+        return AsyncContextualAIWithStreamedResponse(self)
 
     @property
     @override
@@ -311,9 +392,9 @@ class AsyncContextualAI(AsyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -392,31 +473,199 @@ class AsyncContextualAI(AsyncAPIClient):
 
 
 class ContextualAIWithRawResponse:
+    _client: ContextualAI
+
     def __init__(self, client: ContextualAI) -> None:
-        self.datastores = datastores.DatastoresResourceWithRawResponse(client.datastores)
-        self.agents = agents.AgentsResourceWithRawResponse(client.agents)
-        self.lmunit = lmunit.LMUnitResourceWithRawResponse(client.lmunit)
+        self._client = client
+
+    @cached_property
+    def datastores(self) -> datastores.DatastoresResourceWithRawResponse:
+        from .resources.datastores import DatastoresResourceWithRawResponse
+
+        return DatastoresResourceWithRawResponse(self._client.datastores)
+
+    @cached_property
+    def agents(self) -> agents.AgentsResourceWithRawResponse:
+        from .resources.agents import AgentsResourceWithRawResponse
+
+        return AgentsResourceWithRawResponse(self._client.agents)
+
+    @cached_property
+    def users(self) -> users.UsersResourceWithRawResponse:
+        from .resources.users import UsersResourceWithRawResponse
+
+        return UsersResourceWithRawResponse(self._client.users)
+
+    @cached_property
+    def lmunit(self) -> lmunit.LMUnitResourceWithRawResponse:
+        from .resources.lmunit import LMUnitResourceWithRawResponse
+
+        return LMUnitResourceWithRawResponse(self._client.lmunit)
+
+    @cached_property
+    def rerank(self) -> rerank.RerankResourceWithRawResponse:
+        from .resources.rerank import RerankResourceWithRawResponse
+
+        return RerankResourceWithRawResponse(self._client.rerank)
+
+    @cached_property
+    def generate(self) -> generate.GenerateResourceWithRawResponse:
+        from .resources.generate import GenerateResourceWithRawResponse
+
+        return GenerateResourceWithRawResponse(self._client.generate)
+
+    @cached_property
+    def parse(self) -> parse.ParseResourceWithRawResponse:
+        from .resources.parse import ParseResourceWithRawResponse
+
+        return ParseResourceWithRawResponse(self._client.parse)
 
 
 class AsyncContextualAIWithRawResponse:
+    _client: AsyncContextualAI
+
     def __init__(self, client: AsyncContextualAI) -> None:
-        self.datastores = datastores.AsyncDatastoresResourceWithRawResponse(client.datastores)
-        self.agents = agents.AsyncAgentsResourceWithRawResponse(client.agents)
-        self.lmunit = lmunit.AsyncLMUnitResourceWithRawResponse(client.lmunit)
+        self._client = client
+
+    @cached_property
+    def datastores(self) -> datastores.AsyncDatastoresResourceWithRawResponse:
+        from .resources.datastores import AsyncDatastoresResourceWithRawResponse
+
+        return AsyncDatastoresResourceWithRawResponse(self._client.datastores)
+
+    @cached_property
+    def agents(self) -> agents.AsyncAgentsResourceWithRawResponse:
+        from .resources.agents import AsyncAgentsResourceWithRawResponse
+
+        return AsyncAgentsResourceWithRawResponse(self._client.agents)
+
+    @cached_property
+    def users(self) -> users.AsyncUsersResourceWithRawResponse:
+        from .resources.users import AsyncUsersResourceWithRawResponse
+
+        return AsyncUsersResourceWithRawResponse(self._client.users)
+
+    @cached_property
+    def lmunit(self) -> lmunit.AsyncLMUnitResourceWithRawResponse:
+        from .resources.lmunit import AsyncLMUnitResourceWithRawResponse
+
+        return AsyncLMUnitResourceWithRawResponse(self._client.lmunit)
+
+    @cached_property
+    def rerank(self) -> rerank.AsyncRerankResourceWithRawResponse:
+        from .resources.rerank import AsyncRerankResourceWithRawResponse
+
+        return AsyncRerankResourceWithRawResponse(self._client.rerank)
+
+    @cached_property
+    def generate(self) -> generate.AsyncGenerateResourceWithRawResponse:
+        from .resources.generate import AsyncGenerateResourceWithRawResponse
+
+        return AsyncGenerateResourceWithRawResponse(self._client.generate)
+
+    @cached_property
+    def parse(self) -> parse.AsyncParseResourceWithRawResponse:
+        from .resources.parse import AsyncParseResourceWithRawResponse
+
+        return AsyncParseResourceWithRawResponse(self._client.parse)
 
 
 class ContextualAIWithStreamedResponse:
+    _client: ContextualAI
+
     def __init__(self, client: ContextualAI) -> None:
-        self.datastores = datastores.DatastoresResourceWithStreamingResponse(client.datastores)
-        self.agents = agents.AgentsResourceWithStreamingResponse(client.agents)
-        self.lmunit = lmunit.LMUnitResourceWithStreamingResponse(client.lmunit)
+        self._client = client
+
+    @cached_property
+    def datastores(self) -> datastores.DatastoresResourceWithStreamingResponse:
+        from .resources.datastores import DatastoresResourceWithStreamingResponse
+
+        return DatastoresResourceWithStreamingResponse(self._client.datastores)
+
+    @cached_property
+    def agents(self) -> agents.AgentsResourceWithStreamingResponse:
+        from .resources.agents import AgentsResourceWithStreamingResponse
+
+        return AgentsResourceWithStreamingResponse(self._client.agents)
+
+    @cached_property
+    def users(self) -> users.UsersResourceWithStreamingResponse:
+        from .resources.users import UsersResourceWithStreamingResponse
+
+        return UsersResourceWithStreamingResponse(self._client.users)
+
+    @cached_property
+    def lmunit(self) -> lmunit.LMUnitResourceWithStreamingResponse:
+        from .resources.lmunit import LMUnitResourceWithStreamingResponse
+
+        return LMUnitResourceWithStreamingResponse(self._client.lmunit)
+
+    @cached_property
+    def rerank(self) -> rerank.RerankResourceWithStreamingResponse:
+        from .resources.rerank import RerankResourceWithStreamingResponse
+
+        return RerankResourceWithStreamingResponse(self._client.rerank)
+
+    @cached_property
+    def generate(self) -> generate.GenerateResourceWithStreamingResponse:
+        from .resources.generate import GenerateResourceWithStreamingResponse
+
+        return GenerateResourceWithStreamingResponse(self._client.generate)
+
+    @cached_property
+    def parse(self) -> parse.ParseResourceWithStreamingResponse:
+        from .resources.parse import ParseResourceWithStreamingResponse
+
+        return ParseResourceWithStreamingResponse(self._client.parse)
 
 
 class AsyncContextualAIWithStreamedResponse:
+    _client: AsyncContextualAI
+
     def __init__(self, client: AsyncContextualAI) -> None:
-        self.datastores = datastores.AsyncDatastoresResourceWithStreamingResponse(client.datastores)
-        self.agents = agents.AsyncAgentsResourceWithStreamingResponse(client.agents)
-        self.lmunit = lmunit.AsyncLMUnitResourceWithStreamingResponse(client.lmunit)
+        self._client = client
+
+    @cached_property
+    def datastores(self) -> datastores.AsyncDatastoresResourceWithStreamingResponse:
+        from .resources.datastores import AsyncDatastoresResourceWithStreamingResponse
+
+        return AsyncDatastoresResourceWithStreamingResponse(self._client.datastores)
+
+    @cached_property
+    def agents(self) -> agents.AsyncAgentsResourceWithStreamingResponse:
+        from .resources.agents import AsyncAgentsResourceWithStreamingResponse
+
+        return AsyncAgentsResourceWithStreamingResponse(self._client.agents)
+
+    @cached_property
+    def users(self) -> users.AsyncUsersResourceWithStreamingResponse:
+        from .resources.users import AsyncUsersResourceWithStreamingResponse
+
+        return AsyncUsersResourceWithStreamingResponse(self._client.users)
+
+    @cached_property
+    def lmunit(self) -> lmunit.AsyncLMUnitResourceWithStreamingResponse:
+        from .resources.lmunit import AsyncLMUnitResourceWithStreamingResponse
+
+        return AsyncLMUnitResourceWithStreamingResponse(self._client.lmunit)
+
+    @cached_property
+    def rerank(self) -> rerank.AsyncRerankResourceWithStreamingResponse:
+        from .resources.rerank import AsyncRerankResourceWithStreamingResponse
+
+        return AsyncRerankResourceWithStreamingResponse(self._client.rerank)
+
+    @cached_property
+    def generate(self) -> generate.AsyncGenerateResourceWithStreamingResponse:
+        from .resources.generate import AsyncGenerateResourceWithStreamingResponse
+
+        return AsyncGenerateResourceWithStreamingResponse(self._client.generate)
+
+    @cached_property
+    def parse(self) -> parse.AsyncParseResourceWithStreamingResponse:
+        from .resources.parse import AsyncParseResourceWithStreamingResponse
+
+        return AsyncParseResourceWithStreamingResponse(self._client.parse)
 
 
 Client = ContextualAI

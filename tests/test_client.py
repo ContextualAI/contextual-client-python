@@ -6,15 +6,13 @@ import gc
 import os
 import sys
 import json
-import time
 import asyncio
 import inspect
-import subprocess
+import dataclasses
 import tracemalloc
-from typing import Any, Union, cast
-from textwrap import dedent
+from typing import Any, Union, TypeVar, Callable, Iterable, Iterator, Optional, Coroutine, cast
 from unittest import mock
-from typing_extensions import Literal
+from typing_extensions import Literal, AsyncIterator, override
 
 import httpx
 import pytest
@@ -23,18 +21,23 @@ from pydantic import ValidationError
 
 from contextual import ContextualAI, AsyncContextualAI, APIResponseValidationError
 from contextual._types import Omit
+from contextual._utils import asyncify
 from contextual._models import BaseModel, FinalRequestOptions
-from contextual._constants import RAW_RESPONSE_HEADER
 from contextual._exceptions import APIStatusError, APITimeoutError, ContextualAIError, APIResponseValidationError
 from contextual._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
+    OtherPlatform,
+    DefaultHttpxClient,
+    DefaultAsyncHttpxClient,
+    get_platform,
     make_request_options,
 )
 
 from .utils import update_env
 
+T = TypeVar("T")
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 api_key = "My API Key"
 
@@ -49,6 +52,57 @@ def _low_retry_timeout(*_args: Any, **_kwargs: Any) -> float:
     return 0.1
 
 
+def mirror_request_content(request: httpx.Request) -> httpx.Response:
+    return httpx.Response(200, content=request.content)
+
+
+# note: we can't use the httpx.MockTransport class as it consumes the request
+#       body itself, which means we can't test that the body is read lazily
+class MockTransport(httpx.BaseTransport, httpx.AsyncBaseTransport):
+    def __init__(
+        self,
+        handler: Callable[[httpx.Request], httpx.Response]
+        | Callable[[httpx.Request], Coroutine[Any, Any, httpx.Response]],
+    ) -> None:
+        self.handler = handler
+
+    @override
+    def handle_request(
+        self,
+        request: httpx.Request,
+    ) -> httpx.Response:
+        assert not inspect.iscoroutinefunction(self.handler), "handler must not be a coroutine function"
+        assert inspect.isfunction(self.handler), "handler must be a function"
+        return self.handler(request)
+
+    @override
+    async def handle_async_request(
+        self,
+        request: httpx.Request,
+    ) -> httpx.Response:
+        assert inspect.iscoroutinefunction(self.handler), "handler must be a coroutine function"
+        return await self.handler(request)
+
+
+@dataclasses.dataclass
+class Counter:
+    value: int = 0
+
+
+def _make_sync_iterator(iterable: Iterable[T], counter: Optional[Counter] = None) -> Iterator[T]:
+    for item in iterable:
+        if counter:
+            counter.value += 1
+        yield item
+
+
+async def _make_async_iterator(iterable: Iterable[T], counter: Optional[Counter] = None) -> AsyncIterator[T]:
+    for item in iterable:
+        if counter:
+            counter.value += 1
+        yield item
+
+
 def _get_open_connections(client: ContextualAI | AsyncContextualAI) -> int:
     transport = client._client._transport
     assert isinstance(transport, httpx.HTTPTransport) or isinstance(transport, httpx.AsyncHTTPTransport)
@@ -58,51 +112,49 @@ def _get_open_connections(client: ContextualAI | AsyncContextualAI) -> int:
 
 
 class TestContextualAI:
-    client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-
     @pytest.mark.respx(base_url=base_url)
-    def test_raw_response(self, respx_mock: MockRouter) -> None:
+    def test_raw_response(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
-        response = self.client.post("/foo", cast_to=httpx.Response)
+        response = client.post("/foo", cast_to=httpx.Response)
         assert response.status_code == 200
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
-    def test_raw_response_for_binary(self, respx_mock: MockRouter) -> None:
+    def test_raw_response_for_binary(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         respx_mock.post("/foo").mock(
             return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
 
-        response = self.client.post("/foo", cast_to=httpx.Response)
+        response = client.post("/foo", cast_to=httpx.Response)
         assert response.status_code == 200
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
-    def test_copy(self) -> None:
-        copied = self.client.copy()
-        assert id(copied) != id(self.client)
+    def test_copy(self, client: ContextualAI) -> None:
+        copied = client.copy()
+        assert id(copied) != id(client)
 
-        copied = self.client.copy(api_key="another My API Key")
+        copied = client.copy(api_key="another My API Key")
         assert copied.api_key == "another My API Key"
-        assert self.client.api_key == "My API Key"
+        assert client.api_key == "My API Key"
 
-    def test_copy_default_options(self) -> None:
+    def test_copy_default_options(self, client: ContextualAI) -> None:
         # options that have a default are overridden correctly
-        copied = self.client.copy(max_retries=7)
+        copied = client.copy(max_retries=7)
         assert copied.max_retries == 7
-        assert self.client.max_retries == 2
+        assert client.max_retries == 2
 
         copied2 = copied.copy(max_retries=6)
         assert copied2.max_retries == 6
         assert copied.max_retries == 7
 
         # timeout
-        assert isinstance(self.client.timeout, httpx.Timeout)
-        copied = self.client.copy(timeout=None)
+        assert isinstance(client.timeout, httpx.Timeout)
+        copied = client.copy(timeout=None)
         assert copied.timeout is None
-        assert isinstance(self.client.timeout, httpx.Timeout)
+        assert isinstance(client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
         client = ContextualAI(
@@ -137,6 +189,7 @@ class TestContextualAI:
             match="`default_headers` and `set_default_headers` arguments are mutually exclusive",
         ):
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
+        client.close()
 
     def test_copy_default_query(self) -> None:
         client = ContextualAI(
@@ -174,13 +227,15 @@ class TestContextualAI:
         ):
             client.copy(set_default_query={}, default_query={"foo": "Bar"})
 
-    def test_copy_signature(self) -> None:
+        client.close()
+
+    def test_copy_signature(self, client: ContextualAI) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
-            self.client.__init__,  # type: ignore[misc]
+            client.__init__,  # type: ignore[misc]
         )
-        copy_signature = inspect.signature(self.client.copy)
+        copy_signature = inspect.signature(client.copy)
         exclude_params = {"transport", "proxies", "_strict_response_validation"}
 
         for name in init_signature.parameters.keys():
@@ -190,12 +245,13 @@ class TestContextualAI:
             copy_param = copy_signature.parameters.get(name)
             assert copy_param is not None, f"copy() signature is missing the {name} param"
 
-    def test_copy_build_request(self) -> None:
+    @pytest.mark.skipif(sys.version_info >= (3, 10), reason="fails because of a memory leak that started from 3.12")
+    def test_copy_build_request(self, client: ContextualAI) -> None:
         options = FinalRequestOptions(method="get", url="/foo")
 
         def build_request(options: FinalRequestOptions) -> None:
-            client = self.client.copy()
-            client._build_request(options)
+            client_copy = client.copy()
+            client_copy._build_request(options)
 
         # ensure that the machinery is warmed up before tracing starts.
         build_request(options)
@@ -252,14 +308,12 @@ class TestContextualAI:
                     print(frame)
             raise AssertionError()
 
-    def test_request_timeout(self) -> None:
-        request = self.client._build_request(FinalRequestOptions(method="get", url="/foo"))
+    def test_request_timeout(self, client: ContextualAI) -> None:
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
 
-        request = self.client._build_request(
-            FinalRequestOptions(method="get", url="/foo", timeout=httpx.Timeout(100.0))
-        )
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo", timeout=httpx.Timeout(100.0)))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == httpx.Timeout(100.0)
 
@@ -272,6 +326,8 @@ class TestContextualAI:
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == httpx.Timeout(0)
 
+        client.close()
+
     def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
@@ -283,6 +339,8 @@ class TestContextualAI:
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == httpx.Timeout(None)
 
+            client.close()
+
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
             client = ContextualAI(
@@ -293,6 +351,8 @@ class TestContextualAI:
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT
 
+            client.close()
+
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = ContextualAI(
@@ -302,6 +362,8 @@ class TestContextualAI:
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT  # our default
+
+            client.close()
 
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
@@ -314,14 +376,14 @@ class TestContextualAI:
                 )
 
     def test_default_headers_option(self) -> None:
-        client = ContextualAI(
+        test_client = ContextualAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
+        request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = ContextualAI(
+        test_client2 = ContextualAI(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -330,9 +392,12 @@ class TestContextualAI:
                 "X-Stainless-Lang": "my-overriding-header",
             },
         )
-        request = client2._build_request(FinalRequestOptions(method="get", url="/foo"))
+        request = test_client2._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "stainless"
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
+
+        test_client.close()
+        test_client2.close()
 
     def test_validate_headers(self) -> None:
         client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
@@ -362,8 +427,10 @@ class TestContextualAI:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    def test_request_extra_json(self) -> None:
-        request = self.client._build_request(
+        client.close()
+
+    def test_request_extra_json(self, client: ContextualAI) -> None:
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -374,7 +441,7 @@ class TestContextualAI:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": False}
 
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -385,7 +452,7 @@ class TestContextualAI:
         assert data == {"baz": False}
 
         # `extra_json` takes priority over `json_data` when keys clash
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -396,8 +463,8 @@ class TestContextualAI:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": None}
 
-    def test_request_extra_headers(self) -> None:
-        request = self.client._build_request(
+    def test_request_extra_headers(self, client: ContextualAI) -> None:
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -407,7 +474,7 @@ class TestContextualAI:
         assert request.headers.get("X-Foo") == "Foo"
 
         # `extra_headers` takes priority over `default_headers` when keys clash
-        request = self.client.with_options(default_headers={"X-Bar": "true"})._build_request(
+        request = client.with_options(default_headers={"X-Bar": "true"})._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -418,8 +485,8 @@ class TestContextualAI:
         )
         assert request.headers.get("X-Bar") == "false"
 
-    def test_request_extra_query(self) -> None:
-        request = self.client._build_request(
+    def test_request_extra_query(self, client: ContextualAI) -> None:
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -432,7 +499,7 @@ class TestContextualAI:
         assert params == {"my_query_param": "Foo"}
 
         # if both `query` and `extra_query` are given, they are merged
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -446,7 +513,7 @@ class TestContextualAI:
         assert params == {"bar": "1", "foo": "2"}
 
         # `extra_query` takes priority over `query` when keys clash
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -462,7 +529,7 @@ class TestContextualAI:
     def test_multipart_repeating_array(self, client: ContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions.construct(
-                method="get",
+                method="post",
                 url="/foo",
                 headers={"Content-Type": "multipart/form-data; boundary=6b7ba517decee4a450543ea6ae821c82"},
                 json_data={"array": ["foo", "bar"]},
@@ -489,7 +556,71 @@ class TestContextualAI:
         ]
 
     @pytest.mark.respx(base_url=base_url)
-    def test_basic_union_response(self, respx_mock: MockRouter) -> None:
+    def test_binary_content_upload(self, respx_mock: MockRouter, client: ContextualAI) -> None:
+        respx_mock.post("/upload").mock(side_effect=mirror_request_content)
+
+        file_content = b"Hello, this is a test file."
+
+        response = client.post(
+            "/upload",
+            content=file_content,
+            cast_to=httpx.Response,
+            options={"headers": {"Content-Type": "application/octet-stream"}},
+        )
+
+        assert response.status_code == 200
+        assert response.request.headers["Content-Type"] == "application/octet-stream"
+        assert response.content == file_content
+
+    def test_binary_content_upload_with_iterator(self) -> None:
+        file_content = b"Hello, this is a test file."
+        counter = Counter()
+        iterator = _make_sync_iterator([file_content], counter=counter)
+
+        def mock_handler(request: httpx.Request) -> httpx.Response:
+            assert counter.value == 0, "the request body should not have been read"
+            return httpx.Response(200, content=request.read())
+
+        with ContextualAI(
+            base_url=base_url,
+            api_key=api_key,
+            _strict_response_validation=True,
+            http_client=httpx.Client(transport=MockTransport(handler=mock_handler)),
+        ) as client:
+            response = client.post(
+                "/upload",
+                content=iterator,
+                cast_to=httpx.Response,
+                options={"headers": {"Content-Type": "application/octet-stream"}},
+            )
+
+            assert response.status_code == 200
+            assert response.request.headers["Content-Type"] == "application/octet-stream"
+            assert response.content == file_content
+            assert counter.value == 1
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_binary_content_upload_with_body_is_deprecated(self, respx_mock: MockRouter, client: ContextualAI) -> None:
+        respx_mock.post("/upload").mock(side_effect=mirror_request_content)
+
+        file_content = b"Hello, this is a test file."
+
+        with pytest.deprecated_call(
+            match="Passing raw bytes as `body` is deprecated and will be removed in a future version. Please pass raw bytes via the `content` parameter instead."
+        ):
+            response = client.post(
+                "/upload",
+                body=file_content,
+                cast_to=httpx.Response,
+                options={"headers": {"Content-Type": "application/octet-stream"}},
+            )
+
+        assert response.status_code == 200
+        assert response.request.headers["Content-Type"] == "application/octet-stream"
+        assert response.content == file_content
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_basic_union_response(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         class Model1(BaseModel):
             name: str
 
@@ -498,12 +629,12 @@ class TestContextualAI:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
-        response = self.client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
+        response = client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
         assert response.foo == "bar"
 
     @pytest.mark.respx(base_url=base_url)
-    def test_union_response_different_types(self, respx_mock: MockRouter) -> None:
+    def test_union_response_different_types(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         """Union of objects with the same field name using a different type"""
 
         class Model1(BaseModel):
@@ -514,18 +645,20 @@ class TestContextualAI:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
-        response = self.client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
+        response = client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
         assert response.foo == "bar"
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": 1}))
 
-        response = self.client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
+        response = client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model1)
         assert response.foo == 1
 
     @pytest.mark.respx(base_url=base_url)
-    def test_non_application_json_content_type_for_json_data(self, respx_mock: MockRouter) -> None:
+    def test_non_application_json_content_type_for_json_data(
+        self, respx_mock: MockRouter, client: ContextualAI
+    ) -> None:
         """
         Response that sets Content-Type to something other than application/json but returns json data
         """
@@ -541,7 +674,7 @@ class TestContextualAI:
             )
         )
 
-        response = self.client.get("/foo", cast_to=Model)
+        response = client.get("/foo", cast_to=Model)
         assert isinstance(response, Model)
         assert response.foo == 2
 
@@ -554,6 +687,8 @@ class TestContextualAI:
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
 
         assert client.base_url == "https://example.com/from_setter/"
+
+        client.close()
 
     def test_base_url_env(self) -> None:
         with update_env(CONTEXTUAL_AI_BASE_URL="http://localhost:5000/from/env"):
@@ -584,6 +719,7 @@ class TestContextualAI:
             ),
         )
         assert request.url == "http://localhost:5000/custom/path/foo"
+        client.close()
 
     @pytest.mark.parametrize(
         "client",
@@ -609,6 +745,7 @@ class TestContextualAI:
             ),
         )
         assert request.url == "http://localhost:5000/custom/path/foo"
+        client.close()
 
     @pytest.mark.parametrize(
         "client",
@@ -634,35 +771,36 @@ class TestContextualAI:
             ),
         )
         assert request.url == "https://myapi.com/foo"
+        client.close()
 
     def test_copied_client_does_not_close_http(self) -> None:
-        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-        assert not client.is_closed()
+        test_client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        assert not test_client.is_closed()
 
-        copied = client.copy()
-        assert copied is not client
+        copied = test_client.copy()
+        assert copied is not test_client
 
         del copied
 
-        assert not client.is_closed()
+        assert not test_client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-        with client as c2:
-            assert c2 is client
+        test_client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        with test_client as c2:
+            assert c2 is test_client
             assert not c2.is_closed()
-            assert not client.is_closed()
-        assert client.is_closed()
+            assert not test_client.is_closed()
+        assert test_client.is_closed()
 
     @pytest.mark.respx(base_url=base_url)
-    def test_client_response_validation_error(self, respx_mock: MockRouter) -> None:
+    def test_client_response_validation_error(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         class Model(BaseModel):
             foo: str
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": {"invalid": True}}))
 
         with pytest.raises(APIResponseValidationError) as exc:
-            self.client.get("/foo", cast_to=Model)
+            client.get("/foo", cast_to=Model)
 
         assert isinstance(exc.value.__cause__, ValidationError)
 
@@ -684,10 +822,13 @@ class TestContextualAI:
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
-        response = client.get("/foo", cast_to=Model)
+        response = non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
+
+        strict_client.close()
+        non_strict_client.close()
 
     @pytest.mark.parametrize(
         "remaining_retries,retry_after,timeout",
@@ -711,9 +852,9 @@ class TestContextualAI:
         ],
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
-    def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = ContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-
+    def test_parse_retry_after_header(
+        self, remaining_retries: int, retry_after: str, timeout: float, client: ContextualAI
+    ) -> None:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
@@ -721,33 +862,22 @@ class TestContextualAI:
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         respx_mock.post("/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            self.client.post(
-                "/agents",
-                body=cast(object, dict(name="xxx")),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
+            client.agents.with_streaming_response.create(name="xxx").__enter__()
 
-        assert _get_open_connections(self.client) == 0
+        assert _get_open_connections(client) == 0
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: ContextualAI) -> None:
         respx_mock.post("/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            self.client.post(
-                "/agents",
-                body=cast(object, dict(name="xxx")),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
-        assert _get_open_connections(self.client) == 0
+            client.agents.with_streaming_response.create(name="xxx").__enter__()
+        assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
@@ -826,57 +956,100 @@ class TestContextualAI:
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
+    def test_proxy_environment_variables(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        # Test that the proxy environment variables are set correctly
+        monkeypatch.setenv("HTTPS_PROXY", "https://example.org")
 
-class TestAsyncContextualAI:
-    client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = DefaultHttpxClient()
+
+        mounts = tuple(client._mounts.items())
+        assert len(mounts) == 1
+        assert mounts[0][0].pattern == "https://"
+
+    @pytest.mark.filterwarnings("ignore:.*deprecated.*:DeprecationWarning")
+    def test_default_client_creation(self) -> None:
+        # Ensure that the client can be initialized without any exceptions
+        DefaultHttpxClient(
+            verify=True,
+            cert=None,
+            trust_env=True,
+            http1=True,
+            http2=False,
+            limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
+        )
 
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
-    async def test_raw_response(self, respx_mock: MockRouter) -> None:
+    def test_follow_redirects(self, respx_mock: MockRouter, client: ContextualAI) -> None:
+        # Test that the default follow_redirects=True allows following redirects
+        respx_mock.post("/redirect").mock(
+            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+        )
+        respx_mock.get("/redirected").mock(return_value=httpx.Response(200, json={"status": "ok"}))
+
+        response = client.post("/redirect", body={"key": "value"}, cast_to=httpx.Response)
+        assert response.status_code == 200
+        assert response.json() == {"status": "ok"}
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_follow_redirects_disabled(self, respx_mock: MockRouter, client: ContextualAI) -> None:
+        # Test that follow_redirects=False prevents following redirects
+        respx_mock.post("/redirect").mock(
+            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+        )
+
+        with pytest.raises(APIStatusError) as exc_info:
+            client.post("/redirect", body={"key": "value"}, options={"follow_redirects": False}, cast_to=httpx.Response)
+
+        assert exc_info.value.response.status_code == 302
+        assert exc_info.value.response.headers["Location"] == f"{base_url}/redirected"
+
+
+class TestAsyncContextualAI:
+    @pytest.mark.respx(base_url=base_url)
+    async def test_raw_response(self, respx_mock: MockRouter, async_client: AsyncContextualAI) -> None:
         respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
-        response = await self.client.post("/foo", cast_to=httpx.Response)
+        response = await async_client.post("/foo", cast_to=httpx.Response)
         assert response.status_code == 200
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
-    async def test_raw_response_for_binary(self, respx_mock: MockRouter) -> None:
+    async def test_raw_response_for_binary(self, respx_mock: MockRouter, async_client: AsyncContextualAI) -> None:
         respx_mock.post("/foo").mock(
             return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
 
-        response = await self.client.post("/foo", cast_to=httpx.Response)
+        response = await async_client.post("/foo", cast_to=httpx.Response)
         assert response.status_code == 200
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
-    def test_copy(self) -> None:
-        copied = self.client.copy()
-        assert id(copied) != id(self.client)
+    def test_copy(self, async_client: AsyncContextualAI) -> None:
+        copied = async_client.copy()
+        assert id(copied) != id(async_client)
 
-        copied = self.client.copy(api_key="another My API Key")
+        copied = async_client.copy(api_key="another My API Key")
         assert copied.api_key == "another My API Key"
-        assert self.client.api_key == "My API Key"
+        assert async_client.api_key == "My API Key"
 
-    def test_copy_default_options(self) -> None:
+    def test_copy_default_options(self, async_client: AsyncContextualAI) -> None:
         # options that have a default are overridden correctly
-        copied = self.client.copy(max_retries=7)
+        copied = async_client.copy(max_retries=7)
         assert copied.max_retries == 7
-        assert self.client.max_retries == 2
+        assert async_client.max_retries == 2
 
         copied2 = copied.copy(max_retries=6)
         assert copied2.max_retries == 6
         assert copied.max_retries == 7
 
         # timeout
-        assert isinstance(self.client.timeout, httpx.Timeout)
-        copied = self.client.copy(timeout=None)
+        assert isinstance(async_client.timeout, httpx.Timeout)
+        copied = async_client.copy(timeout=None)
         assert copied.timeout is None
-        assert isinstance(self.client.timeout, httpx.Timeout)
+        assert isinstance(async_client.timeout, httpx.Timeout)
 
-    def test_copy_default_headers(self) -> None:
+    async def test_copy_default_headers(self) -> None:
         client = AsyncContextualAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
@@ -909,8 +1082,9 @@ class TestAsyncContextualAI:
             match="`default_headers` and `set_default_headers` arguments are mutually exclusive",
         ):
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
+        await client.close()
 
-    def test_copy_default_query(self) -> None:
+    async def test_copy_default_query(self) -> None:
         client = AsyncContextualAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
@@ -946,13 +1120,15 @@ class TestAsyncContextualAI:
         ):
             client.copy(set_default_query={}, default_query={"foo": "Bar"})
 
-    def test_copy_signature(self) -> None:
+        await client.close()
+
+    def test_copy_signature(self, async_client: AsyncContextualAI) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
-            self.client.__init__,  # type: ignore[misc]
+            async_client.__init__,  # type: ignore[misc]
         )
-        copy_signature = inspect.signature(self.client.copy)
+        copy_signature = inspect.signature(async_client.copy)
         exclude_params = {"transport", "proxies", "_strict_response_validation"}
 
         for name in init_signature.parameters.keys():
@@ -962,12 +1138,13 @@ class TestAsyncContextualAI:
             copy_param = copy_signature.parameters.get(name)
             assert copy_param is not None, f"copy() signature is missing the {name} param"
 
-    def test_copy_build_request(self) -> None:
+    @pytest.mark.skipif(sys.version_info >= (3, 10), reason="fails because of a memory leak that started from 3.12")
+    def test_copy_build_request(self, async_client: AsyncContextualAI) -> None:
         options = FinalRequestOptions(method="get", url="/foo")
 
         def build_request(options: FinalRequestOptions) -> None:
-            client = self.client.copy()
-            client._build_request(options)
+            client_copy = async_client.copy()
+            client_copy._build_request(options)
 
         # ensure that the machinery is warmed up before tracing starts.
         build_request(options)
@@ -1024,12 +1201,12 @@ class TestAsyncContextualAI:
                     print(frame)
             raise AssertionError()
 
-    async def test_request_timeout(self) -> None:
-        request = self.client._build_request(FinalRequestOptions(method="get", url="/foo"))
+    async def test_request_timeout(self, async_client: AsyncContextualAI) -> None:
+        request = async_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
 
-        request = self.client._build_request(
+        request = async_client._build_request(
             FinalRequestOptions(method="get", url="/foo", timeout=httpx.Timeout(100.0))
         )
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -1044,6 +1221,8 @@ class TestAsyncContextualAI:
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == httpx.Timeout(0)
 
+        await client.close()
+
     async def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
@@ -1055,6 +1234,8 @@ class TestAsyncContextualAI:
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == httpx.Timeout(None)
 
+            await client.close()
+
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
             client = AsyncContextualAI(
@@ -1064,6 +1245,8 @@ class TestAsyncContextualAI:
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT
+
+            await client.close()
 
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
@@ -1075,6 +1258,8 @@ class TestAsyncContextualAI:
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT  # our default
 
+            await client.close()
+
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             with httpx.Client() as http_client:
@@ -1085,15 +1270,15 @@ class TestAsyncContextualAI:
                     http_client=cast(Any, http_client),
                 )
 
-    def test_default_headers_option(self) -> None:
-        client = AsyncContextualAI(
+    async def test_default_headers_option(self) -> None:
+        test_client = AsyncContextualAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
+        request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = AsyncContextualAI(
+        test_client2 = AsyncContextualAI(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -1102,9 +1287,12 @@ class TestAsyncContextualAI:
                 "X-Stainless-Lang": "my-overriding-header",
             },
         )
-        request = client2._build_request(FinalRequestOptions(method="get", url="/foo"))
+        request = test_client2._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "stainless"
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
+
+        await test_client.close()
+        await test_client2.close()
 
     def test_validate_headers(self) -> None:
         client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
@@ -1116,7 +1304,7 @@ class TestAsyncContextualAI:
                 client2 = AsyncContextualAI(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
-    def test_default_query_option(self) -> None:
+    async def test_default_query_option(self) -> None:
         client = AsyncContextualAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
@@ -1134,8 +1322,10 @@ class TestAsyncContextualAI:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    def test_request_extra_json(self) -> None:
-        request = self.client._build_request(
+        await client.close()
+
+    def test_request_extra_json(self, client: ContextualAI) -> None:
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1146,7 +1336,7 @@ class TestAsyncContextualAI:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": False}
 
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1157,7 +1347,7 @@ class TestAsyncContextualAI:
         assert data == {"baz": False}
 
         # `extra_json` takes priority over `json_data` when keys clash
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1168,8 +1358,8 @@ class TestAsyncContextualAI:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": None}
 
-    def test_request_extra_headers(self) -> None:
-        request = self.client._build_request(
+    def test_request_extra_headers(self, client: ContextualAI) -> None:
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1179,7 +1369,7 @@ class TestAsyncContextualAI:
         assert request.headers.get("X-Foo") == "Foo"
 
         # `extra_headers` takes priority over `default_headers` when keys clash
-        request = self.client.with_options(default_headers={"X-Bar": "true"})._build_request(
+        request = client.with_options(default_headers={"X-Bar": "true"})._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1190,8 +1380,8 @@ class TestAsyncContextualAI:
         )
         assert request.headers.get("X-Bar") == "false"
 
-    def test_request_extra_query(self) -> None:
-        request = self.client._build_request(
+    def test_request_extra_query(self, client: ContextualAI) -> None:
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1204,7 +1394,7 @@ class TestAsyncContextualAI:
         assert params == {"my_query_param": "Foo"}
 
         # if both `query` and `extra_query` are given, they are merged
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1218,7 +1408,7 @@ class TestAsyncContextualAI:
         assert params == {"bar": "1", "foo": "2"}
 
         # `extra_query` takes priority over `query` when keys clash
-        request = self.client._build_request(
+        request = client._build_request(
             FinalRequestOptions(
                 method="post",
                 url="/foo",
@@ -1234,7 +1424,7 @@ class TestAsyncContextualAI:
     def test_multipart_repeating_array(self, async_client: AsyncContextualAI) -> None:
         request = async_client._build_request(
             FinalRequestOptions.construct(
-                method="get",
+                method="post",
                 url="/foo",
                 headers={"Content-Type": "multipart/form-data; boundary=6b7ba517decee4a450543ea6ae821c82"},
                 json_data={"array": ["foo", "bar"]},
@@ -1261,7 +1451,73 @@ class TestAsyncContextualAI:
         ]
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_basic_union_response(self, respx_mock: MockRouter) -> None:
+    async def test_binary_content_upload(self, respx_mock: MockRouter, async_client: AsyncContextualAI) -> None:
+        respx_mock.post("/upload").mock(side_effect=mirror_request_content)
+
+        file_content = b"Hello, this is a test file."
+
+        response = await async_client.post(
+            "/upload",
+            content=file_content,
+            cast_to=httpx.Response,
+            options={"headers": {"Content-Type": "application/octet-stream"}},
+        )
+
+        assert response.status_code == 200
+        assert response.request.headers["Content-Type"] == "application/octet-stream"
+        assert response.content == file_content
+
+    async def test_binary_content_upload_with_asynciterator(self) -> None:
+        file_content = b"Hello, this is a test file."
+        counter = Counter()
+        iterator = _make_async_iterator([file_content], counter=counter)
+
+        async def mock_handler(request: httpx.Request) -> httpx.Response:
+            assert counter.value == 0, "the request body should not have been read"
+            return httpx.Response(200, content=await request.aread())
+
+        async with AsyncContextualAI(
+            base_url=base_url,
+            api_key=api_key,
+            _strict_response_validation=True,
+            http_client=httpx.AsyncClient(transport=MockTransport(handler=mock_handler)),
+        ) as client:
+            response = await client.post(
+                "/upload",
+                content=iterator,
+                cast_to=httpx.Response,
+                options={"headers": {"Content-Type": "application/octet-stream"}},
+            )
+
+            assert response.status_code == 200
+            assert response.request.headers["Content-Type"] == "application/octet-stream"
+            assert response.content == file_content
+            assert counter.value == 1
+
+    @pytest.mark.respx(base_url=base_url)
+    async def test_binary_content_upload_with_body_is_deprecated(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
+        respx_mock.post("/upload").mock(side_effect=mirror_request_content)
+
+        file_content = b"Hello, this is a test file."
+
+        with pytest.deprecated_call(
+            match="Passing raw bytes as `body` is deprecated and will be removed in a future version. Please pass raw bytes via the `content` parameter instead."
+        ):
+            response = await async_client.post(
+                "/upload",
+                body=file_content,
+                cast_to=httpx.Response,
+                options={"headers": {"Content-Type": "application/octet-stream"}},
+            )
+
+        assert response.status_code == 200
+        assert response.request.headers["Content-Type"] == "application/octet-stream"
+        assert response.content == file_content
+
+    @pytest.mark.respx(base_url=base_url)
+    async def test_basic_union_response(self, respx_mock: MockRouter, async_client: AsyncContextualAI) -> None:
         class Model1(BaseModel):
             name: str
 
@@ -1270,12 +1526,14 @@ class TestAsyncContextualAI:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
-        response = await self.client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
+        response = await async_client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
         assert response.foo == "bar"
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_union_response_different_types(self, respx_mock: MockRouter) -> None:
+    async def test_union_response_different_types(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
         """Union of objects with the same field name using a different type"""
 
         class Model1(BaseModel):
@@ -1286,18 +1544,20 @@ class TestAsyncContextualAI:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
-        response = await self.client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
+        response = await async_client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
         assert response.foo == "bar"
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": 1}))
 
-        response = await self.client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
+        response = await async_client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model1)
         assert response.foo == 1
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_non_application_json_content_type_for_json_data(self, respx_mock: MockRouter) -> None:
+    async def test_non_application_json_content_type_for_json_data(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
         """
         Response that sets Content-Type to something other than application/json but returns json data
         """
@@ -1313,11 +1573,11 @@ class TestAsyncContextualAI:
             )
         )
 
-        response = await self.client.get("/foo", cast_to=Model)
+        response = await async_client.get("/foo", cast_to=Model)
         assert isinstance(response, Model)
         assert response.foo == 2
 
-    def test_base_url_setter(self) -> None:
+    async def test_base_url_setter(self) -> None:
         client = AsyncContextualAI(
             base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
@@ -1327,7 +1587,9 @@ class TestAsyncContextualAI:
 
         assert client.base_url == "https://example.com/from_setter/"
 
-    def test_base_url_env(self) -> None:
+        await client.close()
+
+    async def test_base_url_env(self) -> None:
         with update_env(CONTEXTUAL_AI_BASE_URL="http://localhost:5000/from/env"):
             client = AsyncContextualAI(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
@@ -1347,7 +1609,7 @@ class TestAsyncContextualAI:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: AsyncContextualAI) -> None:
+    async def test_base_url_trailing_slash(self, client: AsyncContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1356,6 +1618,7 @@ class TestAsyncContextualAI:
             ),
         )
         assert request.url == "http://localhost:5000/custom/path/foo"
+        await client.close()
 
     @pytest.mark.parametrize(
         "client",
@@ -1372,7 +1635,7 @@ class TestAsyncContextualAI:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: AsyncContextualAI) -> None:
+    async def test_base_url_no_trailing_slash(self, client: AsyncContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1381,6 +1644,7 @@ class TestAsyncContextualAI:
             ),
         )
         assert request.url == "http://localhost:5000/custom/path/foo"
+        await client.close()
 
     @pytest.mark.parametrize(
         "client",
@@ -1397,7 +1661,7 @@ class TestAsyncContextualAI:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: AsyncContextualAI) -> None:
+    async def test_absolute_request_url(self, client: AsyncContextualAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1406,37 +1670,39 @@ class TestAsyncContextualAI:
             ),
         )
         assert request.url == "https://myapi.com/foo"
+        await client.close()
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-        assert not client.is_closed()
+        test_client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        assert not test_client.is_closed()
 
-        copied = client.copy()
-        assert copied is not client
+        copied = test_client.copy()
+        assert copied is not test_client
 
         del copied
 
         await asyncio.sleep(0.2)
-        assert not client.is_closed()
+        assert not test_client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-        async with client as c2:
-            assert c2 is client
+        test_client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        async with test_client as c2:
+            assert c2 is test_client
             assert not c2.is_closed()
-            assert not client.is_closed()
-        assert client.is_closed()
+            assert not test_client.is_closed()
+        assert test_client.is_closed()
 
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
-    async def test_client_response_validation_error(self, respx_mock: MockRouter) -> None:
+    async def test_client_response_validation_error(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
         class Model(BaseModel):
             foo: str
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": {"invalid": True}}))
 
         with pytest.raises(APIResponseValidationError) as exc:
-            await self.client.get("/foo", cast_to=Model)
+            await async_client.get("/foo", cast_to=Model)
 
         assert isinstance(exc.value.__cause__, ValidationError)
 
@@ -1447,7 +1713,6 @@ class TestAsyncContextualAI:
             )
 
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
     async def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
         class Model(BaseModel):
             name: str
@@ -1459,10 +1724,13 @@ class TestAsyncContextualAI:
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
-        response = await client.get("/foo", cast_to=Model)
+        response = await non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
+
+        await strict_client.close()
+        await non_strict_client.close()
 
     @pytest.mark.parametrize(
         "remaining_retries,retry_after,timeout",
@@ -1486,49 +1754,40 @@ class TestAsyncContextualAI:
         ],
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
-    @pytest.mark.asyncio
-    async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AsyncContextualAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-
+    async def test_parse_retry_after_header(
+        self, remaining_retries: int, retry_after: str, timeout: float, async_client: AsyncContextualAI
+    ) -> None:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
-        calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
+        calculated = async_client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    async def test_retrying_timeout_errors_doesnt_leak(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
         respx_mock.post("/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await self.client.post(
-                "/agents",
-                body=cast(object, dict(name="xxx")),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
+            await async_client.agents.with_streaming_response.create(name="xxx").__aenter__()
 
-        assert _get_open_connections(self.client) == 0
+        assert _get_open_connections(async_client) == 0
 
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
+    async def test_retrying_status_errors_doesnt_leak(
+        self, respx_mock: MockRouter, async_client: AsyncContextualAI
+    ) -> None:
         respx_mock.post("/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await self.client.post(
-                "/agents",
-                body=cast(object, dict(name="xxx")),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
-        assert _get_open_connections(self.client) == 0
+            await async_client.agents.with_streaming_response.create(name="xxx").__aenter__()
+        assert _get_open_connections(async_client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
@@ -1560,7 +1819,6 @@ class TestAsyncContextualAI:
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
     async def test_omit_retry_count_header(
         self, async_client: AsyncContextualAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
@@ -1586,7 +1844,6 @@ class TestAsyncContextualAI:
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("contextual._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
     async def test_overwrite_retry_count_header(
         self, async_client: AsyncContextualAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
@@ -1609,47 +1866,55 @@ class TestAsyncContextualAI:
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
-    def test_get_platform(self) -> None:
-        # A previous implementation of asyncify could leave threads unterminated when
-        # used with nest_asyncio.
-        #
-        # Since nest_asyncio.apply() is global and cannot be un-applied, this
-        # test is run in a separate process to avoid affecting other tests.
-        test_code = dedent("""
-        import asyncio
-        import nest_asyncio
-        import threading
+    async def test_get_platform(self) -> None:
+        platform = await asyncify(get_platform)()
+        assert isinstance(platform, (str, OtherPlatform))
 
-        from contextual._utils import asyncify
-        from contextual._base_client import get_platform 
+    async def test_proxy_environment_variables(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        # Test that the proxy environment variables are set correctly
+        monkeypatch.setenv("HTTPS_PROXY", "https://example.org")
 
-        async def test_main() -> None:
-            result = await asyncify(get_platform)()
-            print(result)
-            for thread in threading.enumerate():
-                print(thread.name)
+        client = DefaultAsyncHttpxClient()
 
-        nest_asyncio.apply()
-        asyncio.run(test_main())
-        """)
-        with subprocess.Popen(
-            [sys.executable, "-c", test_code],
-            text=True,
-        ) as process:
-            timeout = 10  # seconds
+        mounts = tuple(client._mounts.items())
+        assert len(mounts) == 1
+        assert mounts[0][0].pattern == "https://"
 
-            start_time = time.monotonic()
-            while True:
-                return_code = process.poll()
-                if return_code is not None:
-                    if return_code != 0:
-                        raise AssertionError("calling get_platform using asyncify resulted in a non-zero exit code")
+    @pytest.mark.filterwarnings("ignore:.*deprecated.*:DeprecationWarning")
+    async def test_default_client_creation(self) -> None:
+        # Ensure that the client can be initialized without any exceptions
+        DefaultAsyncHttpxClient(
+            verify=True,
+            cert=None,
+            trust_env=True,
+            http1=True,
+            http2=False,
+            limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
+        )
 
-                    # success
-                    break
+    @pytest.mark.respx(base_url=base_url)
+    async def test_follow_redirects(self, respx_mock: MockRouter, async_client: AsyncContextualAI) -> None:
+        # Test that the default follow_redirects=True allows following redirects
+        respx_mock.post("/redirect").mock(
+            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+        )
+        respx_mock.get("/redirected").mock(return_value=httpx.Response(200, json={"status": "ok"}))
 
-                if time.monotonic() - start_time > timeout:
-                    process.kill()
-                    raise AssertionError("calling get_platform using asyncify resulted in a hung process")
+        response = await async_client.post("/redirect", body={"key": "value"}, cast_to=httpx.Response)
+        assert response.status_code == 200
+        assert response.json() == {"status": "ok"}
 
-                time.sleep(0.1)
+    @pytest.mark.respx(base_url=base_url)
+    async def test_follow_redirects_disabled(self, respx_mock: MockRouter, async_client: AsyncContextualAI) -> None:
+        # Test that follow_redirects=False prevents following redirects
+        respx_mock.post("/redirect").mock(
+            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+        )
+
+        with pytest.raises(APIStatusError) as exc_info:
+            await async_client.post(
+                "/redirect", body={"key": "value"}, options={"follow_redirects": False}, cast_to=httpx.Response
+            )
+
+        assert exc_info.value.response.status_code == 302
+        assert exc_info.value.response.headers["Location"] == f"{base_url}/redirected"
