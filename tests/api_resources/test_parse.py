@@ -26,14 +26,14 @@ class TestParse:
     @parametrize
     def test_method_create(self, client: ContextualAI) -> None:
         parse = client.parse.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
         )
         assert_matches_type(ParseCreateResponse, parse, path=["response"])
 
     @parametrize
     def test_method_create_with_all_params(self, client: ContextualAI) -> None:
         parse = client.parse.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
             enable_document_hierarchy=True,
             enable_split_tables=False,
             figure_caption_mode="concise",
@@ -46,7 +46,7 @@ class TestParse:
     @parametrize
     def test_raw_response_create(self, client: ContextualAI) -> None:
         response = client.parse.with_raw_response.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
         )
 
         assert response.is_closed is True
@@ -57,7 +57,7 @@ class TestParse:
     @parametrize
     def test_streaming_response_create(self, client: ContextualAI) -> None:
         with client.parse.with_streaming_response.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -194,14 +194,14 @@ class TestAsyncParse:
     @parametrize
     async def test_method_create(self, async_client: AsyncContextualAI) -> None:
         parse = await async_client.parse.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
         )
         assert_matches_type(ParseCreateResponse, parse, path=["response"])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncContextualAI) -> None:
         parse = await async_client.parse.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
             enable_document_hierarchy=True,
             enable_split_tables=False,
             figure_caption_mode="concise",
@@ -214,7 +214,7 @@ class TestAsyncParse:
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncContextualAI) -> None:
         response = await async_client.parse.with_raw_response.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
         )
 
         assert response.is_closed is True
@@ -225,7 +225,7 @@ class TestAsyncParse:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncContextualAI) -> None:
         async with async_client.parse.with_streaming_response.create(
-            raw_file=b"raw file contents",
+            raw_file=b"Example data",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

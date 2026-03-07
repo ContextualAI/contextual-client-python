@@ -184,7 +184,7 @@ class TestDocuments:
     def test_method_ingest(self, client: ContextualAI) -> None:
         document = client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
         )
         assert_matches_type(IngestionResponse, document, path=["response"])
 
@@ -192,7 +192,7 @@ class TestDocuments:
     def test_method_ingest_with_all_params(self, client: ContextualAI) -> None:
         document = client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
             configuration="configuration",
             metadata="metadata",
         )
@@ -202,7 +202,7 @@ class TestDocuments:
     def test_raw_response_ingest(self, client: ContextualAI) -> None:
         response = client.datastores.documents.with_raw_response.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
         )
 
         assert response.is_closed is True
@@ -214,7 +214,7 @@ class TestDocuments:
     def test_streaming_response_ingest(self, client: ContextualAI) -> None:
         with client.datastores.documents.with_streaming_response.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -229,7 +229,7 @@ class TestDocuments:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             client.datastores.documents.with_raw_response.ingest(
                 datastore_id="",
-                file=b"raw file contents",
+                file=b"Example data",
             )
 
     @parametrize
@@ -510,7 +510,7 @@ class TestAsyncDocuments:
     async def test_method_ingest(self, async_client: AsyncContextualAI) -> None:
         document = await async_client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
         )
         assert_matches_type(IngestionResponse, document, path=["response"])
 
@@ -518,7 +518,7 @@ class TestAsyncDocuments:
     async def test_method_ingest_with_all_params(self, async_client: AsyncContextualAI) -> None:
         document = await async_client.datastores.documents.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
             configuration="configuration",
             metadata="metadata",
         )
@@ -528,7 +528,7 @@ class TestAsyncDocuments:
     async def test_raw_response_ingest(self, async_client: AsyncContextualAI) -> None:
         response = await async_client.datastores.documents.with_raw_response.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
         )
 
         assert response.is_closed is True
@@ -540,7 +540,7 @@ class TestAsyncDocuments:
     async def test_streaming_response_ingest(self, async_client: AsyncContextualAI) -> None:
         async with async_client.datastores.documents.with_streaming_response.ingest(
             datastore_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            file=b"raw file contents",
+            file=b"Example data",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -555,7 +555,7 @@ class TestAsyncDocuments:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `datastore_id` but received ''"):
             await async_client.datastores.documents.with_raw_response.ingest(
                 datastore_id="",
-                file=b"raw file contents",
+                file=b"Example data",
             )
 
     @parametrize
