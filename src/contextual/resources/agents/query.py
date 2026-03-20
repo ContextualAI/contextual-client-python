@@ -9,7 +9,7 @@ from typing_extensions import Literal
 import httpx
 
 from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -156,7 +156,7 @@ class QueryResource(SyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._post(
-            f"/agents/{agent_id}/query",
+            path_template("/agents/{agent_id}/query", agent_id=agent_id),
             body=maybe_transform(
                 {
                     "messages": messages,
@@ -230,7 +230,7 @@ class QueryResource(SyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._post(
-            f"/agents/{agent_id}/feedback",
+            path_template("/agents/{agent_id}/feedback", agent_id=agent_id),
             body=maybe_transform(
                 {
                     "feedback": feedback,
@@ -302,7 +302,7 @@ class QueryResource(SyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._get(
-            f"/agents/{agent_id}/metrics",
+            path_template("/agents/{agent_id}/metrics", agent_id=agent_id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -360,7 +360,9 @@ class QueryResource(SyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return self._get(
-            f"/agents/{agent_id}/query/{message_id}/retrieval/info",
+            path_template(
+                "/agents/{agent_id}/query/{message_id}/retrieval/info", agent_id=agent_id, message_id=message_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -497,7 +499,7 @@ class AsyncQueryResource(AsyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._post(
-            f"/agents/{agent_id}/query",
+            path_template("/agents/{agent_id}/query", agent_id=agent_id),
             body=await async_maybe_transform(
                 {
                     "messages": messages,
@@ -571,7 +573,7 @@ class AsyncQueryResource(AsyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._post(
-            f"/agents/{agent_id}/feedback",
+            path_template("/agents/{agent_id}/feedback", agent_id=agent_id),
             body=await async_maybe_transform(
                 {
                     "feedback": feedback,
@@ -643,7 +645,7 @@ class AsyncQueryResource(AsyncAPIResource):
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._get(
-            f"/agents/{agent_id}/metrics",
+            path_template("/agents/{agent_id}/metrics", agent_id=agent_id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -701,7 +703,9 @@ class AsyncQueryResource(AsyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return await self._get(
-            f"/agents/{agent_id}/query/{message_id}/retrieval/info",
+            path_template(
+                "/agents/{agent_id}/query/{message_id}/retrieval/info", agent_id=agent_id, message_id=message_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

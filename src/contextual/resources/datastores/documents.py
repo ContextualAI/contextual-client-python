@@ -9,7 +9,7 @@ from typing_extensions import Literal
 import httpx
 
 from ..._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
-from ..._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
+from ..._utils import extract_files, path_template, maybe_transform, deepcopy_minimal, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -109,7 +109,7 @@ class DocumentsResource(SyncAPIResource):
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         return self._get_api_list(
-            f"/datastores/{datastore_id}/documents",
+            path_template("/datastores/{datastore_id}/documents", datastore_id=datastore_id),
             page=SyncDocumentsPage[DocumentMetadata],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -165,7 +165,9 @@ class DocumentsResource(SyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return self._delete(
-            f"/datastores/{datastore_id}/documents/{document_id}",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}", datastore_id=datastore_id, document_id=document_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -215,7 +217,11 @@ class DocumentsResource(SyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return self._get(
-            f"/datastores/{datastore_id}/documents/{document_id}/parse",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}/parse",
+                datastore_id=datastore_id,
+                document_id=document_id,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -309,7 +315,7 @@ class DocumentsResource(SyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return self._post(
-            f"/datastores/{datastore_id}/documents",
+            path_template("/datastores/{datastore_id}/documents", datastore_id=datastore_id),
             body=maybe_transform(body, document_ingest_params.DocumentIngestParams),
             files=files,
             options=make_request_options(
@@ -352,7 +358,11 @@ class DocumentsResource(SyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return self._get(
-            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}/metadata",
+                datastore_id=datastore_id,
+                document_id=document_id,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -412,7 +422,11 @@ class DocumentsResource(SyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return self._put(
-            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}/metadata",
+                datastore_id=datastore_id,
+                document_id=document_id,
+            ),
             body=maybe_transform(
                 {
                     "custom_metadata": custom_metadata,
@@ -502,7 +516,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
         return self._get_api_list(
-            f"/datastores/{datastore_id}/documents",
+            path_template("/datastores/{datastore_id}/documents", datastore_id=datastore_id),
             page=AsyncDocumentsPage[DocumentMetadata],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -558,7 +572,9 @@ class AsyncDocumentsResource(AsyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return await self._delete(
-            f"/datastores/{datastore_id}/documents/{document_id}",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}", datastore_id=datastore_id, document_id=document_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -608,7 +624,11 @@ class AsyncDocumentsResource(AsyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return await self._get(
-            f"/datastores/{datastore_id}/documents/{document_id}/parse",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}/parse",
+                datastore_id=datastore_id,
+                document_id=document_id,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -702,7 +722,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return await self._post(
-            f"/datastores/{datastore_id}/documents",
+            path_template("/datastores/{datastore_id}/documents", datastore_id=datastore_id),
             body=await async_maybe_transform(body, document_ingest_params.DocumentIngestParams),
             files=files,
             options=make_request_options(
@@ -745,7 +765,11 @@ class AsyncDocumentsResource(AsyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return await self._get(
-            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}/metadata",
+                datastore_id=datastore_id,
+                document_id=document_id,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -805,7 +829,11 @@ class AsyncDocumentsResource(AsyncAPIResource):
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
         return await self._put(
-            f"/datastores/{datastore_id}/documents/{document_id}/metadata",
+            path_template(
+                "/datastores/{datastore_id}/documents/{document_id}/metadata",
+                datastore_id=datastore_id,
+                document_id=document_id,
+            ),
             body=await async_maybe_transform(
                 {
                     "custom_metadata": custom_metadata,
