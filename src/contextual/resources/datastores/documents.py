@@ -8,8 +8,9 @@ from typing_extensions import Literal
 
 import httpx
 
+from ..._files import deepcopy_with_paths
 from ..._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
-from ..._utils import extract_files, path_template, maybe_transform, deepcopy_minimal, async_maybe_transform
+from ..._utils import extract_files, path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -302,12 +303,13 @@ class DocumentsResource(SyncAPIResource):
         """
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
-        body = deepcopy_minimal(
+        body = deepcopy_with_paths(
             {
                 "file": file,
                 "configuration": configuration,
                 "metadata": metadata,
-            }
+            },
+            [["file"]],
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["file"]])
         # It should be noted that the actual Content-Type header that will be
@@ -709,12 +711,13 @@ class AsyncDocumentsResource(AsyncAPIResource):
         """
         if not datastore_id:
             raise ValueError(f"Expected a non-empty value for `datastore_id` but received {datastore_id!r}")
-        body = deepcopy_minimal(
+        body = deepcopy_with_paths(
             {
                 "file": file,
                 "configuration": configuration,
                 "metadata": metadata,
-            }
+            },
+            [["file"]],
         )
         files = extract_files(cast(Mapping[str, object], body), paths=[["file"]])
         # It should be noted that the actual Content-Type header that will be
