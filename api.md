@@ -221,3 +221,59 @@ Methods:
 - <code title="get /parse/jobs/{job_id}/results">client.parse.<a href="./src/contextual/resources/parse.py">job_results</a>(job_id, \*\*<a href="src/contextual/types/parse_job_results_params.py">params</a>) -> <a href="./src/contextual/types/parse_job_results_response.py">ParseJobResultsResponse</a></code>
 - <code title="get /parse/jobs/{job_id}/status">client.parse.<a href="./src/contextual/resources/parse.py">job_status</a>(job_id) -> <a href="./src/contextual/types/parse_job_status_response.py">ParseJobStatusResponse</a></code>
 - <code title="get /parse/jobs">client.parse.<a href="./src/contextual/resources/parse.py">jobs</a>(\*\*<a href="src/contextual/types/parse_jobs_params.py">params</a>) -> <a href="./src/contextual/types/parse_jobs_response.py">ParseJobsResponse</a></code>
+
+# Extract
+
+Types:
+
+```python
+from contextual.types import ExtractDeleteDocumentResponse, ExtractDeleteSchemaResponse, ExtractListDocumentsResponse, ExtractRetrieveDocumentResponse, ExtractListJobsResponse, ExtractRetrieveJobResponse, ExtractRetrieveJobResultsResponse, ExtractListSchemasResponse, ExtractRetrieveSchemaResponse, ExtractUploadDocumentResponse, ExtractCreateJobResponse, ExtractCreateSchemaResponse, ExtractUpdateSchemaResponse
+```
+
+Methods:
+
+- <code title="delete /extract/documents/{document_id}">client.extract.<a href="./src/contextual/resources/extract.py">delete_document</a>(document_id) -> <a href="./src/contextual/types/extract_delete_document_response.py">ExtractDeleteDocumentResponse</a></code>
+- <code title="delete /extract/schemas/{schema_id}">client.extract.<a href="./src/contextual/resources/extract.py">delete_schema</a>(schema_id) -> <a href="./src/contextual/types/extract_delete_schema_response.py">ExtractDeleteSchemaResponse</a></code>
+- <code title="get /extract/documents">client.extract.<a href="./src/contextual/resources/extract.py">list_documents</a>(\*\*<a href="src/contextual/types/extract_list_documents_params.py">params</a>) -> <a href="./src/contextual/types/extract_list_documents_response.py">ExtractListDocumentsResponse</a></code>
+- <code title="get /extract/documents/{document_id}">client.extract.<a href="./src/contextual/resources/extract.py">retrieve_document</a>(document_id) -> <a href="./src/contextual/types/extract_retrieve_document_response.py">ExtractRetrieveDocumentResponse</a></code>
+- <code title="get /extract/jobs">client.extract.<a href="./src/contextual/resources/extract.py">list_jobs</a>(\*\*<a href="src/contextual/types/extract_list_jobs_params.py">params</a>) -> <a href="./src/contextual/types/extract_list_jobs_response.py">ExtractListJobsResponse</a></code>
+- <code title="get /extract/jobs/{job_id}">client.extract.<a href="./src/contextual/resources/extract.py">retrieve_job</a>(job_id) -> <a href="./src/contextual/types/extract_retrieve_job_response.py">ExtractRetrieveJobResponse</a></code>
+- <code title="get /extract/jobs/{job_id}/results">client.extract.<a href="./src/contextual/resources/extract.py">retrieve_job_results</a>(job_id) -> <a href="./src/contextual/types/extract_retrieve_job_results_response.py">ExtractRetrieveJobResultsResponse</a></code>
+- <code title="get /extract/schemas">client.extract.<a href="./src/contextual/resources/extract.py">list_schemas</a>(\*\*<a href="src/contextual/types/extract_list_schemas_params.py">params</a>) -> <a href="./src/contextual/types/extract_list_schemas_response.py">ExtractListSchemasResponse</a></code>
+- <code title="get /extract/schemas/{schema_id}">client.extract.<a href="./src/contextual/resources/extract.py">retrieve_schema</a>(schema_id) -> <a href="./src/contextual/types/extract_retrieve_schema_response.py">ExtractRetrieveSchemaResponse</a></code>
+- <code title="post /extract/documents/upload">client.extract.<a href="./src/contextual/resources/extract.py">upload_document</a>(\*\*<a href="src/contextual/types/extract_upload_document_params.py">params</a>) -> <a href="./src/contextual/types/extract_upload_document_response.py">ExtractUploadDocumentResponse</a></code>
+- <code title="post /extract/jobs">client.extract.<a href="./src/contextual/resources/extract.py">create_job</a>(\*\*<a href="src/contextual/types/extract_create_job_params.py">params</a>) -> <a href="./src/contextual/types/extract_create_job_response.py">ExtractCreateJobResponse</a></code>
+- <code title="post /extract/schemas">client.extract.<a href="./src/contextual/resources/extract.py">create_schema</a>(\*\*<a href="src/contextual/types/extract_create_schema_params.py">params</a>) -> <a href="./src/contextual/types/extract_create_schema_response.py">ExtractCreateSchemaResponse</a></code>
+- <code title="put /extract/jobs/{job_id}/results">client.extract.<a href="./src/contextual/resources/extract.py">update_job_results</a>(job_id, \*\*<a href="src/contextual/types/extract_update_job_results_params.py">params</a>) -> object</code>
+- <code title="put /extract/schemas/{schema_id}">client.extract.<a href="./src/contextual/resources/extract.py">update_schema</a>(schema_id, \*\*<a href="src/contextual/types/extract_update_schema_params.py">params</a>) -> <a href="./src/contextual/types/extract_update_schema_response.py">ExtractUpdateSchemaResponse</a></code>
+
+# Billing
+
+Types:
+
+```python
+from contextual.types import BillingRetrieveBalanceResponse, BillingListTopUpsResponse, BillingRetrieveBillingModeHistoryResponse, BillingRetrieveMetadataResponse, BillingRetrieveAclUsageResponse, BillingRetrieveEarliestUsageDateResponse, BillingRetrieveMonthlyUsageResponse
+```
+
+Methods:
+
+- <code title="get /billing/balance">client.billing.<a href="./src/contextual/resources/billing.py">retrieve_balance</a>() -> <a href="./src/contextual/types/billing_retrieve_balance_response.py">BillingRetrieveBalanceResponse</a></code>
+- <code title="get /billing/balance/top-ups">client.billing.<a href="./src/contextual/resources/billing.py">list_top_ups</a>(\*\*<a href="src/contextual/types/billing_list_top_ups_params.py">params</a>) -> <a href="./src/contextual/types/billing_list_top_ups_response.py">BillingListTopUpsResponse</a></code>
+- <code title="get /billing/billing_mode/history">client.billing.<a href="./src/contextual/resources/billing.py">retrieve_billing_mode_history</a>(\*\*<a href="src/contextual/types/billing_retrieve_billing_mode_history_params.py">params</a>) -> <a href="./src/contextual/types/billing_retrieve_billing_mode_history_response.py">BillingRetrieveBillingModeHistoryResponse</a></code>
+- <code title="get /billing/metadata">client.billing.<a href="./src/contextual/resources/billing.py">retrieve_metadata</a>() -> <a href="./src/contextual/types/billing_retrieve_metadata_response.py">BillingRetrieveMetadataResponse</a></code>
+- <code title="get /billing/usages/acl">client.billing.<a href="./src/contextual/resources/billing.py">retrieve_acl_usage</a>(\*\*<a href="src/contextual/types/billing_retrieve_acl_usage_params.py">params</a>) -> <a href="./src/contextual/types/billing_retrieve_acl_usage_response.py">BillingRetrieveAclUsageResponse</a></code>
+- <code title="get /billing/usages/earliest_date">client.billing.<a href="./src/contextual/resources/billing.py">retrieve_earliest_usage_date</a>() -> <a href="./src/contextual/types/billing_retrieve_earliest_usage_date_response.py">BillingRetrieveEarliestUsageDateResponse</a></code>
+- <code title="get /billing/usages/monthly">client.billing.<a href="./src/contextual/resources/billing.py">retrieve_monthly_usage</a>(\*\*<a href="src/contextual/types/billing_retrieve_monthly_usage_params.py">params</a>) -> <a href="./src/contextual/types/billing_retrieve_monthly_usage_response.py">BillingRetrieveMonthlyUsageResponse</a></code>
+
+# Workspaces
+
+Types:
+
+```python
+from contextual.types import WorkspaceRetrieveConsentResponse, WorkspaceUpdateConsentResponse
+```
+
+Methods:
+
+- <code title="get /workspaces/consent">client.workspaces.<a href="./src/contextual/resources/workspaces.py">retrieve_consent</a>() -> <a href="./src/contextual/types/workspace_retrieve_consent_response.py">WorkspaceRetrieveConsentResponse</a></code>
+- <code title="put /workspaces/consent">client.workspaces.<a href="./src/contextual/resources/workspaces.py">update_consent</a>(\*\*<a href="src/contextual/types/workspace_update_consent_params.py">params</a>) -> <a href="./src/contextual/types/workspace_update_consent_response.py">WorkspaceUpdateConsentResponse</a></code>
