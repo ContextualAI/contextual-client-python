@@ -31,12 +31,15 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import parse, users, agents, lmunit, rerank, generate, datastores
+    from .resources import parse, users, agents, lmunit, rerank, billing, extract, generate, datastores, workspaces
     from .resources.parse import ParseResource, AsyncParseResource
     from .resources.users import UsersResource, AsyncUsersResource
     from .resources.lmunit import LMUnitResource, AsyncLMUnitResource
     from .resources.rerank import RerankResource, AsyncRerankResource
+    from .resources.billing import BillingResource, AsyncBillingResource
+    from .resources.extract import ExtractResource, AsyncExtractResource
     from .resources.generate import GenerateResource, AsyncGenerateResource
+    from .resources.workspaces import WorkspacesResource, AsyncWorkspacesResource
     from .resources.agents.agents import AgentsResource, AsyncAgentsResource
     from .resources.datastores.datastores import DatastoresResource, AsyncDatastoresResource
 
@@ -156,6 +159,24 @@ class ContextualAI(SyncAPIClient):
         from .resources.parse import ParseResource
 
         return ParseResource(self)
+
+    @cached_property
+    def extract(self) -> ExtractResource:
+        from .resources.extract import ExtractResource
+
+        return ExtractResource(self)
+
+    @cached_property
+    def billing(self) -> BillingResource:
+        from .resources.billing import BillingResource
+
+        return BillingResource(self)
+
+    @cached_property
+    def workspaces(self) -> WorkspacesResource:
+        from .resources.workspaces import WorkspacesResource
+
+        return WorkspacesResource(self)
 
     @cached_property
     def with_raw_response(self) -> ContextualAIWithRawResponse:
@@ -381,6 +402,24 @@ class AsyncContextualAI(AsyncAPIClient):
         return AsyncParseResource(self)
 
     @cached_property
+    def extract(self) -> AsyncExtractResource:
+        from .resources.extract import AsyncExtractResource
+
+        return AsyncExtractResource(self)
+
+    @cached_property
+    def billing(self) -> AsyncBillingResource:
+        from .resources.billing import AsyncBillingResource
+
+        return AsyncBillingResource(self)
+
+    @cached_property
+    def workspaces(self) -> AsyncWorkspacesResource:
+        from .resources.workspaces import AsyncWorkspacesResource
+
+        return AsyncWorkspacesResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncContextualAIWithRawResponse:
         return AsyncContextualAIWithRawResponse(self)
 
@@ -546,6 +585,23 @@ class ContextualAIWithRawResponse:
 
         return ParseResourceWithRawResponse(self._client.parse)
 
+    @cached_property
+    def extract(self) -> extract.ExtractResourceWithRawResponse:
+        from .resources.extract import ExtractResourceWithRawResponse
+
+        return ExtractResourceWithRawResponse(self._client.extract)
+
+    @cached_property
+    def billing(self) -> billing.BillingResourceWithRawResponse:
+        from .resources.billing import BillingResourceWithRawResponse
+
+        return BillingResourceWithRawResponse(self._client.billing)
+
+    @cached_property
+    def workspaces(self) -> workspaces.WorkspacesResourceWithRawResponse:
+        from .resources.workspaces import WorkspacesResourceWithRawResponse
+
+        return WorkspacesResourceWithRawResponse(self._client.workspaces)
 
 class AsyncContextualAIWithRawResponse:
     _client: AsyncContextualAI
@@ -595,6 +651,23 @@ class AsyncContextualAIWithRawResponse:
 
         return AsyncParseResourceWithRawResponse(self._client.parse)
 
+    @cached_property
+    def extract(self) -> extract.AsyncExtractResourceWithRawResponse:
+        from .resources.extract import AsyncExtractResourceWithRawResponse
+
+        return AsyncExtractResourceWithRawResponse(self._client.extract)
+
+    @cached_property
+    def billing(self) -> billing.AsyncBillingResourceWithRawResponse:
+        from .resources.billing import AsyncBillingResourceWithRawResponse
+
+        return AsyncBillingResourceWithRawResponse(self._client.billing)
+
+    @cached_property
+    def workspaces(self) -> workspaces.AsyncWorkspacesResourceWithRawResponse:
+        from .resources.workspaces import AsyncWorkspacesResourceWithRawResponse
+
+        return AsyncWorkspacesResourceWithRawResponse(self._client.workspaces)
 
 class ContextualAIWithStreamedResponse:
     _client: ContextualAI
@@ -644,6 +717,23 @@ class ContextualAIWithStreamedResponse:
 
         return ParseResourceWithStreamingResponse(self._client.parse)
 
+    @cached_property
+    def extract(self) -> extract.ExtractResourceWithStreamingResponse:
+        from .resources.extract import ExtractResourceWithStreamingResponse
+
+        return ExtractResourceWithStreamingResponse(self._client.extract)
+
+    @cached_property
+    def billing(self) -> billing.BillingResourceWithStreamingResponse:
+        from .resources.billing import BillingResourceWithStreamingResponse
+
+        return BillingResourceWithStreamingResponse(self._client.billing)
+
+    @cached_property
+    def workspaces(self) -> workspaces.WorkspacesResourceWithStreamingResponse:
+        from .resources.workspaces import WorkspacesResourceWithStreamingResponse
+
+        return WorkspacesResourceWithStreamingResponse(self._client.workspaces)
 
 class AsyncContextualAIWithStreamedResponse:
     _client: AsyncContextualAI
@@ -693,6 +783,23 @@ class AsyncContextualAIWithStreamedResponse:
 
         return AsyncParseResourceWithStreamingResponse(self._client.parse)
 
+    @cached_property
+    def extract(self) -> extract.AsyncExtractResourceWithStreamingResponse:
+        from .resources.extract import AsyncExtractResourceWithStreamingResponse
+
+        return AsyncExtractResourceWithStreamingResponse(self._client.extract)
+
+    @cached_property
+    def billing(self) -> billing.AsyncBillingResourceWithStreamingResponse:
+        from .resources.billing import AsyncBillingResourceWithStreamingResponse
+
+        return AsyncBillingResourceWithStreamingResponse(self._client.billing)
+
+    @cached_property
+    def workspaces(self) -> workspaces.AsyncWorkspacesResourceWithStreamingResponse:
+        from .resources.workspaces import AsyncWorkspacesResourceWithStreamingResponse
+
+        return AsyncWorkspacesResourceWithStreamingResponse(self._client.workspaces)
 
 Client = ContextualAI
 

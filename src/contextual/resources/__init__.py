@@ -40,6 +40,22 @@ from .rerank import (
     RerankResourceWithStreamingResponse,
     AsyncRerankResourceWithStreamingResponse,
 )
+from .billing import (
+    BillingResource,
+    AsyncBillingResource,
+    BillingResourceWithRawResponse,
+    AsyncBillingResourceWithRawResponse,
+    BillingResourceWithStreamingResponse,
+    AsyncBillingResourceWithStreamingResponse,
+)
+from .extract import (
+    ExtractResource,
+    AsyncExtractResource,
+    ExtractResourceWithRawResponse,
+    AsyncExtractResourceWithRawResponse,
+    ExtractResourceWithStreamingResponse,
+    AsyncExtractResourceWithStreamingResponse,
+)
 from .generate import (
     GenerateResource,
     AsyncGenerateResource,
@@ -55,6 +71,14 @@ from .datastores import (
     AsyncDatastoresResourceWithRawResponse,
     DatastoresResourceWithStreamingResponse,
     AsyncDatastoresResourceWithStreamingResponse,
+)
+from .workspaces import (
+    WorkspacesResource,
+    AsyncWorkspacesResource,
+    WorkspacesResourceWithRawResponse,
+    AsyncWorkspacesResourceWithRawResponse,
+    WorkspacesResourceWithStreamingResponse,
+    AsyncWorkspacesResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -100,4 +124,22 @@ __all__ = [
     "AsyncParseResourceWithRawResponse",
     "ParseResourceWithStreamingResponse",
     "AsyncParseResourceWithStreamingResponse",
+    "ExtractResource",
+    "AsyncExtractResource",
+    "ExtractResourceWithRawResponse",
+    "AsyncExtractResourceWithRawResponse",
+    "ExtractResourceWithStreamingResponse",
+    "AsyncExtractResourceWithStreamingResponse",
+    "BillingResource",
+    "AsyncBillingResource",
+    "BillingResourceWithRawResponse",
+    "AsyncBillingResourceWithRawResponse",
+    "BillingResourceWithStreamingResponse",
+    "AsyncBillingResourceWithStreamingResponse",
+    "WorkspacesResource",
+    "AsyncWorkspacesResource",
+    "WorkspacesResourceWithRawResponse",
+    "AsyncWorkspacesResourceWithRawResponse",
+    "WorkspacesResourceWithStreamingResponse",
+    "AsyncWorkspacesResourceWithStreamingResponse",
 ]
